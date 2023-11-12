@@ -9,7 +9,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     container_name: postgres
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
+      - pgdata_vol:/var/lib/postgresql/data
     networks:
       - internal_network
 
@@ -20,39 +20,44 @@ services:
     container_name: back-end
     networks:
       - internal_network
-    depends_on:
-      - db
+    # depends_on:
+    #   - db
+    ports:
+      - '3000:3000'
     volumes:
       - ./back-end/src:/app/src
 
-  front-end:
-    build:
-      context: ./front-end
-      dockerfile: ./Dockerfile
-    container_name: front-end
-    ports:
-      - '3001:3000'
-    networks:
-      - internal_network
-    depends_on:
-      - db
-    volumes:
-      - ./front-end/src:/app/src
+  # front-end:
+  #   build:
+  #     context: ./front-end
+  #     dockerfile: ./Dockerfile
+  #   container_name: front-end
+  #   ports:
+  #     - '3000:3000'
+  #   networks:
+  #     - internal_network
+  #   # depends_on:
+  #   #   - back-end
+  #   volumes:
+  #     - ./front-end/src:/app/src
 
-  pgadmin:
-    image: dpage/pgadmin4
-    restart: always
-    container_name: pgadmin4
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
-      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
-    ports:
-      - '5050:80'
-    networks:
-      - internal_network
-    depends_on:
-      - db
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   restart: always
+  #   container_name: pgadmin4
+  #   environment:
+  #     - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+  #     - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+  #   ports:
+  #     - '5050:80'
+  #   networks:
+  #     - internal_network
+  #   depends_on:
+  #     - db
 
 networks:
   internal_network:
+
+volumes:
+  pgdata_vol:
 

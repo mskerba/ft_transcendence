@@ -14,7 +14,7 @@ model Users {
   user_id           Int      @id @default(autoincrement())
   name              String   @unique
   email             String   @unique
-  //provider String
-  //provider_id Int @unique
+  provider          String
+  provider_id       String
   registration_date DateTime @default(now())
 }
