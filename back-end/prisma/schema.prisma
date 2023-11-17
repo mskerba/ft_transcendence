@@ -14,6 +14,8 @@ model Users {
   user_id           Int      @id @default(autoincrement())
   name              String   @unique
   email             String   @unique
+  avatar            String   @default("https://www.svgrepo.com/show/213882/avatar-user.svg")
+  hashed_rt         String?
   provider          String
   provider_id       String
   registration_date DateTime @default(now())

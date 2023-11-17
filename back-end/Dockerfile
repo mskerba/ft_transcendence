@@ -8,7 +8,9 @@ RUN npm install -g @nestjs/cli
 
 RUN npm install -D prisma
 
-RUN npm install dotenv @nestjs/mapped-types @nestjs/passport passport passport-google-oauth20
+RUN npm install @prisma/client @nestjs/mapped-types   class-validator class-transformer
+
+RUN npm install @nestjs/jwt @nestjs/passport passport passport-google-oauth20 passport-jwt bcrypt
 
 COPY . .
 

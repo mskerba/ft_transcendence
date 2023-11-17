@@ -1,23 +1,41 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Controller, Get, Post, Req, Res, UseGuards, HttpStatus } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { GoogleOauthGuard } from './guards/google-oauth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { JwtRTAuthGuard } from './guards/jwt-rt-auth.guard';
+import { GetCurrentUserId, GetCurrentUser } from '../common/decorators/index'
+
 
 @Controller('auth')
 export class AuthController {
+    constructor(private authSerivce: AuthService) {}
+
     @Get('google')
-    @UseGuards(AuthGuard('google'))
+    @UseGuards(GoogleOauthGuard)
     async googleLogin() {
     }
     
     @Get('google/callback')
-    @UseGuards(AuthGuard('google'))
+    @UseGuards(GoogleOauthGuard)
     async googleLoginCallBack(@Req() req) {
-        console.log(req.user);
-        return 'SUCCESSFULLY LOGGED IN!'
+        const tokens = await this.authSerivce.signIn(req.user);
+
+        return tokens;
     }
 
-    @Get('')
-    @UseGuards(AuthGuard('google'))
-    async hh() {
-        return 'AAAAAAAAUUUUUUTTTHHH!'
+    @Post('logout')
+    @UseGuards(JwtAuthGuard)
+    logout(@GetCurrentUserId() userId: number) {
+        return this.authSerivce.logout(userId);
     }
+
+    @Post('refresh')
+    @UseGuards(JwtRTAuthGuard)
+    refreshTokens(
+        @GetCurrentUserId() userId: number,
+        @GetCurrentUser('refreshToken') refreshToken: string
+    ) {
+        return this.authSerivce.refreshTokens(userId, refreshToken);
+    }
+
 }

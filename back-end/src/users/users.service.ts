@@ -5,30 +5,47 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
-  private users = [];
 
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   create(createUserDto: CreateUserDto) {
-    return this.prisma.users.create(createUserDto);
+    return this.prisma.users.create({ data: createUserDto });
   }
 
   findAll() {
-    return this.users;
+    return this.prisma.users.findMany();
   }
 
   findOne(id: number) {
-    return this.users[id];
+    return this.prisma.users.findUnique({
+      where: {
+        user_id: id,
+      },
+    });
+  }
+
+  findByEmail(email: string) {
+    return this.prisma.users.findUnique({
+      where: {
+        email: email,
+      },
+    });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
-    this.users[id] = updateUserDto;
-    return this.users[id];
+    return this.prisma.users.update({
+      where: {
+        user_id: id,
+      },
+      data: updateUserDto,
+    });
   }
 
   remove(id: number) {
-    const user = this.users[id];
-    this.users.splice(id, 1);
-    return user;
+    return this.prisma.users.delete({
+      where: {
+        user_id: id,
+      },
+    });
   }
 }
