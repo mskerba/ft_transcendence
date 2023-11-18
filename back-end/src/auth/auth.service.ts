@@ -4,7 +4,9 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { JwtPayload } from './strategies/jwt.strategy';
+import * as speakeasy from 'speakeasy';
+import * as qrcode from 'qrcode';
+
 
 @Injectable()
 export class AuthService {
@@ -24,6 +26,12 @@ export class AuthService {
             return this.registerUser(user);
         }
 
+        if (userExists.is_2fa_enabled && !userExists.is_two_factor_verified) {
+            throw new ForbiddenException('verify 2FA!');
+        }
+
+        console.log(userExists);
+
         const tokens = await this.generateTokens(userExists.user_id, userExists.email);
         await this.updateRtHash(userExists.user_id, tokens.refresh_token);
         return tokens;
@@ -35,6 +43,52 @@ export class AuthService {
         const tokens = await this.generateTokens(newUser.user_id, newUser.email);
         await this.updateRtHash(newUser.user_id, tokens.refresh_token);
         return tokens;
+    }
+
+    async enableTwoFactorAuth(userId: number): Promise<{ secretKey: string; qrCodeUrl: string }> {
+        const secretKey = this.generateSecretKey();
+        const otpAuthUrl = speakeasy.otpauthURL({
+          secret: secretKey,
+          label: 'PingPong',
+          issuer: 'Taha',
+        });
+
+        const qrCodeUrl = qrcode.toDataURL(otpAuthUrl);
+
+        await this.usersService.update(userId, {
+            is_2fa_enabled: true,
+            two_fa_secret_key: secretKey,
+        });
+
+        return { secretKey, qrCodeUrl };
+    }
+
+    async verifyTwoFactorAuth(userId: number, token: string): Promise<boolean> {
+        const user = await this.usersService.findOne(userId);
+        const secretKey = user.two_fa_secret_key;
+        if (!secretKey) {
+          return false;
+        }
+    
+        const verified = speakeasy.totp.verify({
+          secret: secretKey,
+          encoding: 'base32',
+          token,
+        });
+        
+        console.log(verified);
+        if (verified) {
+            await this.usersService.update(userId, {
+                is_two_factor_verified: true,
+            });
+        }
+    
+        return verified;
+    }
+
+    async isTwoFactorEnabled(userId: number): Promise<boolean> {
+        const user = await this.usersService.findOne(userId);
+        return user.is_2fa_enabled;
     }
 
     async updateRtHash(userId: number, rt: string) {
@@ -53,6 +107,7 @@ export class AuthService {
             },
             data: {
                 hashed_rt: null,
+                is_two_factor_verified: false,
             }
         });
     }
@@ -67,6 +122,11 @@ export class AuthService {
         const tokens = await this.generateTokens(user.user_id, user.email);
         await this.updateRtHash(user.user_id, tokens.refresh_token);
         return tokens;
+    }
+
+
+    generateSecretKey(): string {
+        return speakeasy.generateSecret().base32;
     }
 
     async generateTokens(userId: number, email: string) {

@@ -11,12 +11,15 @@ datasource db {
 }
 
 model Users {
-  user_id           Int      @id @default(autoincrement())
-  name              String   @unique
-  email             String   @unique
-  avatar            String   @default("https://www.svgrepo.com/show/213882/avatar-user.svg")
-  hashed_rt         String?
-  provider          String
-  provider_id       String
-  registration_date DateTime @default(now())
+  user_id                 Int      @id @default(autoincrement())
+  name                    String   @unique
+  email                   String   @unique
+  avatar                  String   @default("https://www.svgrepo.com/show/213882/avatar-user.svg")
+  hashed_rt               String?
+  is_2fa_enabled          Boolean  @default(false)
+  is_two_factor_verified  Boolean  @default(false)
+  two_fa_secret_key       String?
+  provider                String
+  provider_id             String
+  registration_date       DateTime @default(now())
 }

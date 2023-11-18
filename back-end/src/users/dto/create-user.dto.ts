@@ -3,7 +3,8 @@ import {
     IsNotEmpty,
     Length,
     IsEmail,
-    IsOptional
+    IsOptional,
+    IsBoolean,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -36,4 +37,16 @@ export class CreateUserDto {
     @IsString()
     @IsOptional()
     hashed_rt: string
+
+    @IsBoolean()
+    @IsOptional()
+    is_2fa_enabled: boolean;
+
+    @IsString()
+    @IsOptional()
+    two_fa_secret_key: string;
+
+    @IsBoolean()
+    @IsOptional()
+    is_two_factor_verified: boolean;
 }

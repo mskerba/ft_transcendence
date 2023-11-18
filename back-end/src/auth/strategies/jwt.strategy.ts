@@ -11,14 +11,6 @@ export type JwtPayload = {
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     constructor(private usersService: UsersService) {
-
-        const extractJwtFromCookie = (req) => {
-            let token = null;
-            if (req && req.cookies) {
-              token = req.cookies['access_token'];
-            }
-            return token || ExtractJwt.fromAuthHeaderAsBearerToken()(req);
-          };
           
         super({
             secretOrKey: "at-secret",
@@ -28,9 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 
     async validate(payload: JwtPayload) {
         const user = await this.usersService.findOne(payload.sub);
-        if (!user) {
-            throw new UnauthorizedException();
-        }
+        if (!user) throw new UnauthorizedException();
 
         return payload;
     }
