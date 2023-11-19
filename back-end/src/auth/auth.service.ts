@@ -26,15 +26,11 @@ export class AuthService {
             return this.registerUser(user);
         }
 
-        if (userExists.is_2fa_enabled && !userExists.is_two_factor_verified) {
-            throw new ForbiddenException('verify 2FA!');
-        }
-
         console.log(userExists);
 
         const tokens = await this.generateTokens(userExists.user_id, userExists.email);
         await this.updateRtHash(userExists.user_id, tokens.refresh_token);
-        return tokens;
+        return {...userExists , tokens};
     }
 
     async registerUser(user: CreateUserDto) {
@@ -42,7 +38,7 @@ export class AuthService {
 
         const tokens = await this.generateTokens(newUser.user_id, newUser.email);
         await this.updateRtHash(newUser.user_id, tokens.refresh_token);
-        return tokens;
+        return {...newUser , tokens};
     }
 
     async enableTwoFactorAuth(userId: number): Promise<{ secretKey: string; qrCodeUrl: string }> {
@@ -56,15 +52,32 @@ export class AuthService {
         const qrCodeUrl = qrcode.toDataURL(otpAuthUrl);
 
         await this.usersService.update(userId, {
-            is_2fa_enabled: true,
+            two_fa_enabled: true,
             two_fa_secret_key: secretKey,
         });
 
         return { secretKey, qrCodeUrl };
     }
 
-    async verifyTwoFactorAuth(userId: number, token: string): Promise<boolean> {
+    async disableTwoFactorAuth(userId: number, token: string) {
         const user = await this.usersService.findOne(userId);
+
+        if (user.two_fa_enabled) {
+            const verified = await this.verifyTwoFactorAuth(user, token);
+            if (verified) {
+                await this.usersService.update(userId, {
+                    two_fa_enabled: false,
+                    two_fa_verified: false,
+                    two_fa_secret_key: null,
+                });
+            }
+            else {
+                throw new ForbiddenException("invalid token!");
+            }
+        }
+    }
+
+    async verifyTwoFactorAuth(user, token: string): Promise<boolean> {
         const secretKey = user.two_fa_secret_key;
         if (!secretKey) {
           return false;
@@ -75,20 +88,14 @@ export class AuthService {
           encoding: 'base32',
           token,
         });
-        
-        console.log(verified);
+
         if (verified) {
-            await this.usersService.update(userId, {
-                is_two_factor_verified: true,
+            await this.usersService.update(user.user_id, {
+                two_fa_verified: true,
             });
         }
     
         return verified;
-    }
-
-    async isTwoFactorEnabled(userId: number): Promise<boolean> {
-        const user = await this.usersService.findOne(userId);
-        return user.is_2fa_enabled;
     }
 
     async updateRtHash(userId: number, rt: string) {
@@ -107,7 +114,7 @@ export class AuthService {
             },
             data: {
                 hashed_rt: null,
-                is_two_factor_verified: false,
+                two_fa_verified: false,
             }
         });
     }

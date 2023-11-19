@@ -16,8 +16,8 @@ model Users {
   email                   String   @unique
   avatar                  String   @default("https://www.svgrepo.com/show/213882/avatar-user.svg")
   hashed_rt               String?
-  is_2fa_enabled          Boolean  @default(false)
-  is_two_factor_verified  Boolean  @default(false)
+  two_fa_enabled          Boolean  @default(false)
+  two_fa_verified         Boolean  @default(false)
   two_fa_secret_key       String?
   provider                String
   provider_id             String

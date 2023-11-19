@@ -14,14 +14,23 @@ export class UserEntity {
 
     avatar: string;
 
-    @Exclude()
+    registration_date: Date;
+    
+    // @Exclude()
     provider: string;
 
-    @Exclude()
+    // @Exclude()
     provider_id: string;
 
-    @Exclude()
-    hashed_rt: string
+    // @Exclude()
+    hashed_rt: string;
 
-    registration_date: Date;
+    // @Exclude()
+    two_fa_enabled: boolean;
+
+    // @Exclude()
+    two_fa_secret_key: string;
+
+    // @Exclude()
+    two_fa_verified: boolean;
 }

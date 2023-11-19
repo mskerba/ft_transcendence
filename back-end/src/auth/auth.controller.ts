@@ -1,15 +1,20 @@
-import { Controller, Get, Post, Req, Res, UseGuards, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Req, Res, UseGuards, HttpStatus, ForbiddenException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { GoogleOauthGuard } from './guards/google-oauth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { JwtRTAuthGuard } from './guards/jwt-rt-auth.guard';
 import { GetCurrentUserId, GetCurrentUser } from '../common/decorators/index';
 import { Public } from '../common/decorators/public.decorator';
+import { UserEntity } from 'src/users/entities/user.entity';
+import { UsersService } from 'src/users/users.service';
 
 
 @Controller('auth')
 export class AuthController {
-    constructor(private authService: AuthService) {}
+    constructor(
+        private authService: AuthService,
+        private usersService: UsersService
+    ) {}
 
     @Get('google')
     @Public()
@@ -21,14 +26,14 @@ export class AuthController {
     @Public()
     @UseGuards(GoogleOauthGuard)
     async googleLoginCallBack(@Req() req) {
-        const tokens = await this.authService.signIn(req.user);
-
-        return tokens;
+        return new UserEntity(await this.authService.signIn(req.user));
     }
 
     @Post('logout')
-    logout(@GetCurrentUserId() userId: number) {
-        return this.authService.logout(userId);
+    logout(@Req() req) {
+        const user = req.user;
+
+        return this.authService.logout(user.user_id);
     }
 
     @Post('refresh')
@@ -36,39 +41,47 @@ export class AuthController {
     @UseGuards(JwtRTAuthGuard)
     refreshTokens(
         @GetCurrentUserId() userId: number,
-        @GetCurrentUser('refreshToken') refreshToken: string
+        @GetCurrentUser('refreshToken') refreshToken: string,
     ) {
+        
         return this.authService.refreshTokens(userId, refreshToken);
     }
 
-
     @Get('enable-2fa')
-    async enableTwoFactorAuth(
-        @GetCurrentUserId() userId: number,
-        @Res() res
-    ) {
-        const { secretKey, qrCodeUrl } = await this.authService.enableTwoFactorAuth(userId);
+    async enableTwoFactorAuth(@Req() req) {
+        const user = req.user;
+    
+        const { secretKey, qrCodeUrl } = await this.authService.enableTwoFactorAuth(user.user_id);
 
-        res.json({ secretKey, qrCodeUrl });
+        return ({ secretKey, qrCodeUrl });
+    }
+
+    @Post('disable-2fa')
+    async disableTwoFactorAuth(@Req() req) {
+        const user = req.user;
+        const { token } = req.body;
+
+        await this.authService.disableTwoFactorAuth(user.user_id, token);
     }
 
     @Post('verify-2fa')
     @Public()
-    async verifyTwoFactorAuth(
-        @Req() req,
-        @Res() res,
-    ) {
-        const userId = 1;
-        const { token } = req.body;
+    async verifyTwoFactorAuth(@Req() req) {
+        const { userId, token } = req.body;
 
-        const isTwoFactorEnabled = await this.authService.isTwoFactorEnabled(userId);
+        const user = await this.usersService.findOne(userId);
 
-        if (isTwoFactorEnabled) {
+        if (!user) throw new ForbiddenException('invalid user!');
+
+        if (user.two_fa_enabled) {
             const verified = await this.authService.verifyTwoFactorAuth(userId, token);
 
-            res.json({ success: verified });
+            return({ success: verified });
         } else {
-            res.json({ success: true, message: '2FA is not enabled for this user.' });
+            return({
+                success: true,
+                message: '2FA is not enabled for this user.',
+            });
         }
     }
 

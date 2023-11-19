@@ -40,7 +40,7 @@ export class CreateUserDto {
 
     @IsBoolean()
     @IsOptional()
-    is_2fa_enabled: boolean;
+    two_fa_enabled: boolean;
 
     @IsString()
     @IsOptional()
@@ -48,5 +48,5 @@ export class CreateUserDto {
 
     @IsBoolean()
     @IsOptional()
-    is_two_factor_verified: boolean;
+    two_fa_verified: boolean;
 }
