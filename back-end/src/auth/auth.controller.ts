@@ -50,6 +50,8 @@ export class AuthController {
     @Get('enable-2fa')
     async enableTwoFactorAuth(@Req() req) {
         const user = req.user;
+
+        if (user.two_fa_enabled) return ;
     
         const { secretKey, qrCodeUrl } = await this.authService.enableTwoFactorAuth(user.user_id);
 
@@ -61,7 +63,7 @@ export class AuthController {
         const user = req.user;
         const { token } = req.body;
 
-        await this.authService.disableTwoFactorAuth(user.user_id, token);
+        await this.authService.disableTwoFactorAuth(user, token);
     }
 
     @Post('verify-2fa')
@@ -73,15 +75,10 @@ export class AuthController {
 
         if (!user) throw new ForbiddenException('invalid user!');
 
-        if (user.two_fa_enabled) {
-            const verified = await this.authService.verifyTwoFactorAuth(userId, token);
-
+        if (user.two_fa_enabled && !user.two_fa_verified) {
+            const verified = await this.authService.verifyTwoFactorAuth(user, token);
+            
             return({ success: verified });
-        } else {
-            return({
-                success: true,
-                message: '2FA is not enabled for this user.',
-            });
         }
     }
 

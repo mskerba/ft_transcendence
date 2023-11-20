@@ -59,13 +59,15 @@ export class AuthService {
         return { secretKey, qrCodeUrl };
     }
 
-    async disableTwoFactorAuth(userId: number, token: string) {
-        const user = await this.usersService.findOne(userId);
-
+    async disableTwoFactorAuth(user, token: string) {
         if (user.two_fa_enabled) {
-            const verified = await this.verifyTwoFactorAuth(user, token);
+            const verified = speakeasy.totp.verify({
+                secret: user.two_fa_secret_key,
+                encoding: 'base32',
+                token,
+            });
             if (verified) {
-                await this.usersService.update(userId, {
+                await this.usersService.update(user.user_id, {
                     two_fa_enabled: false,
                     two_fa_verified: false,
                     two_fa_secret_key: null,

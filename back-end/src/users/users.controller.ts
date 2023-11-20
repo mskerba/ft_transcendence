@@ -3,7 +3,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Public } from 'src/common/decorators';
 
 @Controller('users')
 export class UsersController {
@@ -15,7 +15,7 @@ export class UsersController {
   }
   
   @Get()
-  @UseGuards(JwtAuthGuard)
+  @Public()
   async findAll() : Promise<UserEntity[]> {
     const users = await this.usersService.findAll();
     return users.map((user) => new UserEntity(user)); 
