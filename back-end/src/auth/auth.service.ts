@@ -1,11 +1,14 @@
 import { Injectable, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as speakeasy from 'speakeasy';
 import * as qrcode from 'qrcode';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { generateFromEmail } from 'unique-username-generator';
+
+
 
 
 @Injectable()
@@ -23,25 +26,41 @@ export class AuthService {
 
         const userExists = await this.usersService.findByEmail(user.email);
         if (!userExists) {
-            return this.registerUser(user);
+            return this.signUp(user);
         }
-
-        console.log(userExists);
 
         const tokens = await this.generateTokens(userExists.user_id, userExists.email);
         await this.updateRtHash(userExists.user_id, tokens.refresh_token);
-        return {...userExists , tokens};
+        return {... userExists , ... tokens};
     }
 
-    async registerUser(user: CreateUserDto) {
+    async signUp(user: CreateUserDto) {
+        user.name = generateFromEmail(user.email, 5);
         const newUser = await this.usersService.create(user);
 
         const tokens = await this.generateTokens(newUser.user_id, newUser.email);
         await this.updateRtHash(newUser.user_id, tokens.refresh_token);
-        return {...newUser , tokens};
+        return {... newUser , ... tokens};
     }
 
-    async enableTwoFactorAuth(userId: number): Promise<{ secretKey: string; qrCodeUrl: string }> {
+    async logout(userId: number) {
+        await this.prisma.users.updateMany({
+            where: {
+                user_id: userId,
+                hashed_rt: {
+                    not: null,
+                },
+            },
+            data: {
+                hashed_rt: null,
+                two_fa_verified: false,
+            }
+        });
+    }
+
+    async generateTwoFactorAuthSecret(user): Promise<{ secretKey: string; qrCodeUrl: string }> {
+        if (user.two_fa_enabled) throw new ForbiddenException("the 2FA is already enabled");
+
         const secretKey = this.generateSecretKey();
         const otpAuthUrl = speakeasy.otpauthURL({
           secret: secretKey,
@@ -49,18 +68,18 @@ export class AuthService {
           issuer: 'Taha',
         });
 
-        const qrCodeUrl = qrcode.toDataURL(otpAuthUrl);
-
-        await this.usersService.update(userId, {
-            two_fa_enabled: true,
+        const qrCodeUrl = await qrcode.toDataURL(otpAuthUrl);
+        await this.usersService.update(user.user_id, {
             two_fa_secret_key: secretKey,
         });
 
         return { secretKey, qrCodeUrl };
     }
 
-    async disableTwoFactorAuth(user, token: string) {
-        if (user.two_fa_enabled) {
+    async enableTwoFactorAuth(user, token: string): Promise<boolean> {
+        if (user.two_fa_enabled) throw new ForbiddenException("the 2FA is already enabled");
+
+        if (user.two_fa_secret_key) {
             const verified = speakeasy.totp.verify({
                 secret: user.two_fa_secret_key,
                 encoding: 'base32',
@@ -68,18 +87,47 @@ export class AuthService {
             });
             if (verified) {
                 await this.usersService.update(user.user_id, {
-                    two_fa_enabled: false,
-                    two_fa_verified: false,
-                    two_fa_secret_key: null,
+                    two_fa_enabled: true,
+                    two_fa_verified: true,
                 });
+                return true;
             }
             else {
                 throw new ForbiddenException("invalid token!");
             }
         }
+        return false;
     }
 
-    async verifyTwoFactorAuth(user, token: string): Promise<boolean> {
+    async disableTwoFactorAuth(user, token: string): Promise<boolean> {
+        if (!user.two_fa_enabled) throw new ForbiddenException("the 2FA is already disabled");
+
+        const verified = speakeasy.totp.verify({
+            secret: user.two_fa_secret_key,
+            encoding: 'base32',
+            token,
+        });
+        if (verified) {
+            await this.usersService.update(user.user_id, {
+                two_fa_enabled: false,
+                two_fa_verified: false,
+                two_fa_secret_key: null,
+            });
+        }
+        else {
+            throw new ForbiddenException("invalid token!");
+        }
+        return true;
+    }
+
+    async verifyTwoFactorAuth(userId: number, token: string): Promise<boolean> {
+        const user = await this.usersService.findOne(userId);
+
+        if (!user) throw new ForbiddenException('invalid user!');
+        if (!user.two_fa_enabled) throw new ForbiddenException('the Two Factor authentificator is not enabled');
+        if (user.two_fa_verified) throw new ForbiddenException('the Two Factor authentificator is already verified');
+
+    
         const secretKey = user.two_fa_secret_key;
         if (!secretKey) {
           return false;
@@ -104,21 +152,6 @@ export class AuthService {
         const hash = await this.hashData(rt);
 
         await this.usersService.update(userId, {hashed_rt: hash});
-    }
-
-    async logout(userId: number) {
-        await this.prisma.users.updateMany({
-            where: {
-                user_id: userId,
-                hashed_rt: {
-                    not: null,
-                },
-            },
-            data: {
-                hashed_rt: null,
-                two_fa_verified: false,
-            }
-        });
     }
 
     async refreshTokens(userId: number, rt: string) {

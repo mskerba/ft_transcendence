@@ -6,6 +6,7 @@ import { UserEntity } from './entities/user.entity';
 import { Public } from 'src/common/decorators';
 
 @Controller('users')
+@Public()
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
@@ -15,7 +16,6 @@ export class UsersController {
   }
   
   @Get()
-  @Public()
   async findAll() : Promise<UserEntity[]> {
     const users = await this.usersService.findAll();
     return users.map((user) => new UserEntity(user)); 
