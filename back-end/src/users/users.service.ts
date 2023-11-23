@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable,BadRequestException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -8,12 +8,13 @@ export class UsersService {
 
   constructor(private prisma: PrismaService) { }
 
-  create(createUserDto: CreateUserDto) {
-    return this.prisma.users.create({ data: createUserDto });
+  async create(createUserDto: CreateUserDto) {
+    return await this.prisma.users.create({ data: createUserDto });
+  
   }
 
   findAll() {
-    return this.prisma.users.findMany();
+    return this.prisma.users.findMany({});
   }
 
   findOne(id: number) {

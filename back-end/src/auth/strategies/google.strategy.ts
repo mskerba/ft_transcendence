@@ -23,7 +23,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
         const user: Partial<UserEntity> = {
             name: profile.displayName,
             email: profile.emails[0].value,
-            avatar: profile.photos[0].value,
             provider: "google",
             provider_id: profile.id,
         };

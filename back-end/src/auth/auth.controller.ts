@@ -5,6 +5,9 @@ import { JwtRTAuthGuard } from './guards/jwt-rt-auth.guard';
 import { GetCurrentUserId, GetCurrentUser } from '../common/decorators/index';
 import { Public } from '../common/decorators/public.decorator';
 import { UserEntity } from 'src/users/entities/user.entity';
+import { Jwt2FAGuard } from './guards/jwt-2fa-auth.guard';
+import { OTPCodeDto } from './dto/otp-code.dto';
+import { TwoFATokenDto } from './dto/2fa-token.dto';
 
 
 @Controller('auth')
@@ -28,10 +31,8 @@ export class AuthController {
     }
 
     @Post('logout')
-    logout(@Req() req) {
-        const user: UserEntity = req.user;
-
-        return this.authService.logout(user.user_id);
+    async logout(@GetCurrentUserId() userId: number) {
+        return await this.authService.logout(userId);
     }
 
     @Post('refresh')
@@ -55,27 +56,45 @@ export class AuthController {
     }
 
     @Post('enable-2fa')
-    async enableTwoFactorAuth(@Req() req) {
+    async enableTwoFactorAuth(
+        @Req() req,
+        @Body() tokenDto: TwoFATokenDto,
+    ) {
         const user: UserEntity = req.user;
-        const { token } = req.body;
 
-        const enabled = await this.authService.enableTwoFactorAuth(user, token);
+        const enabled = await this.authService.enableTwoFactorAuth(user, tokenDto.token);
         return ({success: enabled});
     }
 
-    @Post('disable-2fa')
-    async disableTwoFactorAuth(@Req() req, @Body('token') token: string) {
-        const user: UserEntity = req.user;
 
-        const disabled = await this.authService.disableTwoFactorAuth(user, token);
+    @Public()
+    @Post('send-otp')
+    @UseGuards(Jwt2FAGuard)
+    async sendOTPVerificationEmail(@Req() req) {
+        const user: UserEntity = req.user;
+        return await this.authService.sendOTPVerificationEmail(user);
+    }
+
+    @Public()
+    @Post('disable-2fa')
+    @UseGuards(Jwt2FAGuard)
+    async disableTwoFactorAuth(
+        @GetCurrentUserId() userId: number,
+        @Body('otpCode') otpCodeDto: OTPCodeDto,
+    ) {
+        const disabled = await this.authService.disableTwoFactorAuth(userId, otpCodeDto.otp);
         return ({success: disabled});
     }
 
-    @Post('verify-2fa')
     @Public()
-    async verifyTwoFactorAuth(@Body('userId', ParseIntPipe) userId: number, @Body('token') token: string) {
-
-        const verified = await this.authService.verifyTwoFactorAuth(userId, token);
+    @Post('verify-2fa')
+    @UseGuards(Jwt2FAGuard)
+    async verifyTwoFactorAuth(
+        @Req() req,
+        @Body() tokenDto: TwoFATokenDto,
+    ) {
+        const user: UserEntity = req.user;
+        const verified = await this.authService.verifyTwoFactorAuth(user, tokenDto.token);
         return({ success: verified });
     }
 

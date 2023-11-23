@@ -18,6 +18,8 @@ services:
       context: ./back-end
       dockerfile: ./Dockerfile
     container_name: back-end
+    env_file:
+      - ./.env
     networks:
       - internal_network
     depends_on:

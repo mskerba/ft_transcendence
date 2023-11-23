@@ -22,4 +22,14 @@ model Users {
   provider                String
   provider_id             String
   registration_date       DateTime @default(now())
+
+  otpVerification UserOTPVerification?
+}
+
+model UserOTPVerification {
+  id          Int      @id @default(autoincrement())
+  userId      Int @unique
+  otp          String
+  expiresAt   DateTime
+  user        Users    @relation(fields: [userId], references: [user_id])
 }
