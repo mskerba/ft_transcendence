@@ -2,13 +2,14 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { UserModule } from './user/user.module';
+import { FriendModule } from './friend/friend.module';
 
 @Module({
-  imports: [UsersModule, AuthModule, PrismaModule],
+  imports: [AuthModule, PrismaModule, UserModule, FriendModule],
   controllers: [AppController],
   providers: [
     AppService,

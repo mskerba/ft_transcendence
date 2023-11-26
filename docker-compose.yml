@@ -18,6 +18,7 @@ services:
       context: ./back-end
       dockerfile: ./Dockerfile
     container_name: back-end
+    restart: always
     env_file:
       - ./.env
     networks:

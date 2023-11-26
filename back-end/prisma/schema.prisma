@@ -10,26 +10,55 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users {
-  user_id                 Int      @id @default(autoincrement())
-  name                    String   @unique
-  email                   String   @unique
-  avatar                  String   @default("https://www.svgrepo.com/show/213882/avatar-user.svg")
-  hashed_rt               String?
-  two_fa_enabled          Boolean  @default(false)
-  two_fa_verified         Boolean  @default(false)
-  two_fa_secret_key       String?
-  provider                String
-  provider_id             String
-  registration_date       DateTime @default(now())
+// schema.prisma
 
-  otpVerification UserOTPVerification?
+model User {
+  userId                  Int       @id @default(autoincrement())
+  name                    String?   @unique
+  email                   String    @unique
+  avatar                  String    @default("https://www.svgrepo.com/show/213882/avatar-user.svg")
+  hashedRt                String?
+  twoFA_Enabled           Boolean   @default(false)
+  twoFA_Verified          Boolean   @default(false)
+  twoFA_SecretKey         String?
+  registrationDate        DateTime  @default(now())
+
+  otpVerification         UserOTPVerification?
+
+  sentFriendRequests      FriendRequest[] @relation("SentFriendRequests")
+
+  receivedFriendRequests  FriendRequest[] @relation("ReceivedFriendRequests")
+
+  user1Friends            Friendship[]    @relation("User1Friends")
+  user2Friends            Friendship[]    @relation("User2Friends")
 }
 
 model UserOTPVerification {
-  id          Int      @id @default(autoincrement())
-  userId      Int @unique
-  otp          String
-  expiresAt   DateTime
-  user        Users    @relation(fields: [userId], references: [user_id])
+  id                      Int       @id @default(autoincrement())
+  userId                  Int       @unique
+  otp                     String
+  expiresAt               DateTime
+  user                    User      @relation(fields: [userId], references: [userId])
+}
+
+model FriendRequest {
+  requestId               Int       @id @default(autoincrement())
+  senderId                Int       @unique
+  receiverId              Int       @unique
+  requestDate             DateTime
+
+  sender                  User      @relation("SentFriendRequests", fields: [senderId], references: [userId])
+
+  receiver                User      @relation("ReceivedFriendRequests", fields: [receiverId], references: [userId])
+}
+
+model Friendship {
+  friendshipId            Int       @id @default(autoincrement())
+  user1Id                 Int
+  user2Id                 Int
+  friendshipDate          DateTime
+
+  user1                   User      @relation("User1Friends", fields: [user1Id], references: [userId])
+
+  user2                   User      @relation("User2Friends", fields: [user2Id], references: [userId])
 }

@@ -1,13 +1,12 @@
 import { Injectable, BadRequestException, ForbiddenException } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
+import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as speakeasy from 'speakeasy';
 import * as qrcode from 'qrcode';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { generateFromEmail } from 'unique-username-generator';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { UserEntity } from 'src/user/entities/user.entity';
 import { EmailService } from './email.service';
 
 
@@ -22,7 +21,7 @@ export type OtpVerification = {
 @Injectable()
 export class AuthService {
     constructor(
-        private usersService: UsersService,
+        private userService: UserService,
         private prisma: PrismaService,
         private jwtService: JwtService,
         private emailService: EmailService,
@@ -33,33 +32,32 @@ export class AuthService {
             throw new BadRequestException("Unauthenticated");
         }
 
-        const userExists = await this.usersService.findByEmail(user.email);
+        const userExists = await this.userService.findByEmail(user.email);
         if (!userExists) {
             return this.signUp(user);
         }
 
-        const tokens = await this.generateTokens(userExists.user_id, userExists.email);
-        await this.updateRtHash(userExists.user_id, tokens.refresh_token);
+        const tokens = await this.generateTokens(userExists.userId, userExists.email);
+        await this.updateRtHash(userExists.userId, tokens.refresh_token);
         return {... userExists , ... tokens};
     }
 
     async signUp(user: CreateUserDto) {
-        user.name = generateFromEmail(user.email, 5);
-        const newUser = await this.usersService.create(user);
+        const newUser = await this.userService.create(user);
 
-        const tokens = await this.generateTokens(newUser.user_id, newUser.email);
-        await this.updateRtHash(newUser.user_id, tokens.refresh_token);
+        const tokens = await this.generateTokens(newUser.userId, newUser.email);
+        await this.updateRtHash(newUser.userId, tokens.refresh_token);
         return {... newUser , ... tokens};
     }
 
     async logout(userId: number) {
-        await this.prisma.users.updateMany({
+        await this.prisma.user.updateMany({
             where: {
-                user_id: userId,
+                userId,
             },
             data: {
-                hashed_rt: null,
-                two_fa_verified: false,
+                hashedRt: null,
+                twoFA_Verified: false,
             }
         });
     }
@@ -67,18 +65,18 @@ export class AuthService {
     async updateRtHash(userId: number, rt: string) {
         const hash = await bcrypt.hash(rt, 10);
 
-        await this.usersService.update(userId, {hashed_rt: hash});
+        await this.userService.update(userId, {hashedRt: hash});
     }
 
     async refreshTokens(userId: number, rt: string) {
-        const user = await this.usersService.findOne(userId);
-        if (!user || !user.hashed_rt) throw new ForbiddenException('Access Denied!');
+        const user = await this.userService.findOne(userId);
+        if (!user || !user.hashedRt) throw new ForbiddenException('Access Denied!');
 
-        const rtMatches = await bcrypt.compare(rt, user.hashed_rt);
+        const rtMatches = await bcrypt.compare(rt, user.hashedRt);
         if (!rtMatches) throw new ForbiddenException('Access Denied!');
 
-        const tokens = await this.generateTokens(user.user_id, user.email);
-        await this.updateRtHash(user.user_id, tokens.refresh_token);
+        const tokens = await this.generateTokens(user.userId, user.email);
+        await this.updateRtHash(user.userId, tokens.refresh_token);
         return tokens;
     }
 
@@ -124,7 +122,7 @@ export class AuthService {
     }
 
     async generateTwoFactorAuthSecret(user: UserEntity): Promise<{ secretKey: string; qrCodeUrl: string }> {
-        if (user.two_fa_enabled) throw new ForbiddenException("the 2FA is already enabled");
+        if (user.twoFA_Enabled) throw new ForbiddenException("the 2FA is already enabled");
 
         const secretKey = speakeasy.generateSecret().base32;
         const otpAuthUrl = speakeasy.otpauthURL({
@@ -134,27 +132,27 @@ export class AuthService {
         });
 
         const qrCodeUrl = await qrcode.toDataURL(otpAuthUrl);
-        await this.usersService.update(user.user_id, {
-            two_fa_secret_key: secretKey,
+        await this.userService.update(user.userId, {
+            twoFA_SecretKey: secretKey,
         });
 
         return { secretKey, qrCodeUrl };
     }
 
     async enableTwoFactorAuth(user: UserEntity, token: string): Promise<boolean> {
-        if (user.two_fa_enabled) throw new ForbiddenException("the 2FA is already enabled");
-        if (!user.two_fa_secret_key) throw new ForbiddenException("No secret exists!");
+        if (user.twoFA_Enabled) throw new ForbiddenException("the 2FA is already enabled");
+        if (!user.twoFA_SecretKey) throw new ForbiddenException("No secret exists!");
 
-        if (user.two_fa_secret_key) {
+        if (user.twoFA_SecretKey) {
             const verified = speakeasy.totp.verify({
-                secret: user.two_fa_secret_key,
+                secret: user.twoFA_SecretKey,
                 encoding: 'base32',
                 token,
             });
             if (verified) {
-                await this.usersService.update(user.user_id, {
-                    two_fa_enabled: true,
-                    two_fa_verified: true,
+                await this.userService.update(user.userId, {
+                    twoFA_Enabled: true,
+                    twoFA_Verified: true,
                 });
                 return true;
             }
@@ -167,9 +165,9 @@ export class AuthService {
 
     async disableTwoFactorAuth(userId: number, otpCode: string): Promise<boolean> {
 
-        const user = await this.prisma.users.findUnique({
+        const user = await this.prisma.user.findUnique({
             where: {
-                user_id: userId
+                userId: userId
             },
             include: {
                 otpVerification: true
@@ -177,7 +175,7 @@ export class AuthService {
         });
 
         
-        if (!user.two_fa_enabled) throw new ForbiddenException("the 2FA is already disabled");
+        if (!user.twoFA_Enabled) throw new ForbiddenException("the 2FA is already disabled");
         if (!user.otpVerification) throw new ForbiddenException("Send the OTP code to email!");
         
         const otpVerif: OtpVerification = user.otpVerification;
@@ -186,10 +184,10 @@ export class AuthService {
 
         const otpMatches = await bcrypt.compare(otpCode, otpVerif.otp);
         if (otpMatches) {
-            await this.usersService.update(user.user_id, {
-                two_fa_enabled: false,
-                two_fa_verified: false,
-                two_fa_secret_key: null,
+            await this.userService.update(user.userId, {
+                twoFA_Enabled: false,
+                twoFA_Verified: false,
+                twoFA_SecretKey: null,
             });
             await this.prisma.userOTPVerification.deleteMany({ where: { userId, } });
         }
@@ -201,11 +199,11 @@ export class AuthService {
 
     async verifyTwoFactorAuth(user: UserEntity, token: string): Promise<boolean> {
 
-        if (!user.two_fa_enabled) throw new ForbiddenException('the Two Factor authentificator is not enabled');
-        if (user.two_fa_verified) throw new ForbiddenException('the Two Factor authentificator is already verified');
+        if (!user.twoFA_Enabled) throw new ForbiddenException('the Two Factor authentificator is not enabled');
+        if (user.twoFA_Verified) throw new ForbiddenException('the Two Factor authentificator is already verified');
 
     
-        const secretKey = user.two_fa_secret_key;
+        const secretKey = user.twoFA_SecretKey;
         if (!secretKey) {
           return false;
         }
@@ -217,8 +215,8 @@ export class AuthService {
         });
 
         if (verified) {
-            await this.usersService.update(user.user_id, {
-                two_fa_verified: true,
+            await this.userService.update(user.userId, {
+                twoFA_Verified: true,
             });
         }
     
@@ -226,7 +224,7 @@ export class AuthService {
     }
 
     async sendOTPVerificationEmail(user: UserEntity) {
-        if (!user.two_fa_enabled) throw new ForbiddenException('the Two Factor authentificator is not enabled');
+        if (!user.twoFA_Enabled) throw new ForbiddenException('the Two Factor authentificator is not enabled');
 
         try {
             const otp: string = `${Math.floor(1000 + Math.random() * 9000)}`;
@@ -235,11 +233,11 @@ export class AuthService {
             const hashed_otp = await bcrypt.hash(otp, 10);
 
 
-            await this.prisma.userOTPVerification.deleteMany({ where: { userId: user.user_id } });
+            await this.prisma.userOTPVerification.deleteMany({ where: { userId: user.userId } });
 
             const newOTPVerification = await this.prisma.userOTPVerification.create({
                 data: {
-                    userId: user.user_id,
+                    userId: user.userId,
                     otp: hashed_otp,
                     expiresAt: new Date(Date.now() + 36000000),
                 }
@@ -257,7 +255,7 @@ export class AuthService {
                 status: "PENDING",
                 message: "Verification otp email sent",
                 data: {
-                    userId: user.user_id,
+                    userId: user.userId,
                     email: user.email
                 }
             });

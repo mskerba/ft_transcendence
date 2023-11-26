@@ -1,13 +1,14 @@
-import { Controller, Get, Post, Req, Res, UseGuards, ParseIntPipe, Body } from '@nestjs/common';
+import { Controller, Get, Post, Req, Res, UseGuards, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { GoogleOauthGuard } from './guards/google-oauth.guard';
 import { JwtRTAuthGuard } from './guards/jwt-rt-auth.guard';
 import { GetCurrentUserId, GetCurrentUser } from '../common/decorators/index';
 import { Public } from '../common/decorators/public.decorator';
-import { UserEntity } from 'src/users/entities/user.entity';
 import { Jwt2FAGuard } from './guards/jwt-2fa-auth.guard';
 import { OTPCodeDto } from './dto/otp-code.dto';
 import { TwoFATokenDto } from './dto/2fa-token.dto';
+import { FortyTwoStrategy } from './guards/42-auth.guard';
+import { UserEntity } from 'src/user/entities/user.entity';
 
 
 @Controller('auth')
@@ -21,13 +22,27 @@ export class AuthController {
     @UseGuards(GoogleOauthGuard)
     async googleLogin() {
     }
+
+    @Public()
+    @Get('42')
+    @UseGuards(FortyTwoStrategy)
+    async fortyTwoLogin() {
+    }
     
     @Public()
     @Get('google/callback')
     @UseGuards(GoogleOauthGuard)
     async googleLoginCallBack(@Req() req) {
         const user: UserEntity = req.user;
-        return new UserEntity(await this.authService.signIn(user));
+        return await this.authService.signIn(user);
+    }
+
+    @Public()
+    @Get('42/callback')
+    @UseGuards(FortyTwoStrategy)
+    async fortyTwoCallBack(@Req() req) {
+        const user: UserEntity = req.user;
+        return await this.authService.signIn(user);
     }
 
     @Post('logout')
@@ -35,8 +50,8 @@ export class AuthController {
         return await this.authService.logout(userId);
     }
 
-    @Post('refresh')
     @Public()
+    @Post('refresh')
     @UseGuards(JwtRTAuthGuard)
     refreshTokens(
         @GetCurrentUserId() userId: number,

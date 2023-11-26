@@ -24,29 +24,19 @@ export class CreateUserDto {
     @IsString()
     avatar: string;
 
-
-    @IsString()
-    @IsNotEmpty()
-    provider: string;
-
-
-    @IsString()
-    @IsNotEmpty()
-    provider_id: string;
-
     @IsString()
     @IsOptional()
-    hashed_rt: string
+    hashedRt: string
 
     @IsBoolean()
     @IsOptional()
-    two_fa_enabled: boolean;
+    twoFA_Enabled: boolean;
 
     @IsString()
     @IsOptional()
-    two_fa_secret_key: string;
+    twoFA_SecretKey: string;
 
     @IsBoolean()
     @IsOptional()
-    two_fa_verified: boolean;
+    twoFA_Verified: boolean;
 }

@@ -1,30 +1,27 @@
-// import { Injectable } from '@nestjs/common';
-// import { PassportStrategy } from '@nestjs/passport';
-// import { Strategy } from 'passport-42';
+import { Injectable } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { Strategy } from 'passport-42';
+import { UserEntity } from 'src/user/entities/user.entity';
 
-// @Injectable()
-// export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
-//     constructor() {
-//         super({
-//             clientID: "FORTYTWO_APP_ID",
-//             clientSecret: "FORTYTWO_APP_SECRET",
-//             callbackURL: "http://localhost:3000/auth/42/callback",
-//         });
-//     }
+@Injectable()
+export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
+    constructor() {
+        super({
+            clientID: process.env.FORTYTWO_CLIENT_ID,
+            clientSecret: process.env.FORTYTWO_CLIENT_SECRET,
+            callbackURL: process.env.FORTYTWO_CALLBACK_URL,
+        });
+    }
 
-//     async validate(
-//         accessToken: string,
-//         refreshToken: string,
-//         profile: any,
-//         done: any,
-//     ) {
-//         const user = {
-//             name: profile.displayName,
-//             email: profile.emails[0].value,
-//             avatar: profile.photos[0].value,
-//             provider: "google",
-//             provider_id: profile.id,
-//         };
-//         done(null, user);
-//     }
-// }
+    async validate(
+        accessToken: string,
+        refreshToken: string,
+        profile: any,
+        done: any,
+    ) {
+        const user: Partial<UserEntity> = {
+            email: profile.emails[0].value,
+        };
+        done(null, user);
+    }
+}
