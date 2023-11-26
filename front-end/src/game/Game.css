@@ -1,0 +1,219 @@
+:root {
+    --blue: #1e90ff;
+    --white: #ffffff;
+    --font-size: 1.3rem;
+    --mono: "Oxygen mono", monospace;
+    --sans: Oxygen, sans-serif;
+}
+
+*{
+    box-sizing: border-box;
+}
+
+.game--page {
+    height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    z-index: -9;
+    align-items: center;
+}
+
+.game--component {
+    position: relative;
+    /* top: 10%; */
+    display: flex;
+    flex-wrap:wrap;
+    /* background-color: blue; */
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    max-width: 1100px;
+    max-height: 730px;
+    z-index: 0;
+    align-content: baseline;
+}
+
+.score--board{
+    display: grid;
+    grid-template: 100px/1fr 1fr 2fr 1fr 1fr;
+    gap: 1%;
+    margin: 10px;
+    padding: 10px 0px;
+    height: 100px;
+    background: linear-gradient(0deg, black,rgb(44, 43, 43));
+    border-radius: 7px;
+    color: white;
+    justify-content: space-between;
+    /* align-content: center; */
+}
+
+.timing--text {
+    text-align: center;
+    display: block;
+    padding: 0px 30px;
+    color: green;
+    text-transform: uppercase;
+    font: 700 30px / 1.14 "Sofascore Sans", sans-serif;
+    position: relative;
+    display: block;
+    border-radius: 128px;
+    cursor: pointer;
+    height: 37px;
+    top: 27px;
+}
+
+.timing--text p{
+    position: relative;
+    top: -29px;
+    left: 4px;
+}
+
+.game--timer {
+    color: white;
+    text-transform: uppercase;
+    font: 700 30px / 1.14 "Sofascore Sans", sans-serif;
+    /* position: relative; */
+    display: flex;
+    /* gap: 10px; */
+    justify-content: space-between;
+    /* flex-wrap: wrap; */
+    align-content: center;
+}
+
+.players {
+    /* position: relative; */
+    /* top: 20px; */
+    justify-content: center;
+    font-weight: bold;
+    display: grid;
+    grid-template: 1fr 1fr / 1fr;
+    gap: 1%;
+}
+
+.player--image {
+    grid-area: 1 / 1 / 2 / 2;
+    display: flex;
+    justify-content: center;
+}
+.name
+{
+    display: flex;
+    justify-content: center;
+    height: fit-content;
+    grid-area: 2 / 1 / 3 / 2;
+}
+
+.name p {
+    margin: 0;
+    padding: 0;
+    font-family: var(--mono);
+    font-size: var(--font-size);
+}
+
+.emoji img{
+    position: relative;
+    width: 45%;
+}
+
+.setting img{
+    position: relative;
+    width: 52%;
+    left: 56%;
+    top: 7%;
+}
+
+.grow::before, .grow::after {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: -4px;
+    background: linear-gradient(45deg, #AAFF00, #DFFF00,#64aa2a, #4CBB17, #90EE90, #32CD32, rgb(127, 30, 192), #0BDA51, #E4D00A,#7CFC00,rgb(65, 230, 65), #07e007,#50C878);
+    background-size: 400%;
+    width: 100.8%;
+    height: 101.5%;
+    z-index: -1;
+    animation: animate 20s linear infinite;
+    border-radius: 10px;
+}
+
+@keyframes animate {
+    0%{
+        background-position: 0 0;
+    }
+    50%{
+        background-position: 400% 0;
+    }
+    100%{
+        background-position: 0 0;
+    }
+}
+
+.grow::after {
+    filter: blur(15px);
+
+}
+
+
+.canva {
+    position: relative;
+    border-radius: 12px;
+    width: 1100px;
+    height: 600px;
+    background: linear-gradient(0deg, black,rgb(44, 43, 43));
+}
+
+
+canvas {
+    border-radius: 12px;
+}
+
+@media (max-width: 600px)
+{
+    .timing--text {
+        padding: 0px 10px;
+    }
+}
+
+@media (max-width: 480px)
+{
+    .game--component{
+        transform: rotate(-90deg);
+    } 
+    /* .game--page {
+        display:block;
+        margin: 0;
+        padding: 0;
+        background-color: #07e007;
+    }
+    
+    .game--component {
+        display: flex;
+        flex-wrap: nowrap;
+        margin: 0;
+        padding: 5px;
+        width: 100%;
+        height:  100vh ;
+        justify-content: center;
+        z-index: 0;
+    }
+    
+    .score--board{
+        /* position: relative; 
+         margin: 20px 20px auto 20px;  
+        width: 150px;
+        height: 760px;
+        background: linear-gradient(0deg, black,rgb(44, 43, 43));
+        border-radius: 7px;
+    }
+    .canva {
+         position: relative; 
+        border-radius: 7px;
+        width: 400px;
+        height: 760px;
+        background: linear-gradient(0deg, black,rgb(44, 43, 43));
+    } */
+}
