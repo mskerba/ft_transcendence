@@ -31,6 +31,24 @@ model User {
 
   user1Friends            Friendship[]    @relation("User1Friends")
   user2Friends            Friendship[]    @relation("User2Friends")
+
+  // iharile 
+  
+  dmMessage               DirectMessage[]
+
+  User1                   SoloConversation[]    @relation("UserConv1")
+  User2                   SoloConversation[]    @relation("UserConv2")
+
+  roleUser                RoleUser[]
+  roomMessage             RoomMessage[]
+
+  block1                BlockUser[]             @relation("Blocking")
+  block2                BlockUser[]             @relation("Blocked")
+
+  kick                 KickUser[]
+  bann                 BanUser[]
+  mute                 MuteUser[]
+  
 }
 
 model UserOTPVerification {
@@ -61,4 +79,156 @@ model Friendship {
   user1                   User      @relation("User1Friends", fields: [user1Id], references: [userId])
 
   user2                   User      @relation("User2Friends", fields: [user2Id], references: [userId])
+
+
 }
+
+
+// chat tables
+
+
+
+model SoloConversation{
+  
+  conversationId Int @id @default(autoincrement())
+
+  user1 User @relation("UserConv1", fields: [UserId1], references: [userId])
+  UserId1 Int
+
+  user2 User @relation("UserConv2", fields: [UserId2], references: [userId])
+  UserId2 Int
+
+
+}
+
+
+model DirectMessage{
+
+DirectMessageId Int @id @default(autoincrement())
+
+text String
+
+userid User @relation(fields: [UserId], references: [userId])
+UserId Int
+
+}
+
+model Room{
+
+  RoomId Int @id @default(autoincrement()) 
+
+  TypeRoom String
+
+  avatar Bytes
+
+  title String
+
+  password String?
+
+  roleUser RoleUser[]
+
+  roomMessage RoomMessage[]
+
+  kick  KickUser[]
+
+  bann BanUser[]
+
+  mute MuteUser[]
+
+}
+
+
+model RoleUser{
+
+  RoleId  Int @id @default(autoincrement())
+
+  
+  roleUser User @relation(fields: [UserId], references: [userId])
+  UserId Int 
+  
+  RoleName String
+
+  roomId Room @relation(fields: [RoomId], references: [RoomId])
+  RoomId Int 
+
+}
+
+
+model RoomMessage{
+
+  RoomMessageId  Int @id @default(autoincrement())
+
+  text String
+
+  roomId Room @relation(fields: [RoomId], references: [RoomId])
+  RoomId Int
+
+  userId User @relation(fields: [UserId], references: [userId])
+  UserId Int
+}
+
+// this between two user 
+model BlockUser{
+
+  BlockedUserId Int  @id @default(autoincrement())
+
+  block1 User @relation("Blocking", fields: [TheBlockingUserId], references: [userId])
+  TheBlockingUserId Int
+  
+  block2 User @relation("Blocked", fields: [TheBlockedUserId], references: [userId])
+  TheBlockedUserId Int
+}
+
+
+// this happen in groups
+model KickUser{
+
+  KickUserId Int @id @default(autoincrement())
+
+  roomId Room @relation(fields: [RoomId], references: [RoomId])
+  RoomId Int
+
+  userId User @relation(fields: [UserId], references: [userId])
+  UserId Int
+}
+
+model BanUser{
+
+  BannUserId Int  @id @default(autoincrement())
+
+  roomId Room @relation(fields: [RoomId], references: [RoomId])
+  RoomId Int
+
+  userId User @relation(fields: [UserId], references: [userId])
+  UserId Int
+
+}
+
+model MuteUser{
+
+  MuteUserId Int @id @default(autoincrement())
+ 
+  roomId Room @relation(fields: [RoomId], references: [RoomId])
+  RoomId Int
+
+  userId User @relation(fields: [UserId], references: [userId])
+  UserId Int
+  
+  StartTime  DateTime
+  EndTime    DateTime  
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
