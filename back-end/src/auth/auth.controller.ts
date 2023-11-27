@@ -32,9 +32,26 @@ export class AuthController {
     @Public()
     @Get('google/callback')
     @UseGuards(GoogleOauthGuard)
-    async googleLoginCallBack(@Req() req) {
+    async googleLoginCallBack(@Req() req, @Res() res) {
         const user: UserEntity = req.user;
-        return await this.authService.signIn(user);
+        const tokens = await this.authService.signIn(user);
+
+        res.cookie('accessToken', tokens.access_token, {
+            httpOnly: true,
+            maxAge: 15 * 60 * 1000, // 15 minutes in milliseconds
+          });
+      
+          // Set refresh token as a cookie with a 7-day expiration
+          res.cookie('refreshToken', tokens.refresh_token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+          });
+
+          res.cookie('2faToken', tokens.refresh_token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+          });
+        return res.redirect('http://localhost:3001/game');
     }
 
     @Public()
@@ -46,8 +63,14 @@ export class AuthController {
     }
 
     @Post('logout')
-    async logout(@GetCurrentUserId() userId: number) {
-        return await this.authService.logout(userId);
+    async logout(
+        @GetCurrentUserId() userId: number,
+        @Res() res,
+    ) {
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+        await this.authService.logout(userId);
+        return res.send('Logout successful');
     }
 
     @Public()

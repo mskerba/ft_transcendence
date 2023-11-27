@@ -1,14 +1,20 @@
-// import React, { useState } from 'react'
+import React, { useState } from 'react'
 import Game from "./game/Game";
 import './App.css'
+import GoogleLoginButton from './auth/login';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
-function App() {
 
+const App = () => {
   return (
-    <>
-      <Game />
-    </>
-  )
-}
+    <Router>
+    <Routes>
+      <Route path="/" element={<GoogleLoginButton />} />
+      <Route path="/game" element={<Game />} />
+    </Routes>
+  </Router>
+  );
+};
 
-export default App
+export default App;
+

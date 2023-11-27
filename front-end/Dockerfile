@@ -1,13 +1,17 @@
-FROM node:19
+FROM node:latest
 
 WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install @react-oauth/google@latest
+RUN npm install vite react react-dom react-router-dom
+
+RUN npm i --save-dev @types/p5
 
 COPY . .
 
-RUN npm run build
 
-CMD [ "npm", "start" ]
+# RUN npm run build
+
+
+CMD ["npm", "run", "dev"]

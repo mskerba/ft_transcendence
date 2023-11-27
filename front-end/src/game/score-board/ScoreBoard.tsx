@@ -1,4 +1,4 @@
-// import React from 'react'
+import React from 'react'
 import { useEffect, useState }  from 'react';
 import Timer from './Timer'
 import UserData from './UserData'
