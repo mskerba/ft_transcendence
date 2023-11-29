@@ -51,15 +51,32 @@ export class AuthController {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
           });
-        return res.redirect('http://localhost:3001/game');
+        return res.redirect('http://localhost:3001/profile');
     }
 
     @Public()
     @Get('42/callback')
     @UseGuards(FortyTwoStrategy)
-    async fortyTwoCallBack(@Req() req) {
+    async fortyTwoCallBack(@Req() req, @Res() res) {
         const user: UserEntity = req.user;
-        return await this.authService.signIn(user);
+        const tokens = await this.authService.signIn(user);
+
+        res.cookie('accessToken', tokens.access_token, {
+            httpOnly: true,
+            maxAge: 15 * 60 * 1000, // 15 minutes in milliseconds
+          });
+      
+          // Set refresh token as a cookie with a 7-day expiration
+          res.cookie('refreshToken', tokens.refresh_token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+          });
+
+          res.cookie('2faToken', tokens.refresh_token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+          });
+        return res.redirect('http://localhost:3001/profile');
     }
 
     @Post('logout')
