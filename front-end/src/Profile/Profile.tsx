@@ -31,14 +31,154 @@ const Profile = () => {
         <nav className='navbar'>
             <div className='button'>Games</div>
             <div className='button'>Friends</div>
-            <div className='button'>Friend Requests</div>
-            <div className='active'>Achievements</div>
+            <div className='active'>Friend Requests</div>
+            <div className='button'>Achievements</div>
             <div className='button'>settings</div>
         </nav>
         <div className='footer'>
             <div className='box'>
                 <div className='item'>
-                    <div>Hamid sahrawi</div>
+                    <h4>Hamid sahrawi</h4>
+                    <div className='buttons'>
+                        <div className='confirm'>Confirm</div>
+                        <div className='delete'>Delete</div>
+                    </div>
+                </div>
+                <div className='item'>
+                    <h4>Hamid sahrawi</h4>
+                    <div className='buttons'>
+                        <div className='confirm'>Confirm</div>
+                        <div className='delete'>Delete</div>
+                    </div>
+                </div>
+                <div className='item'>
+                    <h4>Hamid sahrawi</h4>
+                    <div className='buttons'>
+                        <div className='confirm'>Confirm</div>
+                        <div className='delete'>Delete</div>
+                    </div>
+                </div>
+                <div className='item'>
+                    <h4>Hamid sahrawi</h4>
+                    <div className='buttons'>
+                        <div className='confirm'>Confirm</div>
+                        <div className='delete'>Delete</div>
+                    </div>
+                </div>
+                <div className='item'>
+                    <h4>Hamid sahrawi</h4>
+                    <div className='buttons'>
+                        <div className='confirm'>Confirm</div>
+                        <div className='delete'>Delete</div>
+                    </div>
+                </div>
+                <div className='item'>
+                    <h4>Hamid sahrawi</h4>
+                    <div className='buttons'>
+                        <div className='confirm'>Confirm</div>
+                        <div className='delete'>Delete</div>
+                    </div>
+                </div>
+                <div className='item'>
+                    <h4>Hamid sahrawi</h4>
+                    <div className='buttons'>
+                        <div className='confirm'>Confirm</div>
+                        <div className='delete'>Delete</div>
+                    </div>
+                </div>
+                <div className='item'>
+                    <h4>Hamid sahrawi</h4>
+                    <div className='buttons'>
+                        <div className='confirm'>Confirm</div>
+                        <div className='delete'>Delete</div>
+                    </div>
+                </div>
+                <div className='item'>
+                    <h4>Hamid sahrawi</h4>
+                    <div className='buttons'>
+                        <div className='confirm'>Confirm</div>
+                        <div className='delete'>Delete</div>
+                    </div>
+                </div>
+                <div className='item'>
+                    <h4>Hamid sahrawi</h4>
+                    <div className='buttons'>
+                        <div className='confirm'>Confirm</div>
+                        <div className='delete'>Delete</div>
+                    </div>
+                </div>
+                <div className='item'>
+                    <h4>Hamid sahrawi</h4>
+                    <div className='buttons'>
+                        <div className='confirm'>Confirm</div>
+                        <div className='delete'>Delete</div>
+                    </div>
+                </div>
+                <div className='item'>
+                    <h4>Hamid sahrawi</h4>
+                    <div className='buttons'>
+                        <div className='confirm'>Confirm</div>
+                        <div className='delete'>Delete</div>
+                    </div>
+                </div>
+                <div className='item'>
+                    <h4>Hamid sahrawi</h4>
+                    <div className='buttons'>
+                        <div className='confirm'>Confirm</div>
+                        <div className='delete'>Delete</div>
+                    </div>
+                </div>
+                <div className='item'>
+                    <h4>Hamid sahrawi</h4>
+                    <div className='buttons'>
+                        <div className='confirm'>Confirm</div>
+                        <div className='delete'>Delete</div>
+                    </div>
+                </div>
+                <div className='item'>
+                    <h4>Hamid sahrawi</h4>
+                    <div className='buttons'>
+                        <div className='confirm'>Confirm</div>
+                        <div className='delete'>Delete</div>
+                    </div>
+                </div>
+                <div className='item'>
+                    <h4>Hamid sahrawi</h4>
+                    <div className='buttons'>
+                        <div className='confirm'>Confirm</div>
+                        <div className='delete'>Delete</div>
+                    </div>
+                </div>
+                <div className='item'>
+                    <h4>Hamid sahrawi</h4>
+                    <div className='buttons'>
+                        <div className='confirm'>Confirm</div>
+                        <div className='delete'>Delete</div>
+                    </div>
+                </div>
+                <div className='item'>
+                    <h4>Hamid sahrawi</h4>
+                    <div className='buttons'>
+                        <div className='confirm'>Confirm</div>
+                        <div className='delete'>Delete</div>
+                    </div>
+                </div>
+                <div className='item'>
+                    <h4>Hamid sahrawi</h4>
+                    <div className='buttons'>
+                        <div className='confirm'>Confirm</div>
+                        <div className='delete'>Delete</div>
+                    </div>
+                </div>
+                <div className='item'>
+                    <h4>Hamid sahrawi</h4>
+                    <div className='buttons'>
+                        <div className='confirm'>Confirm</div>
+                        <div className='delete'>Delete</div>
+                    </div>
+                </div>
+                <div className='item'>
+                    <h4>Hamid sahrawi</h4>
                     <div className='buttons'>
                         <div className='confirm'>Confirm</div>
                         <div className='delete'>Delete</div>

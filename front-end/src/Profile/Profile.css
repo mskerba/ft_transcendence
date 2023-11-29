@@ -4,18 +4,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-around;
 }
 
-h1, h2, h3 {
-    padding: 0px;
-    margin: 0px;
-}
 .profile .header {
-    padding-top: 100px;
-    padding-bottom: 50px;
     text-align: center;
-    height: 500px;
+    height: 300px;
+    margin-top: 20px;
 }
 
 .profile .header img {
@@ -23,8 +17,8 @@ h1, h2, h3 {
     height: 100px;
     object-fit: cover;
     margin: 10px auto;
-    border: 2px solid #9EFF02;
-    box-shadow: 0 0 10px #82FF82;
+    border: 2px solid #0CF25D;
+    box-shadow: 0 0 10px #0CF25D;
     border-radius: 50%;
     padding: 0px;
 }
@@ -37,8 +31,6 @@ h1, h2, h3 {
     color: #FFD700;
 }
 
-
-
 .profile .header .infos {
     width: 400px;
     display: flex;
@@ -46,8 +38,8 @@ h1, h2, h3 {
     align-items: center;
     justify-content: space-around;
     background-color: #04364A;
-    border: 1px solid #9EFF02;
-    box-shadow: 0 0 3px #82FF82;
+    border: 1px solid #0CF25D;
+    box-shadow: 0 0 3px #0CF25D;
     border-radius: 3px;
 }
 
@@ -65,8 +57,8 @@ h1, h2, h3 {
 }
 
 .profile .header .infos .block .label {
-    color: #9EFF02;
-    text-shadow: 0 0 5px #82FF82;
+    color: #0CF25D;
+    text-shadow: 0 0 5px #0CF25D;
 }
 
 .profile .header .infos .block .value {
@@ -79,6 +71,7 @@ h1, h2, h3 {
     display: flex;
     justify-items: center;
     justify-content: space-between;
+    margin-top: 30px;
 }
 
 .profile .navbar .button {
@@ -89,11 +82,11 @@ h1, h2, h3 {
 
 .profile .navbar .button:hover,
 .profile .navbar .active {
-    color: #9EFF02;
+    color: #0CF25D;
     font-size: 1rem;
     padding: 10px;
-    border-bottom: 2px solid #9EFF02;
-    text-shadow: 0 0 5px #82FF82;
+    border-bottom: 2px solid #0CF25D;
+    text-shadow: 0 0 5px #0CF25D;
     cursor: pointer;
 }
 
@@ -104,41 +97,77 @@ h1, h2, h3 {
 .profile .footer {
     height: 100%;
     width: 100vw;
-    background-color: #04364A;
+    background-color: #038C3E;
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+    padding-top: 20px;
 }
 
 .profile .footer .box {
     width: 500px;
-    height: 600px;
-    background-color: #043136;
-    margin: 20px  auto;
-    border: 1px solid #9EFF02;
+    height: min-content;
+    padding: 0px 10px;
+    background-color: #025951;
+    box-shadow: 0 0 50px #025951;
     border-radius: 4px;
+    overflow-y: scroll;
+    margin-bottom: 10px;
 }
 
 .profile .footer .box .item {
     display: flex;
     justify-items: center;
+    align-items: center;
     justify-content: space-between;
-    border: 1px solid #9EFF02;
-    background-color: #04364A;
+    background-color: #038C3E;
+    box-shadow: 0 0 10px #038C3E;
     border-radius: 3px;
-    margin: 10px;
     padding: 10px;
+    margin: 10px;
+
+}
+
+.profile .footer .box .item h4 {
+    
+    color: #034159;
 }
 
 .profile .footer .box .item .buttons {
     display: flex;
     justify-content: space-between;
     justify-items: center;
-    width: 30%;
+    width: 45%;
 }
 
 .profile .footer .box .item .buttons .confirm {
-    background-color: #9EFF02;
-    color: #FFFFFF;
-    padding: 5px;
+    background-color: #0CF25D;
+    color: #034159;
+    padding: 10px 20px;
+    border: 1px solid #0CF25D;
+    border-radius: 4px;
+    box-shadow: 0 0 5px #0CF25D;
+    cursor: pointer;
 }
+.profile .footer .box .item .buttons .confirm:hover {
+    background-color: #038C3E;
+}
+
+.profile .footer .box .item .buttons .delete {
+    background-color: #034159;
+    color:#FFFFFF;
+    padding: 10px 20px;
+    border: 1px solid #034159;
+    border-radius: 4px;
+    box-shadow: 0 0 5px #034159;
+    cursor: pointer;
+}
+
+.profile .footer .box .item .buttons .delete:hover {
+    background-color: #025951;
+    border: 1px solid #025951;
+}
+
 
 @media only screen and (max-width: 500px) {
     .profile .header img {
@@ -150,4 +179,22 @@ h1, h2, h3 {
         width: 300px;
     }
   
+}
+
+.profile .footer .box::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+}
+
+.profile .footer .box::-webkit-scrollbar
+{
+	width: 12px;
+}
+
+.profile .footer .box::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #0CF25D;
 }
