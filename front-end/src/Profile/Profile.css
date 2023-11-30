@@ -1,6 +1,43 @@
+.user-profile-buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+
+
+  .add-friend-button,
+  .send-message-button,
+  .block-button,
+  .unfriend-button {
+    padding: 0px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .add-friend-button {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .send-message-button {
+    background-color: #008cba;
+    color: white;
+  }
+  
+  .block-button {
+    background-color: #ff0000;
+    color: white;
+  }
+  
+
+/*  */
+
+
 .profile {
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 40% 60%;
@@ -13,6 +50,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-end;
 }
 
 .footer {
@@ -29,8 +67,8 @@
     width: 500px;
     padding: 0px 10px;
     background-color: #025951;
-    border-radius: 4px;
-    box-shadow: 0 0 50px #025951;
+    border-radius: 5px;
+    box-shadow: 0 0 20px #000000;
     margin: 0 0 10px 0;
     margin-bottom: 10px;
     overflow-y: scroll;
@@ -133,11 +171,10 @@
     align-items: center;
     justify-content: space-between;
     background-color: #038C3E;
-    box-shadow: 0 0 10px #038C3E;
+    box-shadow: 0 0 20px #383737;
     border-radius: 3px;
     padding: 10px;
     margin: 10px;
-    box-shadow: 0 0 5px #034159;
 }
 
 .item h4 {
@@ -195,8 +232,7 @@
 .box::-webkit-scrollbar-thumb
 {
 	border-radius: 10px;
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-	background-color: #FFFFFF;
+	background-color: #04364A;
 }
 
 @media (max-width: 500px) {

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './Profile.css'
+import NavBar from '../navBar/navBar';
 
 const Profile = () => {
-
+    var isFriend: Boolean = false;
   return (
     <div className='profile'>
         <div className='header'>
@@ -10,6 +11,15 @@ const Profile = () => {
                 <img src="https://thispersondoesnotexist.com/"/>
                 <h3>momeaizi</h3>
                 <p><span>level</span> 11.75</p>
+                <div className='user-profile-buttons-container'>
+                    { isFriend ? (
+                        <div className='unfriend-button'><img src='src/assets/unfriend.svg'/></div>
+                    ) : (
+                        <div className='add-friend-button'><img src='src/assets/add-friend.svg'/></div>
+                    )}
+                    <div className='send-message-button'><img src='src/assets/message.svg'/></div>
+                    <div className='block-button'><img src='src/assets/block.svg'/></div>
+                </div>
                 <div className='infos'>
                     <div className='block'>
                         <span className='label'>Games</span>
