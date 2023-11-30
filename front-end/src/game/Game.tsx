@@ -2,7 +2,7 @@ import React from 'react'
 import { useEffect, useState }  from 'react';
 import ScoreBoard from "./score-board/ScoreBoard";
 import Canva from "./canva/Canva";
-import './Game.css'
+// import './Game.css'
 
 function Game() {
   const test:String='canva';

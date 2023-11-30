@@ -1,200 +1,34 @@
 .profile {
     height: 100vh;
     width: 100vw;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 40% 60%;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+.header {
+    grid-area: 1 / 1 / 2 / 2; 
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.profile .header {
-    text-align: center;
-    height: 300px;
-    margin-top: 20px;
-}
-
-.profile .header img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    margin: 10px auto;
-    border: 2px solid #0CF25D;
-    box-shadow: 0 0 10px #0CF25D;
-    border-radius: 50%;
-    padding: 0px;
-}
-
-.profile .header h3 {
-    color: #FFFFFF;
-}
-
-.profile .header p {
-    color: #FFD700;
-}
-
-.profile .header .infos {
-    width: 400px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
-    background-color: #04364A;
-    border: 1px solid #0CF25D;
-    box-shadow: 0 0 3px #0CF25D;
-    border-radius: 3px;
-}
-
-.profile .header .infos .block {
-    padding: 5px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-.profile .header .infos .block span {
-    padding: 5px;
-}
-
-.profile .header .infos .block .label {
-    color: #0CF25D;
-    text-shadow: 0 0 5px #0CF25D;
-}
-
-.profile .header .infos .block .value {
-    color: #FFFFFF;
-}
-
-
-.profile .navbar {
-    width: 600px;
-    display: flex;
-    justify-items: center;
-    justify-content: space-between;
-    margin-top: 30px;
-}
-
-.profile .navbar .button {
-    color: #FFFFFF;
-    font-size: 1rem;
-    padding: 10px;
-}
-
-.profile .navbar .button:hover,
-.profile .navbar .active {
-    color: #0CF25D;
-    font-size: 1rem;
-    padding: 10px;
-    border-bottom: 2px solid #0CF25D;
-    text-shadow: 0 0 5px #0CF25D;
-    cursor: pointer;
-}
-
-.profile .navbar .button:hover {
-    border: none;
-}
-
-.profile .footer {
-    height: 100%;
-    width: 100vw;
+.footer {
+    grid-area: 2 / 1 / 3 / 2;
+    width: 100%;
     background-color: #038C3E;
-    display: flex;
     justify-content: center;
-    justify-items: center;
+    display: flex;
     padding-top: 20px;
 }
 
-.profile .footer .box {
+.box {
     width: 500px;
-    height: min-content;
     padding: 0px 10px;
     background-color: #025951;
+    border-radius: 4px;
     box-shadow: 0 0 50px #025951;
-    border-radius: 4px;
-    overflow-y: scroll;
-    margin-bottom: 10px;
-}
-
-.profile .footer .box .item {
-    display: flex;
-    justify-items: center;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #038C3E;
-    box-shadow: 0 0 10px #038C3E;
-    border-radius: 3px;
-    padding: 10px;
-    margin: 10px;
-
-}
-
-.profile .footer .box .item h4 {
-    
-    color: #034159;
-}
-
-.profile .footer .box .item .buttons {
-    display: flex;
-    justify-content: space-between;
-    justify-items: center;
-    width: 45%;
-}
-
-.profile .footer .box .item .buttons .confirm {
-    background-color: #0CF25D;
-    color: #034159;
-    padding: 10px 20px;
-    border: 1px solid #0CF25D;
-    border-radius: 4px;
-    box-shadow: 0 0 5px #0CF25D;
-    cursor: pointer;
-}
-.profile .footer .box .item .buttons .confirm:hover {
-    background-color: #038C3E;
-}
-
-.profile .footer .box .item .buttons .delete {
-    background-color: #034159;
-    color:#FFFFFF;
-    padding: 10px 20px;
-    border: 1px solid #034159;
-    border-radius: 4px;
-    box-shadow: 0 0 5px #034159;
-    cursor: pointer;
-}
-
-.profile .footer .box .item .buttons .delete:hover {
-    background-color: #025951;
-    border: 1px solid #025951;
-}
-
-
-@media only screen and (max-width: 500px) {
-    .profile .header img {
-        max-width: 80px;
-        max-height: 80px;
-    }
-
-    .profile .header .infos {
-        width: 300px;
-    }
-  
-}
-
-.profile .footer .box::-webkit-scrollbar-track
-{
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-	border-radius: 10px;
-}
-
-.profile .footer .box::-webkit-scrollbar
-{
-	width: 12px;
-}
-
-.profile .footer .box::-webkit-scrollbar-thumb
-{
-	border-radius: 10px;
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-	background-color: #0CF25D;
+    margin: 0 0 10px 0;
 }
