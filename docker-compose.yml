@@ -28,9 +28,7 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - type : bind
-        source: ./back-end
-        target: /app/src
+      - ./back-end:/myapp
 
   # front-end:
   #   build:

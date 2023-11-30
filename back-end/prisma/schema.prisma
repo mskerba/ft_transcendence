@@ -13,7 +13,7 @@ datasource db {
 // schema.prisma
 
 model User {
-  userId                  Int       @id @default(autoincrement())
+  userId                  String       @id @default(cuid())
   name                    String?   @unique
   email                   String    @unique
   avatar                  String    @default("https://www.svgrepo.com/show/213882/avatar-user.svg")
@@ -52,17 +52,17 @@ model User {
 }
 
 model UserOTPVerification {
-  id                      Int       @id @default(autoincrement())
-  userId                  Int       @unique
+  id                      String       @id @default(cuid())
+  userId                  String       @unique
   otp                     String
   expiresAt               DateTime
   user                    User      @relation(fields: [userId], references: [userId])
 }
 
 model FriendRequest {
-  requestId               Int       @id @default(autoincrement())
-  senderId                Int       @unique
-  receiverId              Int       @unique
+  requestId               String       @id @default(cuid())
+  senderId                String       @unique
+  receiverId              String       @unique
   requestDate             DateTime
 
   sender                  User      @relation("SentFriendRequests", fields: [senderId], references: [userId])
@@ -71,9 +71,9 @@ model FriendRequest {
 }
 
 model Friendship {
-  friendshipId            Int       @id @default(autoincrement())
-  user1Id                 Int
-  user2Id                 Int
+  friendshipId            String       @id @default(cuid())
+  user1Id                 String
+  user2Id                 String
   friendshipDate          DateTime
 
   user1                   User      @relation("User1Friends", fields: [user1Id], references: [userId])
@@ -87,16 +87,16 @@ model Friendship {
 // chat tables
 
 
-
+// i need to make this two ids unique
 model SoloConversation{
   
-  conversationId Int @id @default(autoincrement())
+  conversationId String       @id @default(cuid())
 
   user1 User @relation("UserConv1", fields: [UserId1], references: [userId])
-  UserId1 Int
+  UserId1 String 
 
   user2 User @relation("UserConv2", fields: [UserId2], references: [userId])
-  UserId2 Int
+  UserId2 String 
 
 
 }
@@ -104,18 +104,18 @@ model SoloConversation{
 
 model DirectMessage{
 
-DirectMessageId Int @id @default(autoincrement())
+DirectMessageId String       @id @default(cuid())
 
 text String
 
 userid User @relation(fields: [UserId], references: [userId])
-UserId Int
+UserId String
 
 }
 
 model Room{
 
-  RoomId Int @id @default(autoincrement()) 
+  RoomId String       @id @default(cuid())
 
   TypeRoom String
 
@@ -140,31 +140,31 @@ model Room{
 
 model RoleUser{
 
-  RoleId  Int @id @default(autoincrement())
+  RoleId  String       @id @default(cuid())
 
   
   roleUser User @relation(fields: [UserId], references: [userId])
-  UserId Int 
+  UserId String 
   
   RoleName String
 
   roomId Room @relation(fields: [RoomId], references: [RoomId])
-  RoomId Int 
+  RoomId String 
 
 }
 
 
 model RoomMessage{
 
-  RoomMessageId  Int @id @default(autoincrement())
+  RoomMessageId  String       @id @default(cuid())
 
   text String
 
   roomId Room @relation(fields: [RoomId], references: [RoomId])
-  RoomId Int
+  RoomId String
 
   userId User @relation(fields: [UserId], references: [userId])
-  UserId Int
+  UserId String
 }
 
 // this between two user 
@@ -173,10 +173,10 @@ model BlockUser{
   BlockedUserId Int  @id @default(autoincrement())
 
   block1 User @relation("Blocking", fields: [TheBlockingUserId], references: [userId])
-  TheBlockingUserId Int
+  TheBlockingUserId String
   
   block2 User @relation("Blocked", fields: [TheBlockedUserId], references: [userId])
-  TheBlockedUserId Int
+  TheBlockedUserId String
 }
 
 
@@ -186,10 +186,10 @@ model KickUser{
   KickUserId Int @id @default(autoincrement())
 
   roomId Room @relation(fields: [RoomId], references: [RoomId])
-  RoomId Int
+  RoomId String
 
   userId User @relation(fields: [UserId], references: [userId])
-  UserId Int
+  UserId String
 }
 
 model BanUser{
@@ -197,10 +197,10 @@ model BanUser{
   BannUserId Int  @id @default(autoincrement())
 
   roomId Room @relation(fields: [RoomId], references: [RoomId])
-  RoomId Int
+  RoomId String
 
   userId User @relation(fields: [UserId], references: [userId])
-  UserId Int
+  UserId String
 
 }
 
@@ -209,10 +209,10 @@ model MuteUser{
   MuteUserId Int @id @default(autoincrement())
  
   roomId Room @relation(fields: [RoomId], references: [RoomId])
-  RoomId Int
+  RoomId String
 
   userId User @relation(fields: [UserId], references: [userId])
-  UserId Int
+  UserId String
   
   StartTime  DateTime
   EndTime    DateTime  
