@@ -8,7 +8,7 @@ const Profile = () => {
     <div className='profile'>
         <div className='header'>
             <div className='user-infos'>
-                <img src="https://thispersondoesnotexist.com/"/>
+                <img src="https://thispersondoesnotexist.com/" className='user-avatar'/>
                 <h3>momeaizi</h3>
                 <p><span>level</span> 11.75</p>
                 <div className='user-profile-buttons-container'>
