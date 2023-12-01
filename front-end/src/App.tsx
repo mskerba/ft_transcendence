@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import Game from "./game/Game";
+import Chat from "./Chat/Chat";
 import Profile from "./Profile/Profile"
 import './App.css'
 import Login from './auth/login';
@@ -10,14 +11,16 @@ import NavBar from './navBar/navBar';
 const App = () => {
   return (
     <>
-    <NavBar/>
-    <Router>
-    <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/game" element={<Game />} />
-    </Routes>
-  </Router></>
+      <NavBar/>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/game" element={<Game />} />
+          <Route path="/Chat" element={<Chat />} />
+        </Routes>
+      </Router>
+    </>
   );
 };
 
