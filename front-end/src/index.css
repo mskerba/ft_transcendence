@@ -17,6 +17,11 @@ h1, h2, h3, h4 {
   height: 100vh;
   margin: 0;
   padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 56px 1fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
 }
 
 
