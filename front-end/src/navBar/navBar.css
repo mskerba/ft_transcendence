@@ -9,7 +9,8 @@
     background-color:  #034159;
     margin: 0;
     padding: 0px 5%;
-    position: fixed;
+    /* position: fixed; */
+    grid-area: 1 / 1 / 2 / 2;
 }
 
 .navbar- img {
