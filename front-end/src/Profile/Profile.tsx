@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import FriendRequests from './FriendRequests/FriendRequests';
 import './Profile.css'
-import NavBar from '../navBar/navBar';
+import ProfileNavBar from './navbar/ProfileNavBar';
 
 const Profile = () => {
-    var isFriend: Boolean = false;
+    var isFriend: Boolean = true;
   return (
     <div className='profile'>
         <div className='header'>
@@ -39,88 +39,11 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
-            <nav className='navbar'>
-                <div className='button'>Games</div>
-                <div className='button'>Friends</div>
-                <div className='active'>Friend Requests</div>
-                <div className='button'>Achievements</div>
-                <div className='button'>settings</div>
-                
-            </nav>
+           <ProfileNavBar/>
         </div>
         <div className='footer'>
             <div className='box'>
-                <div className='item'>
-                    <h4>Hamid sahrawi</h4>
-                    <div className='buttons'>
-                        <div className='confirm'>Confirm</div>
-                        <div className='delete'>Delete</div>
-                    </div>
-                </div>
-                <div className='item'>
-                    <h4>Hamid sahrawi</h4>
-                    <div className='buttons'>
-                        <div className='confirm'>Confirm</div>
-                        <div className='delete'>Delete</div>
-                    </div>
-                </div>
-                <div className='item'>
-                    <h4>Hamid sahrawi</h4>
-                    <div className='buttons'>
-                        <div className='confirm'>Confirm</div>
-                        <div className='delete'>Delete</div>
-                    </div>
-                </div>
-                <div className='item'>
-                    <h4>Hamid sahrawi</h4>
-                    <div className='buttons'>
-                        <div className='confirm'>Confirm</div>
-                        <div className='delete'>Delete</div>
-                    </div>
-                </div>
-                <div className='item'>
-                    <h4>Hamid sahrawi</h4>
-                    <div className='buttons'>
-                        <div className='confirm'>Confirm</div>
-                        <div className='delete'>Delete</div>
-                    </div>
-                </div>
-                <div className='item'>
-                    <h4>Hamid sahrawi</h4>
-                    <div className='buttons'>
-                        <div className='confirm'>Confirm</div>
-                        <div className='delete'>Delete</div>
-                    </div>
-                </div>
-                <div className='item'>
-                    <h4>Hamid sahrawi</h4>
-                    <div className='buttons'>
-                        <div className='confirm'>Confirm</div>
-                        <div className='delete'>Delete</div>
-                    </div>
-                </div>
-                <div className='item'>
-                    <h4>Hamid sahrawi</h4>
-                    <div className='buttons'>
-                        <div className='confirm'>Confirm</div>
-                        <div className='delete'>Delete</div>
-                    </div>
-                </div>
-                <div className='item'>
-                    <h4>Hamid sahrawi</h4>
-                    <div className='buttons'>
-                        <div className='confirm'>Confirm</div>
-                        <div className='delete'>Delete</div>
-                    </div>
-                </div>
-                <div className='item'>
-                    <h4>Hamid sahrawi lakher</h4>
-                    <div className='buttons'>
-                        <div className='confirm'>Confirm</div>
-                        <div className='delete'>Delete</div>
-                    </div>
-                </div>
-                
+                <FriendRequests/>
             </div>
         </div>
     </div>

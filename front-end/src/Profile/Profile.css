@@ -2,6 +2,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: 10px 0;
   }
 
   .user-profile-buttons-container img {
@@ -22,19 +23,18 @@
     height: 30px;
   }
   
-  .add-friend-button {
-    background-color: #4caf50;
-    color: white;
+  .add-friend-button img {
+    width: 80px;
+    height: 30px;
+  }
+  .send-message-button img {
+    width: 80px;
+    height: 30px;
   }
   
-  .send-message-button {
-    background-color: #008cba;
-    color: white;
-  }
-  
-  .block-button {
-    background-color: #ff0000;
-    color: white;
+  .block-button img {
+    width: 80px;
+    height: 30px;
   }
   
 
@@ -167,58 +167,6 @@
 
 .button:hover {
     border: none;
-}
-
-.item {
-    display: flex;
-    justify-items: center;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #038C3E;
-    box-shadow: 0 0 20px #383737;
-    border-radius: 3px;
-    padding: 10px;
-    margin: 10px;
-}
-
-.item h4 {
-    
-    color: #034159;
-}
-
-.buttons {
-    display: flex;
-    justify-content: space-between;
-    justify-items: center;
-    width: 45%;
-}
-.confirm {
-    background-color: #0CF25D;
-    color: #034159;
-    padding: 10px 20px;
-    border: 1px solid #0CF25D;
-    border-radius: 4px;
-    box-shadow: 0 0 5px #0CF25D;
-    cursor: pointer;
-}
-
-.confirm:hover {
-    background-color: #038C3E;
-}
-
-.delete {
-    background-color: #034159;
-    color:#FFFFFF;
-    padding: 10px 20px;
-    border: 1px solid #034159;
-    border-radius: 4px;
-    box-shadow: 0 0 5px #034159;
-    cursor: pointer;
-}
-
-.delete:hover {
-    background-color: #025951;
-    border: 1px solid #025951;
 }
 
 .box::-webkit-scrollbar-track
