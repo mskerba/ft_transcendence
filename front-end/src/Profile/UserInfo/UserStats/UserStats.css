@@ -1,0 +1,30 @@
+.user-stats-container {
+    width: 400px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    background-color: #04364A;
+    border: 1px solid #0CF25D;
+    box-shadow: 0 0 3px #0CF25D;
+    border-radius: 3px;
+}
+
+.user-stats {
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 5px;
+}
+
+.user-stats-label {
+    color: #0CF25D;
+    text-shadow: 0 0 5px #0CF25D;
+}
+
+.user-stats-value {
+    color: #FFFFFF;
+}

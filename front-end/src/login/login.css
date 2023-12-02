@@ -1,5 +1,5 @@
-.login {
-    background-color: #04364A;
+.login-container {
+    /* background-color: #04364A; */
     position: fixed;
     top: 40%;
     left: 50%;
@@ -8,25 +8,25 @@
     margin: auto auto;
     border: 2px solid #82FF82;
     border-radius: 8px;
-    box-shadow: 0 0 5px #82FF82;
+    box-shadow: 0 0 50px #82FF82;
     width: 400px;
     height: 400px;
 }
 
-.login h1 {
+.login-container h1 {
   color: #ffffff;
   text-align: center;
   text-shadow: 0 0 5px #82FF82;
 }
 
-.login p {
+.login-container p {
   color: #DAFFFB;
   text-indent: 20px;
   line-height: 25px;
 }
 
 
-.login .icon-button {
+.login-container .login-button {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -37,26 +37,28 @@
     color: #273031;
     border: none;
     border-radius: 5px;
-    box-shadow: 0 0 5px #82FF82;
+    box-shadow: 0 0 50px #313231;
     cursor: pointer;
     text-decoration: none;
     border: 1px solid #82FF82;
 }
 
-.login .icon {
+svg {
   width: 20px;
   height: 20px;
   margin: 5px;
   vertical-align: middle;
+  fill: #7f7f7f;
 }
 
-.login .icon-button:hover {
-    background-color: #043136;
-    color: #82FF82;
+.login-button:hover {
+  background-color: #043136;
+  color: #82FF82;
 }
+
 
 @media only screen and (max-width: 500px) {
-  .login {
+  .login-container {
     width: 300px;
     height: 470px;
   }
