@@ -12,38 +12,38 @@ async function main() {
   await prisma.soloConversation.deleteMany();
   await prisma.user.deleteMany();
 
- // create 30 random Users
- let userArray = [];
+//  // create 30 random Users
+//  let userArray = [];
 
-  for (let i = 0; i < 20; i++)
-  {
-    userArray[i] =  await prisma.user.create({
-      data:
-      {
-        name: faker.person.firstName(),
-        email: faker.internet.email(),
-      }
-    })
-  }
+//   for (let i = 0; i < 20; i++)
+//   {
+//     userArray[i] =  await prisma.user.create({
+//       data:
+//       {
+//         name: faker.person.firstName(),
+//         email: faker.internet.email(),
+//       }
+//     })
+//   }
 
   
-  console.log(await userArray);
+//    console.log(await userArray);
 
-  // create direct conversation between two users;
-  for (let i = 0; i < 10; i++)
-  {
-    let id1 = userArray[Math.floor(Math.random() * 20)].userId;
-    let id2 = userArray[Math.floor(Math.random() * 20)].userId;
-    if (id1 == id2)
-      continue ;
-      await prisma.soloConversation.create({
-        data:
-        {
-          UserId1: userArray[Math.floor(Math.random() * 20)].userId,
-          UserId2: userArray[Math.floor(Math.random() * 20)].userId,
-        }
-      })
-  }
+//   // create direct conversation between two users;
+//   for (let i = 0; i < 10; i++)
+//   {
+//     let id1 = userArray[Math.floor(Math.random() * 20)].userId;
+//     let id2 = userArray[Math.floor(Math.random() * 20)].userId;
+//     if (id1 == id2)
+//       continue ;
+//       await prisma.soloConversation.create({
+//         data:
+//         {
+//           UserId1: userArray[Math.floor(Math.random() * 20)].userId,
+//           UserId2: userArray[Math.floor(Math.random() * 20)].userId,
+//         }
+//       })
+//   }
 
 
 

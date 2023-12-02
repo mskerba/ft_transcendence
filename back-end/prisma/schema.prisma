@@ -13,7 +13,7 @@ datasource db {
 // schema.prisma
 
 model User {
-  userId                  String       @id @default(cuid())
+  userId                  Int       @id @default(autoincrement())
   name                    String?   @unique
   email                   String    @unique
   avatar                  String    @default("https://www.svgrepo.com/show/213882/avatar-user.svg")
@@ -48,12 +48,14 @@ model User {
   kick                 KickUser[]
   bann                 BanUser[]
   mute                 MuteUser[]
+
+  sockId                String?
   
 }
 
 model UserOTPVerification {
-  id                      String       @id @default(cuid())
-  userId                  String       @unique
+  id                      Int      @id @default(autoincrement())
+  userId                  Int          @unique
   otp                     String
   expiresAt               DateTime
   user                    User      @relation(fields: [userId], references: [userId])
@@ -61,8 +63,8 @@ model UserOTPVerification {
 
 model FriendRequest {
   requestId               String       @id @default(cuid())
-  senderId                String       @unique
-  receiverId              String       @unique
+  senderId                Int       @unique
+  receiverId              Int       @unique
   requestDate             DateTime
 
   sender                  User      @relation("SentFriendRequests", fields: [senderId], references: [userId])
@@ -72,8 +74,8 @@ model FriendRequest {
 
 model Friendship {
   friendshipId            String       @id @default(cuid())
-  user1Id                 String
-  user2Id                 String
+  user1Id                 Int
+  user2Id                 Int
   friendshipDate          DateTime
 
   user1                   User      @relation("User1Friends", fields: [user1Id], references: [userId])
@@ -93,10 +95,10 @@ model SoloConversation{
   conversationId String       @id @default(cuid())
 
   user1 User @relation("UserConv1", fields: [UserId1], references: [userId])
-  UserId1 String 
+  UserId1 Int 
 
   user2 User @relation("UserConv2", fields: [UserId2], references: [userId])
-  UserId2 String 
+  UserId2 Int 
 
 
 }
@@ -109,7 +111,7 @@ DirectMessageId String       @id @default(cuid())
 text String
 
 userid User @relation(fields: [UserId], references: [userId])
-UserId String
+UserId Int
 
 }
 
@@ -144,7 +146,7 @@ model RoleUser{
 
   
   roleUser User @relation(fields: [UserId], references: [userId])
-  UserId String 
+  UserId Int 
   
   RoleName String
 
@@ -164,7 +166,7 @@ model RoomMessage{
   RoomId String
 
   userId User @relation(fields: [UserId], references: [userId])
-  UserId String
+  UserId Int
 }
 
 // this between two user 
@@ -173,10 +175,10 @@ model BlockUser{
   BlockedUserId Int  @id @default(autoincrement())
 
   block1 User @relation("Blocking", fields: [TheBlockingUserId], references: [userId])
-  TheBlockingUserId String
+  TheBlockingUserId Int
   
   block2 User @relation("Blocked", fields: [TheBlockedUserId], references: [userId])
-  TheBlockedUserId String
+  TheBlockedUserId Int
 }
 
 
@@ -189,7 +191,7 @@ model KickUser{
   RoomId String
 
   userId User @relation(fields: [UserId], references: [userId])
-  UserId String
+  UserId Int
 }
 
 model BanUser{
@@ -200,7 +202,7 @@ model BanUser{
   RoomId String
 
   userId User @relation(fields: [UserId], references: [userId])
-  UserId String
+  UserId Int
 
 }
 
@@ -212,7 +214,7 @@ model MuteUser{
   RoomId String
 
   userId User @relation(fields: [UserId], references: [userId])
-  UserId String
+  UserId Int
   
   StartTime  DateTime
   EndTime    DateTime  
