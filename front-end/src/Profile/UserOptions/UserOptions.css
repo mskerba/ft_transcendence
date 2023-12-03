@@ -25,17 +25,10 @@
 	background-color: #04364A;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 520px) {
 
     .user-options-container {
-        width: 400px;
-        padding: 0;
-    }
-}
-
-@media (max-width: 420px) { 
-    .user-options-container {
-        width: 310px;
-        padding: 0;
+        width: 100%;
+        margin: 0 10px;
     }
 }

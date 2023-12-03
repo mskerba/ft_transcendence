@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import Game from "./game/Game";
+import Chat from "./Chat/Chat";
 import Profile from "./Profile/Profile"
 import './App.css'
 import Login from './login/login';
@@ -16,6 +17,7 @@ const App = () => {
           <Route path="/" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/game" element={<Game />} />
+          <Route path="/Chat" element={<Chat />} />
         </Routes>
       </Router>
     // </>

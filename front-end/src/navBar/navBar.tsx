@@ -10,7 +10,7 @@ const NavBar = () => {
         <div>
           <li>
             <h1>
-            <img src="src/assets/pp.png" />
+            <img src="src/assets/pingpong.png" />
             PingPong</h1>
           </li>
           <li>

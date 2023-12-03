@@ -1,17 +1,41 @@
 import './UserOptionsNavBar.css'
 
-const ProfileNavBar = () => {
+const UserOptionsNavBar = () => {
     return (
         <nav className='user-options-navbar'>
-            <div className='user-options-navbar-button'>Games</div>
-            <div className='user-options-navbar-button'>Achievements</div>
-            <div className='user-options-navbar-button'>Friends</div>
-            <div className='user-options-navbar-button active'>Friend Requests</div>
-            <div className='user-options-navbar-button'>Blocked Users</div>
-            <div className='user-options-navbar-button'>settings</div>
+            <div className='user-options-navbar-button'>
+                <img src='src/assets/games.svg'/>
+                <img src='src/assets/games-hovered.svg' className='hovered'/>
+                <span>Games</span>
+            </div>
+            <div className='user-options-navbar-button'>
+                <img src='src/assets/games.svg'/>
+                <img src='src/assets/games-hovered.svg' className='hovered'/>
+                <span>Achievements</span>
+            </div>
+            <div className='user-options-navbar-button'>
+                <img src='src/assets/friends.svg'/>
+                <img src='src/assets/friends-hovered.svg' className='hovered'/>
+                <span>Friends</span>
+            </div>
+            <div className='user-options-navbar-button active'>
+                <img src='src/assets/games.svg'/>
+                <img src='src/assets/games-hovered.svg' className='hovered'/>
+                <span>Friend Requests</span>
+            </div>
+            <div className='user-options-navbar-button'>
+                <img src='src/assets/games.svg'/>
+                <img src='src/assets/games-hovered.svg' className='hovered'/>
+                <span>Blocked Users</span>
+            </div>
+            <div className='user-options-navbar-button'>
+                <img src='src/assets/games.svg'/>
+                <img src='src/assets/games-hovered.svg' className='hovered'/>
+                <span>settings</span>
+            </div>
         </nav>
     );
 }
 
-export default ProfileNavBar;
+export default UserOptionsNavBar;
 

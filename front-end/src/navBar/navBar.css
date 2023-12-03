@@ -1,7 +1,6 @@
 .navbar- {
     font-family: var(--mono);
     width: 100%;
-
     height: 56px;
     display: flex;
     align-items: center;
@@ -9,7 +8,6 @@
     background-color:  #034159;
     margin: 0;
     padding: 0px 5%;
-    /* position: fixed; */
     grid-area: 1 / 1 / 2 / 2;
 }
 

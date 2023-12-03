@@ -25,5 +25,133 @@
     background-color: #038C3E;
     display: flex;
     justify-content: center;
-    padding-top: 10px;
+    padding-top: 20px;
+}
+
+.box {
+    width: 500px;
+    padding: 0px 10px;
+    background-color: #025951;
+    border-radius: 5px;
+    box-shadow: 0 0 20px #000000;
+    margin: 0 0 10px 0;
+    margin-bottom: 10px;
+    overflow-y: scroll;
+}
+
+
+
+
+.user-infos {
+    text-align: center;
+    height: 300px;
+    margin-top: 20px;
+}
+
+.user-avatar {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin: 10px auto;
+    border: 2px solid #0CF25D;
+    box-shadow: 0 0 10px #0CF25D;
+    border-radius: 50%;
+    padding: 0px;
+}
+
+.user-infos h3 {
+    color: #FFFFFF;
+}
+
+.user-infos p {
+    color: #FFD700;
+}
+
+.infos {
+    width: 400px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    background-color: #04364A;
+    border: 1px solid #0CF25D;
+    box-shadow: 0 0 3px #0CF25D;
+    border-radius: 3px;
+}
+
+.block {
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.block span {
+    padding: 5px;
+}
+
+.label {
+    color: #0CF25D;
+    text-shadow: 0 0 5px #0CF25D;
+}
+
+.value {
+    color: #FFFFFF;
+}
+
+
+.navbar {
+    width: 600px;
+    display: flex;
+    justify-items: center;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.button {
+    color: #FFFFFF;
+    font-size: 1rem;
+    padding: 10px;
+}
+
+.button:hover,
+.active {
+    color: #0CF25D;
+    font-size: 1rem;
+    padding: 10px;
+    border-bottom: 2px solid #0CF25D;
+    text-shadow: 0 0 5px #0CF25D;
+    cursor: pointer;
+}
+
+.button:hover {
+    border: none;
+}
+
+.box::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+}
+
+.box::-webkit-scrollbar
+{
+	width: 8px;
+
+}
+
+.box::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	background-color: #04364A;
+}
+
+@media (max-width: 500px) {
+    .user-infos img {
+        width: 60px;
+        height: 60px;
+
+    }
 }
