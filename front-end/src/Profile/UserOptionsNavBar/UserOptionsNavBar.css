@@ -21,8 +21,8 @@
     height: auto;
 }
 
-.user-options-navbar-button .hovered,
-.active img {
+.hovered,
+.actived img {
     display: none;
 }
 
@@ -31,12 +31,13 @@
 }
 
 .user-options-navbar-button:hover .hovered,
-.active .hovered {
+.actived .hovered {
+    padding: 0;;
     display: inline;
 }
 
 .user-options-navbar-button:hover,
-.active {
+.actived {
     color: #0CF25D;
     font-size: 1rem;
     text-shadow: 0 0 5px #0CF25D;

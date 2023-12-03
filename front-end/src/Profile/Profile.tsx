@@ -9,7 +9,7 @@ const Profile = () => {
     return (
         <div className='profile'>
             <section className='row-0'>
-                {/* <UserInfo /> */}
+                <UserInfo />
                 <UserOptionsNavBar />
             </section>
             <section className='row-1'>

@@ -18,7 +18,7 @@ const UserOptionsNavBar = () => {
                 <img src='src/assets/friends-hovered.svg' className='hovered'/>
                 <span>Friends</span>
             </div>
-            <div className='user-options-navbar-button active'>
+            <div className='user-options-navbar-button actived'>
                 <img src='src/assets/games.svg'/>
                 <img src='src/assets/games-hovered.svg' className='hovered'/>
                 <span>Friend Requests</span>

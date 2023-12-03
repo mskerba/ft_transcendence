@@ -10,7 +10,7 @@ const Chat = () => {
     <div className='chat'>
         <div className='page-chats'>
             <ChatList />
-            <ChatContainer />
+            <ChatConchattainer />
         </div>
     </div>
   );
