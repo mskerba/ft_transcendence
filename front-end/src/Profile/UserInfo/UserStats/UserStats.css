@@ -28,3 +28,9 @@
 .user-stats-value {
     color: #FFFFFF;
 }
+
+@media (max-width: 620px) {
+    .user-stats-container {
+        width: 100%;
+    }
+}

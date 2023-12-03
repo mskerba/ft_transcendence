@@ -12,7 +12,7 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
 }
 
@@ -43,18 +43,13 @@
     text-shadow: 0 0 5px #0CF25D;
     border-bottom: 2px solid #0CF25D;
     cursor: pointer;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
 }
 
 .user-options-navbar-button:hover {
     border: none;
 }
 
-.active:hover {
+.actived:hover {
     border-bottom: 2px solid #0CF25D;
 }
 

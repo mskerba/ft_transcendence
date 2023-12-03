@@ -26,36 +26,36 @@
     text-align: center;
 }
 
-.friend-request-confirm-button {
-    background-color: #0CF25D;
-    color: #034159;
-    width: 45%;
-    height: 100%;
-    border: 1px solid #0CF25D;
-    border-radius: 4px;
-    box-shadow: 0 0 5px #0CF25D;
-    cursor: pointer;
-}
-
+.friend-request-confirm-button ,
 .friend-request-delete-button {
     width: 45%;
     height: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.friend-request-confirm-button {
+    background-color: #0CF25D;
+    color: #034159;
+    box-shadow: 0 0 5px #0CF25D;
+}
+
+.friend-request-delete-button {
     background-color: #034159;
     color:#FFFFFF;
-    border: 1px solid #034159;
-    border-radius: 4px;
     box-shadow: 0 0 5px #034159;
-    cursor: pointer;
-    text-align: center;
 }
 
 .friend-request-confirm-button:hover {
+    border: 1px solid #0CF25D;
     background-color: #038C3E;
 }
 
 .friend-request-delete-button:hover {
     background-color: #025951;
-    border: 1px solid #025951;
 }
 
 @media (max-width: 520px) {
