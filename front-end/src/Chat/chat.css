@@ -139,10 +139,13 @@
 }
 
 .input-message {
+    background-color: #075851eb;
+    border: none;
     height: 100%;
     max-width: 640px;
     width: 100%;
-    padding: 5px 8px;
+    padding: 8px 8px;
+    border-radius: 10px;
 }
 
 .message-send {
