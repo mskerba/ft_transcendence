@@ -1,66 +1,24 @@
-.user-profile-buttons-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 10px 0;
-  }
-
-  .user-profile-buttons-container img {
-    width: 80px;
-    height: 30px;
-  }
-
-
-   .add-friend-button,
-  .send-message-button,
-  .block-button,
-  .unfriend-button {
-    padding: 0px;
-    margin: 5px;
-    cursor: pointer;
-    border-radius: 5px;
-    width: 80px;
-    height: 30px;
-  }
-  
-  .add-friend-button img {
-    width: 80px;
-    height: 30px;
-  }
-  .send-message-button img {
-    width: 80px;
-    height: 30px;
-  }
-  
-  .block-button img {
-    width: 80px;
-    height: 30px;
-  }
-  
-
-/*  */
-
-
 .profile {
     grid-area: 2 / 1 / 3 / 2;
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-rows: 45% 55%;
+    grid-template-rows: 35% 65%;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
     overflow: hidden;
 }
 
-.header {
+.row-0 {
     grid-area: 1 / 1 / 2 / 2; 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+    gap: 0;
 }
 
-.footer {
+.row-1 {
     grid-area: 2 / 1 / 3 / 2;
     width: 100%;
     height: 100%;
@@ -80,6 +38,9 @@
     margin-bottom: 10px;
     overflow-y: scroll;
 }
+
+
+
 
 .user-infos {
     text-align: center;

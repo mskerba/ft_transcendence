@@ -1,0 +1,31 @@
+.user-info-container {
+    text-align: center;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+
+.user-info-container h3 {
+    color: #FFFFFF;
+}
+
+.user-info-container h4 {
+    color: #FFD700;
+}
+
+@media (max-width: 600px) {
+    .user-info-container img {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+@media (max-width: 320px) { 
+    .user-info-container img {
+        width: 60px;
+        height: 60px;
+    }
+}

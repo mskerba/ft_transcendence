@@ -3,15 +3,15 @@ import Game from "./game/Game";
 import Chat from "./Chat/Chat";
 import Profile from "./Profile/Profile"
 import './App.css'
-import Login from './auth/login';
+import Login from './login/login';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import NavBar from './navBar/navBar';
 
 
 const App = () => {
   return (
-    <>
-      <NavBar/>
+    // <>
+    // <NavBar/>
       <Router>
         <Routes>
           <Route path="/" element={<Login />} />
@@ -20,7 +20,7 @@ const App = () => {
           <Route path="/Chat" element={<Chat />} />
         </Routes>
       </Router>
-    </>
+    // </>
   );
 };
 

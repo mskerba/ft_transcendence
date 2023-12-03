@@ -1,0 +1,34 @@
+.user-options-container {
+    width: 500px;
+    padding: 0px 10px;
+    background-color: #025951;
+    border-radius: 5px;
+    box-shadow: 0 0 20px #000000;
+    overflow-y: scroll;
+}
+
+.user-options-container::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+}
+
+.user-options-container::-webkit-scrollbar
+{
+	width: 8px;
+
+}
+
+.user-options-container::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	background-color: #04364A;
+}
+
+@media (max-width: 520px) {
+
+    .user-options-container {
+        width: 100%;
+        margin: 0 10px;
+    }
+}

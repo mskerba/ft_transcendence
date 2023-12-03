@@ -1,0 +1,25 @@
+.user-profile-buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.add-friend-button,
+.send-message-button,
+.block-button,
+.unfriend-button {
+    cursor: pointer;
+}
+
+.user-profile-buttons-container svg {
+    width: 80px;
+    height: 30px;
+    fill: #025951;
+}
+
+.user-profile-buttons-container svg:hover {
+    width: 80px;
+    height: 30px;
+    fill: #363535;
+}
