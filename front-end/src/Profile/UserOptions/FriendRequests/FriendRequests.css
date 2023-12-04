@@ -5,7 +5,7 @@
     align-items: center;
     justify-content: space-between;
     background-color: #038C3E;
-    box-shadow: 0 0 20px #383737;
+    box-shadow: 0 0 5px #000000;
     border-radius: 3px;
     padding: 0 10px;
     margin: 10px;
@@ -40,18 +40,18 @@
 .friend-request-confirm-button {
     background-color: #0CF25D;
     color: #034159;
-    box-shadow: 0 0 5px #0CF25D;
+    box-shadow: 0 0 5px #3e4440;
 }
 
 .friend-request-delete-button {
     background-color: #034159;
     color:#FFFFFF;
-    box-shadow: 0 0 5px #034159;
+    box-shadow: 0 0 5px #3e4440;
 }
 
 .friend-request-confirm-button:hover {
-    border: 1px solid #0CF25D;
-    background-color: #038C3E;
+    background-color: #13e05b;
+    box-shadow: 0 0 1px #13e05b;
 }
 
 .friend-request-delete-button:hover {
@@ -61,7 +61,6 @@
 @media (max-width: 520px) {
 
     .friend-request {
-        height: 40px;
         font-size: .9rem;
     }
     .friend-request h4 {

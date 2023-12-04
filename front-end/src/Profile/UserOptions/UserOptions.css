@@ -1,9 +1,9 @@
 .user-options-container {
     width: 500px;
-    padding: 0px 10px;
+    padding: 10px;
     background-color: #025951;
-    border-radius: 5px;
-    box-shadow: 0 0 20px #000000;
+    border-radius: 2%;
+    box-shadow: 0 0 40px #000000;
     overflow-y: scroll;
 }
 
