@@ -3,12 +3,12 @@ import ChatHeader from './ChatHeader'
 import './chat.css';
 
 
-const ChatContainer = () => {
+const ChatContainer = ({setShow}:any) => {
   
   return (
     <div className='chat-container'>
 
-      <ChatHeader />
+      <ChatHeader setShow={setShow}/>
 
       <div  className='chat-conversation'>
       </div>

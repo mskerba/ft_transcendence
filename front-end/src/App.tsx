@@ -10,8 +10,8 @@ import NavBar from './navBar/navBar';
 
 const App = () => {
   return (
-    // <>
-    // <NavBar/>
+    <>
+    <NavBar/>
       <Router>
         <Routes>
           <Route path="/" element={<Login />} />
@@ -20,7 +20,7 @@ const App = () => {
           <Route path="/Chat" element={<Chat />} />
         </Routes>
       </Router>
-    // </>
+    </>
   );
 };
 
