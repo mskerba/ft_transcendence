@@ -1,6 +1,6 @@
 .user-options-navbar {
     width: 600px;
-    height: 60px;
+    height: 20%;
     display: flex;
     justify-items: center;
     justify-content: space-between;
@@ -22,7 +22,7 @@
 }
 
 .hovered,
-.actived img {
+.active img {
     display: none;
 }
 
@@ -31,13 +31,12 @@
 }
 
 .user-options-navbar-button:hover .hovered,
-.actived .hovered {
-    padding: 0;;
+.active .hovered {
     display: inline;
 }
 
 .user-options-navbar-button:hover,
-.actived {
+.active {
     color: #0CF25D;
     font-size: 1rem;
     text-shadow: 0 0 5px #0CF25D;
@@ -49,13 +48,13 @@
     border: none;
 }
 
-.actived:hover {
+.active:hover {
     border-bottom: 2px solid #0CF25D;
 }
 
 @media (max-width: 620px) {
     .user-options-navbar {
-        width: 95%;
+        width: 90%;
     }
 
     .user-options-navbar-button span {

@@ -5,9 +5,12 @@
     gap: 20px;
 }
 
-.user-profile-container svg {
-    width: 20px;
-    height: 20px;
+.user-profile-container .name {
+    color: #FFFFFF;
+}
+
+.user-profile-container .level-value {
+    color: #ffea00;
 }
 
 .level-container {

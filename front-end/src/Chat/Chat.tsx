@@ -20,6 +20,7 @@ const Chat = () => {
   return (
     <div className='chat'>
         <div className='page-chats'>
+<<<<<<< HEAD
             {(chatDivShow == 2) ? 
               <>
                 <ChatList setShow={setShow}/>
@@ -30,6 +31,10 @@ const Chat = () => {
                   :
                   <ChatContainer setShow={setShow}/>
             }
+=======
+            <ChatList />
+            <ChatContainer />
+>>>>>>> a5b8e09bb590ed684feee98ba8acc5d9245989fa
         </div>
     </div>
   );

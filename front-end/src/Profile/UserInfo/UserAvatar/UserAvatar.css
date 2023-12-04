@@ -8,3 +8,10 @@
     border-radius: 50%;
     padding: 0px;
 }
+
+@media (max-width: 320px) { 
+    .user-avatar {
+        width: 80px;
+        height: 80px;
+    }
+}
