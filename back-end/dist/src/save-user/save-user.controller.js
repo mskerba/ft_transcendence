@@ -30,6 +30,9 @@ let SaveUserController = class SaveUserController {
             return { success: false, error: "Registration fail down" };
         }
     }
+    async findUser(username) {
+        return this.saveUserService.findUser(username);
+    }
 };
 exports.SaveUserController = SaveUserController;
 __decorate([

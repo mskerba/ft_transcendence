@@ -18,7 +18,7 @@ let SaveUserService = class SaveUserService {
         this.prismaService = prismaService;
     }
     async saveUser(username) {
-        const user = await this.prismaService.user.create({
+        let user = await this.prismaService.user.create({
             data: {
                 name: username,
                 email: faker_1.faker.internet.email()
@@ -26,13 +26,23 @@ let SaveUserService = class SaveUserService {
         });
         return user;
     }
-    async addSock(username, socketId) {
-        await this.prismaService.user.update({
+    async findUser(username) {
+        return await this.prismaService.user.count({
             where: { name: username },
-            data: {
-                sockId: socketId
-            },
         });
+    }
+    async addSock(username, socketId) {
+        if (this.findUser(username)) {
+            await this.prismaService.user.update({
+                where: { name: username },
+                data: {
+                    sockId: socketId
+                },
+            });
+        }
+        else {
+            console.log("database not initialized yet");
+        }
     }
 };
 exports.SaveUserService = SaveUserService;

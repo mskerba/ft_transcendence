@@ -20,4 +20,8 @@ export class SaveUserController {
         }
     }
 
+    async findUser(username: string): Promise<number>{
+        return this.saveUserService.findUser(username);
+    }
+
 }

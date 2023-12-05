@@ -18,7 +18,7 @@ document.getElementById('registrationForm').addEventListener('submit', async fun
       });
   
       if (response.ok) {
-        localStorage.setItem('username', formData.get("username"));
+        sessionStorage.setItem('username', formData.get("username"));
         window.location.href = "./chat.html";
       // const form = document.getElementById('form');
       // const input = document.getElementById('input');

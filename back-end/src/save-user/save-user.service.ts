@@ -6,8 +6,10 @@ import { faker } from '@faker-js/faker';
 export class SaveUserService {
     constructor(private readonly prismaService: PrismaService){}
 
+
+   
     async saveUser(username: string) : Promise<any>{
-        const user = await this.prismaService.user.create({
+        let user = await this.prismaService.user.create({
             data:{
                 name: username,
                 email: faker.internet.email()
@@ -16,14 +18,32 @@ export class SaveUserService {
         return user;
     }
 
-    async addSock(username: string, socketId: string) :Promise<void>{
 
-        await this.prismaService.user.update({
-            where: {name: username},
-            data: {
-                sockId : socketId
-            },
-        });
+    async findUser(username: string): Promise<number>{
+          return await this.prismaService.user.count({
+            where : {name : username},
+          });
+    }
+
+    
+      async addSock(username: string, socketId: string) :Promise<void>{
+
+
+        if (this.findUser(username))
+        {
+            await this.prismaService.user.update({
+                where: {name: username},
+                data: {
+                    sockId : socketId
+                },
+            });
+        }
+        else
+        {
+            console.log("database not initialized yet");
+        }
+
+    
     }
 
 }
