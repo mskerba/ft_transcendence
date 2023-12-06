@@ -1,8 +1,7 @@
 .user-profile-buttons-container {
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
-    gap: 10px;
+    justify-content: space-around;
 }
 
 
@@ -14,7 +13,7 @@
 
 .user-profile-buttons-container img {
     height: 35px;
-    width: auto;
+    width: 100px;
 }
 
 .user-profile-button .hovered {

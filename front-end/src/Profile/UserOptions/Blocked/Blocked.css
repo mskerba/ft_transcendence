@@ -1,4 +1,4 @@
-.friend-request {
+.blocked {
     height: 50px;
     display: flex;
     justify-items: center;
@@ -13,27 +13,18 @@
     font-size: 1.2rem;
 }
 
-.friend-request img {
-    width: 45px;
-    height: 45px;
-    object-fit: cover;
-    border: 2px solid #ffffff;
-    border-radius: 50%;
-}
 
-
-.friend-request-buttons {
+.blocked-buttons {
     display: flex;
-    justify-content: space-around;
     justify-items: center;
     align-items: center;
-    width: 45%;
+    justify-content: right;
+    width: 55%;
     height: 75%;
     text-align: center;
 }
 
-.friend-request-confirm-button ,
-.friend-request-delete-button {
+.blocked-unblock-button {
     width: 45%;
     height: 100%;
     border-radius: 4px;
@@ -43,30 +34,24 @@
     align-items: center;
 }
 
-.friend-request-confirm-button {
-    background-color: #0CF25D;
-    color: #034159;
-    box-shadow: 0 0 5px #3e4440;
+.blocked-buttons img {
+    width: 30px;
+    height: 30px;
 }
 
-.friend-request-delete-button {
+.blocked-unblock-button {
     background-color: #034159;
     color:#FFFFFF;
     box-shadow: 0 0 5px #3e4440;
 }
 
-.friend-request-confirm-button:hover {
-    background-color: #13e05b;
-    box-shadow: 0 0 1px #13e05b;
-}
-
-.friend-request-delete-button:hover {
+.blocked-unblock-button:hover {
     background-color: #025951;
 }
 
 @media (max-width: 520px) {
 
-    .friend-request {
+    .blocked {
         font-size: .9rem;
     }
 

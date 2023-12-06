@@ -1,0 +1,52 @@
+.settings {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    border-radius: 3px;
+    margin: 40px;
+    font-size: 1.2rem;
+    gap: 30px;
+    color: #FFFFFF;
+}
+
+.settings img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+}
+
+#username-input {
+    width: 230px;
+    height: 30px;
+    font-size: 1.2rem;
+    padding: 0 10px;
+    color: #FFFFFF;
+    background-color: #038C3E;
+    box-shadow: 0 0 5px #000000;
+    border-radius: 10px;
+    border: 0;
+}
+
+.twoFA {
+    display: flex;
+    gap: 20px;
+}
+
+@media (max-width: 520px) {
+    .settings {
+        font-size: .9rem;
+    }
+
+    #username-input {
+        font-size: .9rem;
+    }
+
+    .twoFA input[type="checkbox"] {
+        width: 15px;
+        height: 15px;
+    }
+
+}

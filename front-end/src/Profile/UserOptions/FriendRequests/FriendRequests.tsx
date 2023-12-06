@@ -4,6 +4,7 @@ const FriendRequest = () => {
     return (
         <>
         <div className='friend-request'>
+            <img src='https://thispersondoesnotexist.com/'/>
             <h4>taha_meaizi</h4>
             <div className='friend-request-buttons'>
                 <div className='friend-request-confirm-button'>Confirm</div>
@@ -11,6 +12,7 @@ const FriendRequest = () => {
             </div>
         </div>
         <div className='friend-request'>
+            <img src='https://thispersondoesnotexist.com/'/>
             <h4>taha_meaizi</h4>
             <div className='friend-request-buttons'>
                 <div className='friend-request-confirm-button'>Confirm</div>
@@ -18,6 +20,7 @@ const FriendRequest = () => {
             </div>
         </div>
         <div className='friend-request'>
+            <img src='https://thispersondoesnotexist.com/'/>
             <h4>taha_meaizi</h4>
             <div className='friend-request-buttons'>
                 <div className='friend-request-confirm-button'>Confirm</div>
@@ -25,6 +28,7 @@ const FriendRequest = () => {
             </div>
         </div>
         <div className='friend-request'>
+            <img src='https://thispersondoesnotexist.com/'/>
             <h4>taha_meaizi</h4>
             <div className='friend-request-buttons'>
                 <div className='friend-request-confirm-button'>Confirm</div>
@@ -32,6 +36,7 @@ const FriendRequest = () => {
             </div>
         </div>
         <div className='friend-request'>
+            <img src='https://thispersondoesnotexist.com/'/>
             <h4>taha_meaizi</h4>
             <div className='friend-request-buttons'>
                 <div className='friend-request-confirm-button'>Confirm</div>
@@ -39,6 +44,7 @@ const FriendRequest = () => {
             </div>
         </div>
         <div className='friend-request'>
+            <img src='https://thispersondoesnotexist.com/'/>
             <h4>taha_meaizi</h4>
             <div className='friend-request-buttons'>
                 <div className='friend-request-confirm-button'>Confirm</div>
@@ -46,6 +52,7 @@ const FriendRequest = () => {
             </div>
         </div>
         <div className='friend-request'>
+            <img src='https://thispersondoesnotexist.com/'/>
             <h4>taha_meaizi</h4>
             <div className='friend-request-buttons'>
                 <div className='friend-request-confirm-button'>Confirm</div>
@@ -53,6 +60,7 @@ const FriendRequest = () => {
             </div>
         </div>
         <div className='friend-request'>
+            <img src='https://thispersondoesnotexist.com/'/>
             <h4>taha_meaizi</h4>
             <div className='friend-request-buttons'>
                 <div className='friend-request-confirm-button'>Confirm</div>
@@ -60,6 +68,7 @@ const FriendRequest = () => {
             </div>
         </div>
         <div className='friend-request'>
+            <img src='https://thispersondoesnotexist.com/'/>
             <h4>taha_meaizi</h4>
             <div className='friend-request-buttons'>
                 <div className='friend-request-confirm-button'>Confirm</div>
@@ -67,6 +76,7 @@ const FriendRequest = () => {
             </div>
         </div>
         <div className='friend-request'>
+            <img src='https://thispersondoesnotexist.com/'/>
             <h4>taha_meaizi</h4>
             <div className='friend-request-buttons'>
                 <div className='friend-request-confirm-button'>Confirm</div>

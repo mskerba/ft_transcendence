@@ -1,4 +1,4 @@
-.friend-request {
+.friend {
     height: 50px;
     display: flex;
     justify-items: center;
@@ -9,11 +9,14 @@
     border-radius: 3px;
     padding: 0 10px;
     margin: 10px;
+}
+
+.friend h4 {
     color: #FFFFFF;
     font-size: 1.2rem;
 }
 
-.friend-request img {
+.friend .avatar {
     width: 45px;
     height: 45px;
     object-fit: cover;
@@ -21,8 +24,7 @@
     border-radius: 50%;
 }
 
-
-.friend-request-buttons {
+.friend-buttons {
     display: flex;
     justify-content: space-around;
     justify-items: center;
@@ -32,8 +34,8 @@
     text-align: center;
 }
 
-.friend-request-confirm-button ,
-.friend-request-delete-button {
+.friend-play-button ,
+.friend-message-button {
     width: 45%;
     height: 100%;
     border-radius: 4px;
@@ -43,30 +45,38 @@
     align-items: center;
 }
 
-.friend-request-confirm-button {
+.friend-buttons img {
+    width: 30px;
+    height: 30px;
+}
+
+.friend-play-button {
     background-color: #0CF25D;
     color: #034159;
     box-shadow: 0 0 5px #3e4440;
 }
 
-.friend-request-delete-button {
+.friend-message-button {
     background-color: #034159;
     color:#FFFFFF;
     box-shadow: 0 0 5px #3e4440;
 }
 
-.friend-request-confirm-button:hover {
+.friend-play-button:hover {
     background-color: #13e05b;
     box-shadow: 0 0 1px #13e05b;
 }
 
-.friend-request-delete-button:hover {
+.friend-message-button:hover {
     background-color: #025951;
 }
 
 @media (max-width: 520px) {
 
-    .friend-request {
+    .friend {
+        font-size: .9rem;
+    }
+    .friend h4 {
         font-size: .9rem;
     }
 
