@@ -1,22 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+
 import './chat.css';
 
-const Popup = () => {
-  const [channelType, setChannelType] = useState('Public'); // Default value for the selected channel type
+const Popup = (prop:any) => {
+  const [channelType, setChannelType] = useState('Public');
+  const [channelPassword, setChannelPassword] = useState('');
+
+
 
   const handleChannelTypeChange = (event:any) => {
     setChannelType(event.target.value);
   };
 
+  const handlePasswordChange = (event:any) => {
+    setChannelPassword(event.target.value);
+  };
+
+  const handleCloseClick = () => {
+    console.log(2)
+
+    prop.setPopupParent((prev:any)=> {
+      return ({...prev,display:'none'})
+    });
+  }
+
   return (
-    <div className='add-group-popup'>
+    <div className='add-group-popup' style={prop.popupParent}>
       <div className='popup'>
-        <span className="close">&times;</span>
-        <div className='add-group-avatar'>
-          <img src='src/assets/group-defaul-image.png'/>
-        </div>
-        <input type="text" placeholder='Group name' className='add-group-name' />
-        <h3>Channel Type:</h3>
+        <span className="close"  onClick={handleCloseClick}>&times;</span>
+          <div className='add-group-avatar'>
+            <img src='src/assets/group-defaul-image.png'/>
+          </div>
+          <input type="text" placeholder='Group name' className='add-group-name' />
+        <h2>Channel Type:</h2>
         <div className='channel-types'>
           <label>
             <input
@@ -49,8 +65,15 @@ const Popup = () => {
             Protected
           </label>
         </div>
-        {(channelType == 'Protected') && <input type='password' placeholder='Password'/>}
-        {/* <p>The channel Type is: {}</p> */}
+        {(channelType == 'Protected') &&
+            <input
+            type='password'
+            placeholder='Password'
+            className='protected-group'
+            value={channelPassword}
+            onChange={handlePasswordChange}
+            />}
+        <input type='submit' className='submit'/>
       </div>
     </div>
   );

@@ -3,9 +3,15 @@ import Conversation from './Convesation';
 import './chat.css';
 
 
-const ChatList = ({setShow}:any) => {
+const ChatList = (prop:any) => {
   function handleClick(){
     console.log("add-group")
+    prop.setPopupParent((prev:any) => {
+      return ({
+        ...prev,
+        display:'flex',
+      })
+    });
   }
   return (
     <div className='chatlist-container'>
@@ -19,42 +25,42 @@ const ChatList = ({setShow}:any) => {
             </div>
         </div>
         <div className='conversations-content'>
-          <Conversation name={'abdelmounim skerbaabdelmounim sk'} setShow={setShow}/>
-          <Conversation name={'2Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'3Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'4Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'5Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'6Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'7Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'8Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'9Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'1Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'2Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'3Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'4Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'5Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'6Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'7Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'8Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'hassan sa7rawi'}  setShow={setShow}/>
-          <Conversation name={'1Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'2Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'3Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'4Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'5Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'6Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'7Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'8Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'9Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'1Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'2Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'3Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'4Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'5Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'6Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'7Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'8Lorem Ipsum'}  setShow={setShow}/>
-          <Conversation name={'hassan sa7rawi'}  setShow={setShow}/>
+          <Conversation name={'abdelmounim skerbaabdelmounim sk'} setShow={prop.setShow}/>
+          <Conversation name={'2Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'3Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'4Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'5Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'6Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'7Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'8Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'9Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'1Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'2Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'3Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'4Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'5Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'6Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'7Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'8Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'hassan sa7rawi'}  setShow={prop.setShow}/>
+          <Conversation name={'1Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'2Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'3Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'4Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'5Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'6Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'7Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'8Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'9Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'1Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'2Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'3Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'4Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'5Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'6Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'7Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'8Lorem Ipsum'}  setShow={prop.setShow}/>
+          <Conversation name={'hassan sa7rawi'}  setShow={prop.setShow}/>
         </div>
     </div>
   );

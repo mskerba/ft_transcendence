@@ -2,6 +2,19 @@ import React, { useState } from 'react'
 import ChatHeader from './ChatHeader'
 import './chat.css';
 
+function Message(prop:any) {
+  return (
+
+    <div  className='chat-messages'>
+      <div className={prop.user}>
+        <div className={`color-${prop.user}`}>
+          <p>gafsdfsdfsd</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 const ChatContainer = ({setShow}:any) => {
   
@@ -11,6 +24,100 @@ const ChatContainer = ({setShow}:any) => {
       <ChatHeader setShow={setShow}/>
 
       <div  className='chat-conversation'>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
+          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>
       </div>
 
       <div  className='chat-input'>

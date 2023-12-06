@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback} from 'react'
 import ChatList from './ChatList';
 import ChatContainer from './ChatContainer'
 import Popup from './Popup';
@@ -7,7 +7,24 @@ import './chat.css';
 
 const Chat = () => {
   const [chatDivShow,setShow]:any = useState(2);
-  // const [addGroupDialogue, setAddGroupDialogue]:any = useState(true);
+
+  const [popupParent, setPopupParent] = useState({display:'none'});
+
+    const escFunction = useCallback((event:any) => {
+    if (event.key === "Escape") 
+      setPopupParent((prev:any)=> {
+        return ({...prev,display:'none'})
+    });
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener("keydown", escFunction, false);
+
+    return () => {
+      document.removeEventListener("keydown", escFunction, false);
+    };
+  }, [escFunction]);
+
 
   useEffect(()=>{
     function handleResize(){
@@ -24,16 +41,16 @@ const Chat = () => {
         <div className='page-chats'>
             {(chatDivShow == 2) ? 
               <>
-                <ChatList setShow={setShow}/>
+                <ChatList setShow={setShow} setPopupParent={setPopupParent}  />
                 <ChatContainer setShow={setShow}/>
               </>
               : (chatDivShow)?
-                  <ChatList setShow={setShow}/>
+                  <ChatList setShow={setShow} setPopupParent={setPopupParent}  />
                   :
                   <ChatContainer setShow={setShow}/>
             }
         </div>
-        <Popup />
+        <Popup setPopupParent={setPopupParent}  popupParent={popupParent}/>
     </div>
   );
 };
