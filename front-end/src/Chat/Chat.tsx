@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import ChatList from './ChatList';
 import ChatContainer from './ChatContainer'
+import Popup from './Popup';
 import './chat.css';
 
 
 const Chat = () => {
   const [chatDivShow,setShow]:any = useState(2);
+  // const [addGroupDialogue, setAddGroupDialogue]:any = useState(true);
 
   useEffect(()=>{
     function handleResize(){
@@ -20,7 +22,6 @@ const Chat = () => {
   return (
     <div className='chat'>
         <div className='page-chats'>
-<<<<<<< HEAD
             {(chatDivShow == 2) ? 
               <>
                 <ChatList setShow={setShow}/>
@@ -31,11 +32,8 @@ const Chat = () => {
                   :
                   <ChatContainer setShow={setShow}/>
             }
-=======
-            <ChatList />
-            <ChatContainer />
->>>>>>> a5b8e09bb590ed684feee98ba8acc5d9245989fa
         </div>
+        <Popup />
     </div>
   );
 };

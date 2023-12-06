@@ -4,7 +4,9 @@ import './chat.css';
 
 
 const ChatList = ({setShow}:any) => {
-  
+  function handleClick(){
+    console.log("add-group")
+  }
   return (
     <div className='chatlist-container'>
         <div className='chatlist-header'>
@@ -12,7 +14,9 @@ const ChatList = ({setShow}:any) => {
                 type="text"
                 placeholder="       Search"
                 className="input-search-input" />
-            <img src='src/assets/group-add.svg'/>
+            <div className='add-group-icon'>
+              <img src='src/assets/group-add.svg' onClick={handleClick}/>
+            </div>
         </div>
         <div className='conversations-content'>
           <Conversation name={'abdelmounim skerbaabdelmounim sk'} setShow={setShow}/>
