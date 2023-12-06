@@ -44,12 +44,20 @@ let ChatGateway = class ChatGateway {
         if (clients.has(Name)) {
             console.log(clients.get(Name));
             this.server.to(clients.get(Name)).emit('DirectMessage', {
-                from: client.id,
-                msg: messageInput
+                from: this.serachOnVal(client.id),
+                to: Name,
+                msg: messageInput,
             });
         }
         else {
         }
+    }
+    serachOnVal(value) {
+        for (const [key, val] of this.connectedClients.entries()) {
+            if (val == value)
+                return key;
+        }
+        return undefined;
     }
 };
 exports.ChatGateway = ChatGateway;

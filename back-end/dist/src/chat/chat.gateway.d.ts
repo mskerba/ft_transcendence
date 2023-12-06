@@ -13,4 +13,5 @@ export declare class ChatGateway implements OnGatewayConnection, OnGatewayDiscon
         Name: string;
         messageInput: string;
     }): void;
+    serachOnVal(value: string): String;
 }

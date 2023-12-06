@@ -2,6 +2,7 @@ import { MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage
 import { Socket } from 'socket.io';
 import {SaveUserService} from '../save-user/save-user.service'
 import { Injectable } from '@nestjs/common';
+import { on } from 'events';
 
 @Injectable()
 @WebSocketGateway()
@@ -43,12 +44,13 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
   }
 
 
+
   // get the message and send it to the other client
   @SubscribeMessage('SendToClient')
-  DirectMessage(client: Socket, payload: { Name: string , messageInput: string}): void
+  DirectMessage(client: Socket, payload: {Name: string , messageInput: string}): void
   {
 
-    const {Name , messageInput} = payload;
+    const { Name , messageInput} = payload;
 
     console.log(payload);
     let clients = this.connectedClients;
@@ -58,8 +60,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
     {
       console.log(clients.get(Name));
       this.server.to(clients.get(Name)).emit('DirectMessage', {
-        from : client.id,
-        msg : messageInput
+        from : this.serachOnVal(client.id),
+        to : Name,
+        msg : messageInput,
       })
     }
     else
@@ -73,5 +76,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
   // handleMessage(client: Socket) : void{
   //      console.log("message is comming from id == ", client.id)
   // }
+
+  serachOnVal(value: string) : String{
+    for (const [key, val] of this.connectedClients.entries())
+    {
+      if (val == value)
+        return key;
+    }
+    return undefined;
+  }
 
 }

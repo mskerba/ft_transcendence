@@ -1,6 +1,7 @@
 
 // this is my code here
 let people = document.querySelector('.people');
+let right = document.querySelector('.right');
 
 // getItem from SesionStorage
 const username = sessionStorage.getItem('username')
@@ -27,6 +28,7 @@ let clientId;
 
 
 let Name ;
+let currentUser;
 
 
 
@@ -48,14 +50,31 @@ async function ConnectedClients()
 
     const clientMap = await clientPromise;
 
+    //top in html here
+    
+    const top = document.createElement('div');
+    top.classList.add('top');
+
+    const span = document.createElement('span');
+    span.innerText = "To: ";
+
+    const span2 = document.createElement('span');
+    span2.classList.add('name');
+    span2.innerText = "UserName";
+
+    span.appendChild(span2);
+
+
     for (const [key, val] of clientMap)
     {
         console.log("name : ", key, " sockeId: ", val);
         if (val != socket.id)
         {
+          // list of clients here
           const Elemli = document.createElement('li');
           Elemli.classList.add('person');
           Elemli.setAttribute('data-chat', prs+i);
+          Elemli.setAttribute(key, prs+i);
           
           const Elemimg = document.createElement('img');
           Elemimg.src = "https://robohash.org/"+ key + ".png";
@@ -80,10 +99,63 @@ async function ConnectedClients()
   
           people.appendChild(Elemli);
   
+          
+          // list of messges of clients
+          
+          const chatDiv = document.createElement('div');
+          chatDiv.classList.add('chat');
+          chatDiv.setAttribute('data-chat', prs+i);
+          
+          const ConvDiv = document.createElement('div');
+          ConvDiv.classList.add('conversation-start');
+
+          const span3 = document.createElement('span');
+          span3.innerText = currentDate.getDay() + ", " + time;
+
+          ConvDiv.appendChild(span3);
+          chatDiv.appendChild(ConvDiv);
+          
+
+          right.appendChild(span);
+          right.appendChild(chatDiv);
+
           i++;
   
         }
     }
+
+    // create button to send message
+    const divButton = document.createElement('div');
+    divButton.classList.add('write');
+
+    const link = document.createElement('a');
+    link.setAttribute('href', 'javascript:;');
+    link.classList.add('write-link');
+    link.classList.add('attach');
+
+    const input = document.createElement('input');
+    input.setAttribute('id', 'text');
+    input.setAttribute('type', 'text');
+    
+    const link2 = document.createElement('a');
+    link2.setAttribute('href', 'javascript:;');
+    link2.classList.add('write-link');
+    link2.classList.add('smiley');
+
+    const link3 = document.createElement('a');
+    link3.setAttribute('href', 'javascript:;');
+    link3.setAttribute('id', 'btnMessage');
+    link3.classList.add('write-link');
+    link3.classList.add('send');
+
+    divButton.appendChild(link);
+    divButton.appendChild(input);
+    divButton.appendChild(link2);
+    divButton.appendChild(link3);
+
+    right.appendChild(divButton);
+
+    setTimeout(UntilSockFinish, 2000);
 }
 
 
@@ -115,6 +187,7 @@ function UntilSockFinish()
   }
   
 Name = document.querySelector('.name').innerText;
+currentUser = "person1";
 
 friends.all.forEach(f => {
 f.addEventListener('mousedown', () => {
@@ -128,6 +201,7 @@ f.addEventListener('mousedown', () => {
   f.classList.add('active')
   chat.current = chat.container.querySelector('.active-chat')
   chat.person = f.getAttribute('data-chat')
+  currentUser = chat.person
   chat.current.classList.remove('active-chat')
   chat.container.querySelector('[data-chat="' + chat.person + '"]').classList.add('active-chat')
   friends.name = f.querySelector('.name').innerText
@@ -136,15 +210,29 @@ f.addEventListener('mousedown', () => {
 
   }
   // end of not my code 
+
+// send message here
+document.getElementById('btnMessage').addEventListener('click', () => {
+      
+  const messageInput = document.getElementById('text').value;  
+  console.log("message is clicked : ", messageInput);
+
+  const div = document.createElement('div');
+  div.classList.add('bubble');
+  div.classList.add('me');
+  div.innerText = messageInput;
+
+  const conv = document.querySelector(".chat[data-chat="+currentUser+"]")
+  conv.appendChild(div);
+
+  socket.emit('SendToClient', { Name , messageInput});
+
+})
+
+
 }
 
 ConnectedClients();
-
-
-
-  setTimeout(UntilSockFinish, 3000);
-
-
 
 
 
@@ -158,21 +246,32 @@ ConnectedClients();
 
 // listen for incoming messages 
 socket.on('DirectMessage', (data) => {
-  console.log("this is the data : ", data);
-})
+  console.log(data);
 
-
-
-// send message here
-document.getElementById('btnMessage').addEventListener('click', () => {
+  query = document.querySelector('['+ data.from+ ']');
   
-  const messageInput = document.getElementById('text').value;  
-  console.log("msg sent to this name : ", Name);
-  socket.emit('SendToClient', {Name , messageInput});
+
+  console.log("query : ", query.getAttribute(data.from));
+
+
+  chat = document.querySelector('.chat[data-chat='+ query.getAttribute(data.from)+ ']');
+
+  const div = document.createElement('div');
+  div.classList.add('bubble');
+  div.classList.add('you');
+  div.innerText = data.msg;
+
+  chat.appendChild(div);
+
+
 
 })
 
 
-// check if i get get some messages
+
+
+
+
+
 
 
