@@ -13,15 +13,6 @@
     font-size: 1.2rem;
 }
 
-.friend-request img {
-    width: 45px;
-    height: 45px;
-    object-fit: cover;
-    border: 2px solid #ffffff;
-    border-radius: 50%;
-}
-
-
 .friend-request-buttons {
     display: flex;
     justify-content: space-around;

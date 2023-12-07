@@ -6,11 +6,11 @@ const Settings = () => {
     const [inputValue, setInputValue] = useState('momeaizi');
 
     const handleSwitchToggle = () => {
-      setIsSwitchedOn(!isSwitchedOn);
+        setIsSwitchedOn(!isSwitchedOn);
     };
-
+    
     const handleInputChange = (e: any) => {
-      setInputValue(e.target.value);
+        setInputValue(e.target.value);
     };
 
     return (
@@ -23,6 +23,7 @@ const Settings = () => {
                 onChange={handleInputChange}
             />
             <div className='twoFA'>
+                <p>Two-factor authentication (2fa)</p>
                 <div className={`switch-container ${isSwitchedOn ? 'on' : 'off'}`} onClick={handleSwitchToggle}>
                     <div className="switch-circle"></div>
                 </div>

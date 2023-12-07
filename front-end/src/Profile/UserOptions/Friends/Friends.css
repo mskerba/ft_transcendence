@@ -16,11 +16,18 @@
     font-size: 1.2rem;
 }
 
-.friend .avatar {
+.user-avatar-name {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}
+
+.user-avatar-name .avatar {
     width: 45px;
     height: 45px;
     object-fit: cover;
-    border: 2px solid #ffffff;
+    border: 2px solid #0CF25D;
     border-radius: 50%;
 }
 
