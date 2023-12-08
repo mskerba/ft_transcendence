@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 
 import './chat.css';
 
-const Popup = (prop:any) => {
+const PopupCreatGroup = (prop:any) => {
   const [channelType, setChannelType] = useState('Public');
   const [channelPassword, setChannelPassword] = useState('');
 
@@ -17,21 +17,19 @@ const Popup = (prop:any) => {
   };
 
   const handleCloseClick = () => {
-    console.log(2)
-
     prop.setPopupParent((prev:any)=> {
       return ({...prev,display:'none'})
     });
   }
 
   return (
-    <div className='add-group-popup' style={prop.popupParent}>
-      <div className='popup'>
+    <div className='popup' style={prop.popupParent}>
+      <div className='add-group-popup'>
         <span className="close"  onClick={handleCloseClick}>&times;</span>
-          <div className='add-group-avatar'>
-            <img src='src/assets/group-defaul-image.png'/>
-          </div>
-          <input type="text" placeholder='Group name' className='add-group-name' />
+        <div className='add-group-avatar'>
+          <img src='src/assets/group-defaul-image.png'/>
+        </div>
+        <input type="text" placeholder='Group name' className='add-group-name' />
         <h2>Channel Type:</h2>
         <div className='channel-types'>
           <label>
@@ -79,4 +77,4 @@ const Popup = (prop:any) => {
   );
 };
 
-export default Popup;
+export default PopupCreatGroup;

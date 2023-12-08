@@ -3,6 +3,7 @@
     width: 100%;
     height: 56px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     background-color:  #034159;
@@ -35,12 +36,12 @@
     /* gap: 1rem; */
 }
 
-.navbar- ul div {
+.logo-search,
+.profile-exit{
     margin: 0;
     padding: 0;
     display: flex;
     gap: 3rem;
-    display: flex;
     justify-items: center;
     justify-content: space-between;
     align-items: center;
@@ -50,11 +51,72 @@
     color: white;
 }
 
-input {
+
+.small-size-search,
+.big-size-search {
     background-color: #115a77;
     border-radius: 10px;
     padding: 8px;
     font-size: 16px;
     width: 200px;
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
+}
+
+.profile-button-navbar {
+    border-radius: 50%;
+    /* border: 3px solid #025951; */
+    box-sizing: content-box;
+}
+
+.middle-navbar {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 3rem;
+    justify-items: center;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.middle-navbar-min {
+    display: none;
+    margin: 0;
+    padding: 0;
+    gap: 3rem;
+    justify-items: center;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.small-size-search {
+    display: none;
+}
+
+.big-size-search {
+    display: flex;
+}
+
+@media (max-width: 1050px)
+{
+    .middle-navbar {
+        display: none;
+    }
+    
+    .middle-navbar-min {
+        display: flex;
+    }
+
+    .navbar- {
+        height: 110px;
+        justify-content: space-evenly;
+    }
+
+    .small-size-search {
+        display: flex;
+    }
+
+    .big-size-search {
+        display: none;
+        
+    }
 }

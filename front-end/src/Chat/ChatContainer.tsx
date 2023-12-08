@@ -8,7 +8,7 @@ function Message(prop:any) {
     <div  className='chat-messages'>
       <div className={prop.user}>
         <div className={`color-${prop.user}`}>
-          <p>gafsdfsdfsd</p>
+          <p>sdflkdsjfdslkdfsd</p>
         </div>
       </div>
     </div>
@@ -16,12 +16,12 @@ function Message(prop:any) {
 }
 
 
-const ChatContainer = ({setShow}:any) => {
+const ChatContainer = (prop:any) => {
   
   return (
     <div className='chat-container'>
 
-      <ChatHeader setShow={setShow}/>
+      <ChatHeader setShow={prop.setShow} setPopupInfParent={prop.setPopupInfParent}/>
 
       <div  className='chat-conversation'>
           <Message user={'user'}/>
@@ -29,8 +29,8 @@ const ChatContainer = ({setShow}:any) => {
           <Message user={'user'}/>
           <Message user={'is-not-user'}/>
           <Message user={'user'}/>
-          <Message user={'is-not-user'}/>
-          <Message user={'user'}/>
+          <Message user={'is-not-user'}/>`
+          <Message user={'user'}/>`
           <Message user={'is-not-user'}/>
           <Message user={'user'}/>
           <Message user={'is-not-user'}/>
@@ -122,7 +122,8 @@ const ChatContainer = ({setShow}:any) => {
 
       <div  className='chat-input'>
         <div className='input-content'>
-          <input type='text' placeholder='Message' className='input-message'/>
+          {/* <input type='stylesheet' placeholder='Message' className='input-message'/> */}
+          <textarea placeholder='Message' className='input-message' ></textarea>
           <div className='message-send'>
             <img src="src/assets/send.svg" />
           </div>

@@ -4,8 +4,7 @@ import './chat.css';
 
 
 const ChatList = (prop:any) => {
-  function handleClick(){
-    console.log("add-group")
+  function handleClick() {
     prop.setPopupParent((prev:any) => {
       return ({
         ...prev,
