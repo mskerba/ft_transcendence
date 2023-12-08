@@ -1,0 +1,40 @@
+.game {
+    height: 50px;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 3px;
+    padding: 0 10px;
+    margin: 10px;
+    font-size: 1.2rem;
+}
+
+.game img {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #0CF25D;
+}
+
+.lose {
+    color: #FFFFFF;
+    background-color: #810000;
+    box-shadow: 0 0 5px #810000;
+}
+
+.win {
+    color: #000000;
+    background-color: #13e05b;
+    box-shadow: 0 0 5px #13e05b;
+}
+
+@media (max-width: 520px) {
+
+    .game {
+        font-size: .9rem;
+    }
+
+}
+
