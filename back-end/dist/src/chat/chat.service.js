@@ -1,0 +1,106 @@
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ChatService = void 0;
+const common_1 = require("@nestjs/common");
+const prisma_service_1 = require("../prisma/prisma.service");
+let ChatService = class ChatService {
+    constructor(prismaService) {
+        this.prismaService = prismaService;
+    }
+    async findUserById(userid) {
+        return await this.prismaService.user.findFirst({
+            where: { userId: userid },
+            select: {
+                name: true,
+            },
+        });
+    }
+    async findUserByname(username) {
+        return await this.prismaService.user.findFirst({
+            where: { name: username },
+            select: {
+                userId: true,
+            },
+        });
+    }
+    async findUserBySockid(socketId) {
+        return await this.prismaService.user.findFirst({
+            where: { sockId: socketId },
+            select: {
+                userId: true,
+            },
+        });
+    }
+    async SockToClient(socketId, username) {
+        const data = await this.findUserByname(username);
+        console.log(data);
+        if (data) {
+            await this.prismaService.user.update({
+                where: { name: username },
+                data: {
+                    sockId: socketId,
+                },
+            });
+        }
+        else
+            console.log("this client not found");
+    }
+    async findLinkMessage(user1, user2) {
+        const data = await this.prismaService.linkDirectMessage.findFirst({
+            where: {
+                UserId1: user1,
+                UserId2: user2,
+            },
+            select: {
+                conversationId: true,
+            },
+        });
+        return (data);
+    }
+    async LinkDirectMessage(sender, receiver) {
+        const data = await this.prismaService.linkDirectMessage.create({
+            data: {
+                UserId1: sender,
+                UserId2: receiver,
+            },
+            select: {
+                conversationId: true,
+            }
+        });
+        return (data);
+    }
+    async addDirectMessage(sender, receiver, msg) {
+        let str = await this.findLinkMessage(sender, receiver);
+        if (!str)
+            str = await this.LinkDirectMessage(sender, receiver);
+        console.log("this is str: ", str);
+        const data = await this.prismaService.directMessage.create({
+            data: {
+                text: msg,
+                userid: { connect: { userId: sender } },
+                PrvMsgId: { connect: { conversationId: str.conversationId } },
+            },
+            select: {
+                text: true,
+                privateId: true,
+                senderId: true,
+            }
+        });
+        return data;
+    }
+};
+exports.ChatService = ChatService;
+exports.ChatService = ChatService = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+], ChatService);
+//# sourceMappingURL=chat.service.js.map

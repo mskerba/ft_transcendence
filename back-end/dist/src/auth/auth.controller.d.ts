@@ -6,37 +6,9 @@ export declare class AuthController {
     constructor(authService: AuthService);
     googleLogin(): Promise<void>;
     fortyTwoLogin(): Promise<void>;
-    googleLoginCallBack(req: any): Promise<{
-        access_token: string;
-        refresh_token: string;
-        TwoFA_token: string;
-        userId: number;
-        name: string;
-        email: string;
-        avatar: string;
-        hashedRt: string;
-        twoFA_Enabled: boolean;
-        twoFA_Verified: boolean;
-        twoFA_SecretKey: string;
-        registrationDate: Date;
-        sockId: string;
-    }>;
-    fortyTwoCallBack(req: any): Promise<{
-        access_token: string;
-        refresh_token: string;
-        TwoFA_token: string;
-        userId: number;
-        name: string;
-        email: string;
-        avatar: string;
-        hashedRt: string;
-        twoFA_Enabled: boolean;
-        twoFA_Verified: boolean;
-        twoFA_SecretKey: string;
-        registrationDate: Date;
-        sockId: string;
-    }>;
-    logout(userId: number): Promise<void>;
+    googleLoginCallBack(req: any, res: any): Promise<any>;
+    fortyTwoCallBack(req: any, res: any): Promise<any>;
+    logout(userId: number, res: any): Promise<any>;
     refreshTokens(userId: number, refreshToken: string): Promise<{
         access_token: string;
         refresh_token: string;

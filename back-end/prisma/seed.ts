@@ -9,22 +9,22 @@ const prisma = new PrismaClient();
 async function main() {
  
   // delete all users
-  await prisma.soloConversation.deleteMany();
+  // await prisma.privateMessage.deleteMany();
   await prisma.user.deleteMany();
 
-//  // create 30 random Users
-//  let userArray = [];
+ // create 30 random Users
+ let userArray = [];
 
-//   for (let i = 0; i < 20; i++)
-//   {
-//     userArray[i] =  await prisma.user.create({
-//       data:
-//       {
-//         name: faker.person.firstName(),
-//         email: faker.internet.email(),
-//       }
-//     })
-//   }
+  for (let i = 0; i < 20; i++)
+  {
+    userArray[i] =  await prisma.user.create({
+      data:
+      {
+        name: faker.person.firstName(),
+        email: faker.internet.email(),
+      }
+    })
+  }
 
   
 //    console.log(await userArray);

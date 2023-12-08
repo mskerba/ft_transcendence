@@ -7,10 +7,13 @@ import { Response } from 'express';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-
   @Get()
-  getHello(@Res() response: Response): void {
-    const file = path.join(__dirname, '../..', '/html/index.html');
-    response.sendFile(file);
+  getHell(){
+    return this.appService.getHello();
   }
+  // @Get()
+  // getHello(@Res() response: Response): void {
+  //   const file = path.join(__dirname, '../..', '/html/index.html');
+  //   response.sendFile(file);
+  // }
 }

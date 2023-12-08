@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SaveUserService } from './save-user.service';
+import { SaveUserService } from './chat.service';
 
 describe('SaveUserService', () => {
   let service: SaveUserService;

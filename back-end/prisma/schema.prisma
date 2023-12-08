@@ -34,10 +34,11 @@ model User {
 
   // iharile 
   
-  dmMessage               DirectMessage[]
+  dmMessage1               DirectMessage[]
 
-  User1                   SoloConversation[]    @relation("UserConv1")
-  User2                   SoloConversation[]    @relation("UserConv2")
+
+  User1                   LinkDirectMessage[]    @relation("UserConv1")
+  User2                   LinkDirectMessage[]    @relation("UserConv2")
 
   roleUser                RoleUser[]
   roomMessage             RoomMessage[]
@@ -90,7 +91,7 @@ model Friendship {
 
 
 // i need to make this two ids unique
-model SoloConversation{
+model LinkDirectMessage{
   
   conversationId String       @id @default(cuid())
 
@@ -100,6 +101,7 @@ model SoloConversation{
   user2 User @relation("UserConv2", fields: [UserId2], references: [userId])
   UserId2 Int 
 
+  dmMessage DirectMessage[]
 
 }
 
@@ -110,8 +112,12 @@ DirectMessageId String       @id @default(cuid())
 
 text String
 
-userid User @relation(fields: [UserId], references: [userId])
-UserId Int
+PrvMsgId LinkDirectMessage @relation(fields: [privateId], references: [conversationId])
+privateId String
+
+userid User @relation(fields: [senderId], references: [userId])
+senderId Int
+
 
 }
 

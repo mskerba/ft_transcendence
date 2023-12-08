@@ -11,6 +11,7 @@
     "prisma:migrate": "prisma migrate dev --name init",
     "prisma:generate": "prisma generate",
     "start": "npm run prisma:migrate &&  nest start",
+    "alone": "npx prisma db seed && nest start --watch",
     "start:dev": "npx prisma db seed && nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",

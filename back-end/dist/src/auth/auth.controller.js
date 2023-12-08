@@ -31,16 +31,45 @@ let AuthController = class AuthController {
     }
     async fortyTwoLogin() {
     }
-    async googleLoginCallBack(req) {
+    async googleLoginCallBack(req, res) {
         const user = req.user;
-        return await this.authService.signIn(user);
+        const tokens = await this.authService.signIn(user);
+        res.cookie('accessToken', tokens.access_token, {
+            httpOnly: true,
+            maxAge: 15 * 60 * 1000,
+        });
+        res.cookie('refreshToken', tokens.refresh_token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+        res.cookie('2faToken', tokens.refresh_token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+        return res.redirect('http://localhost:3001/profile');
     }
-    async fortyTwoCallBack(req) {
+    async fortyTwoCallBack(req, res) {
         const user = req.user;
-        return await this.authService.signIn(user);
+        const tokens = await this.authService.signIn(user);
+        res.cookie('accessToken', tokens.access_token, {
+            httpOnly: true,
+            maxAge: 15 * 60 * 1000,
+        });
+        res.cookie('refreshToken', tokens.refresh_token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+        res.cookie('2faToken', tokens.refresh_token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+        return res.redirect('http://localhost:3001/profile');
     }
-    async logout(userId) {
-        return await this.authService.logout(userId);
+    async logout(userId, res) {
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+        await this.authService.logout(userId);
+        return res.send('Logout successful');
     }
     refreshTokens(userId, refreshToken) {
         return this.authService.refreshTokens(userId, refreshToken);
@@ -91,8 +120,9 @@ __decorate([
     (0, common_1.Get)('google/callback'),
     (0, common_1.UseGuards)(google_oauth_guard_1.GoogleOauthGuard),
     __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "googleLoginCallBack", null);
 __decorate([
@@ -100,15 +130,17 @@ __decorate([
     (0, common_1.Get)('42/callback'),
     (0, common_1.UseGuards)(_42_auth_guard_1.FortyTwoStrategy),
     __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "fortyTwoCallBack", null);
 __decorate([
     (0, common_1.Post)('logout'),
     __param(0, (0, index_1.GetCurrentUserId)()),
+    __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "logout", null);
 __decorate([

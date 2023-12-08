@@ -9,11 +9,11 @@ import { PrismaModule } from './prisma/prisma.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { UserModule } from './user/user.module';
 import { FriendModule } from './friend/friend.module';
-import { ChatGateway } from './chat/chat.gateway';
+import { ChatGateway } from './chatGateway/chat.gateway';
 import { join } from 'path';
-import { SaveUserService } from './save-user/save-user.service';
-import { SaveUserController } from './save-user/save-user.controller';
-import { SaveUserModule } from './save-user/save-user.module';
+import { ChatService } from './chat/chat.service';
+import { ChatController } from './chat/chat.controller';
+import { ChatModule } from './chat/chat.module';
 
 
 @Module({
@@ -22,10 +22,10 @@ import { SaveUserModule } from './save-user/save-user.module';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../../', 'html'),
     }),
-    SaveUserModule,
+    ChatModule,
     PrismaModule
   ],
-  controllers: [AppController, SaveUserController],
+  controllers: [AppController, ChatController],
   providers: [
     AppService,
     // {
@@ -33,7 +33,7 @@ import { SaveUserModule } from './save-user/save-user.module';
     //   useClass: JwtAuthGuard,
     // },
     ChatGateway,
-    SaveUserService,
+    ChatService,
     
 
   ],

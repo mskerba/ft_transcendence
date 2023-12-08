@@ -12,11 +12,11 @@ const serve_static_1 = require("@nestjs/serve-static");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const prisma_module_1 = require("./prisma/prisma.module");
-const chat_gateway_1 = require("./chat/chat.gateway");
+const chat_gateway_1 = require("./chatGateway/chat.gateway");
 const path_1 = require("path");
-const save_user_service_1 = require("./save-user/save-user.service");
-const save_user_controller_1 = require("./save-user/save-user.controller");
-const save_user_module_1 = require("./save-user/save-user.module");
+const chat_service_1 = require("./chat/chat.service");
+const chat_controller_1 = require("./chat/chat.controller");
+const chat_module_1 = require("./chat/chat.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -26,14 +26,14 @@ exports.AppModule = AppModule = __decorate([
             serve_static_1.ServeStaticModule.forRoot({
                 rootPath: (0, path_1.join)(__dirname, '../../', 'html'),
             }),
-            save_user_module_1.SaveUserModule,
+            chat_module_1.ChatModule,
             prisma_module_1.PrismaModule
         ],
-        controllers: [app_controller_1.AppController, save_user_controller_1.SaveUserController],
+        controllers: [app_controller_1.AppController, chat_controller_1.ChatController],
         providers: [
             app_service_1.AppService,
             chat_gateway_1.ChatGateway,
-            save_user_service_1.SaveUserService,
+            chat_service_1.ChatService,
         ],
     })
 ], AppModule);

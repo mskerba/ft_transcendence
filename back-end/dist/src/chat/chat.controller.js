@@ -9,26 +9,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppController = void 0;
+exports.ChatController = void 0;
 const common_1 = require("@nestjs/common");
-const app_service_1 = require("./app.service");
-let AppController = class AppController {
-    constructor(appService) {
-        this.appService = appService;
-    }
-    getHell() {
-        return this.appService.getHello();
+const chat_service_1 = require("./chat.service");
+let ChatController = class ChatController {
+    constructor(chatService) {
+        this.chatService = chatService;
     }
 };
-exports.AppController = AppController;
-__decorate([
-    (0, common_1.Get)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], AppController.prototype, "getHell", null);
-exports.AppController = AppController = __decorate([
-    (0, common_1.Controller)(),
-    __metadata("design:paramtypes", [app_service_1.AppService])
-], AppController);
-//# sourceMappingURL=app.controller.js.map
+exports.ChatController = ChatController;
+exports.ChatController = ChatController = __decorate([
+    (0, common_1.Controller)('chat'),
+    __metadata("design:paramtypes", [chat_service_1.ChatService])
+], ChatController);
+//# sourceMappingURL=chat.controller.js.map

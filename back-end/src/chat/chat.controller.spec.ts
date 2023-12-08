@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SaveUserController } from './save-user.controller';
+import { SaveUserController } from './chat.controller';
 
 describe('SaveUserController', () => {
   let controller: SaveUserController;
