@@ -11,7 +11,7 @@ import NavBar from './navBar/navBar';
 const App = () => {
   return (
     <>
-    {/* <NavBar/> */}
+    <NavBar/>
       <Router>
         <Routes>
           <Route path="/" element={<Login />} />
