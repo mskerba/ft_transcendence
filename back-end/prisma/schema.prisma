@@ -77,13 +77,13 @@ model Friendship {
   friendshipId            String       @id @default(cuid())
   user1Id                 Int
   user2Id                 Int
-  friendshipDate          DateTime
+  friendshipDate          DateTime      @default(now())
 
   user1                   User      @relation("User1Friends", fields: [user1Id], references: [userId])
 
   user2                   User      @relation("User2Friends", fields: [user2Id], references: [userId])
 
-
+  @@unique([user1Id, user2Id])
 }
 
 

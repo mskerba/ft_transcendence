@@ -10,6 +10,6 @@ export declare class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
         to: number;
         msg: string;
     }): Promise<void>;
-    handleConnection(client: Socket): void;
+    handleConnection(client: Socket): Promise<void>;
     handleDisconnect(client: Socket): void;
 }

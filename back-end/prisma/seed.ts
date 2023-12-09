@@ -9,22 +9,23 @@ const prisma = new PrismaClient();
 async function main() {
  
   // delete all users
-  // await prisma.privateMessage.deleteMany();
-  await prisma.user.deleteMany();
+//   await prisma.directMessage.deleteMany();
+//   await prisma.linkDirectMessage.deleteMany();
+//   await prisma.user.deleteMany();
 
- // create 30 random Users
- let userArray = [];
+//  // create 30 random Users
+//  let userArray = [];
 
-  for (let i = 0; i < 20; i++)
-  {
-    userArray[i] =  await prisma.user.create({
-      data:
-      {
-        name: faker.person.firstName(),
-        email: faker.internet.email(),
-      }
-    })
-  }
+//   for (let i = 0; i < 20; i++)
+//   {
+//     userArray[i] =  await prisma.user.create({
+//       data:
+//       {
+//         name: faker.person.firstName(),
+//         email: faker.internet.email(),
+//       }
+//     })
+//   }
 
   
 //    console.log(await userArray);
@@ -44,6 +45,31 @@ async function main() {
 //         }
 //       })
 //   }
+
+
+// prisma.friendship.deleteMany()
+
+// let userArray = await prisma.user.findMany({});
+
+
+// let j = 0;
+// let k = 19;
+
+// for (let i = 0; i < 10; i++)
+// {
+//      let id1: number = userArray[j++].userId;
+//      let id2: number = userArray[k--].userId;
+
+//     await prisma.friendship.create({
+//       data: {
+          
+//           user1: { connect:{userId : id1}},
+//           user2: { connect: {userId: id2}},
+      
+//           },
+
+//       });
+// }
 
 
 

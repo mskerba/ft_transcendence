@@ -23,18 +23,27 @@ let ChatGateway = class ChatGateway {
     }
     async Message(client, data) {
         console.log("id of sender : ", client.id);
-        const obj = await this.chatService.findUserById(data.to);
         const { userId } = await this.chatService.findUserBySockid(client.id);
-        const obj2 = await this.chatService.addDirectMessage(userId, data.to, data.msg);
-        console.log(obj2);
     }
-    handleConnection(client) {
+    async handleConnection(client) {
         console.log("client connected : id: ", client.id);
-        console.log("the name that is sent : ", client.handshake.headers.origin);
-        this.chatService.SockToClient(client.id, client.handshake.headers.origin);
+        await this.chatService.SockToClient(client.id, client.handshake.headers.origin);
+        const { userId } = await this.chatService.findUserBySockid(client.id);
+        console.log("im userId == ", userId);
+        const test = await this.chatService.FriendStatus(userId);
+        console.log("all friends that i talk with", test);
+        if (test) {
+            test.forEach(item => {
+                if (item.user1.sockId == client.id)
+                    client.to(item.user2.sockId).emit("status", userId, "online");
+                else
+                    client.to(item.user1.sockId).emit("status", userId, "online");
+            });
+        }
     }
     handleDisconnect(client) {
         console.log("disconnected client : ", client.id);
+        console.log("disconnected name is : ", client.handshake.headers.origin);
         this.chatService.SockToClient(null, client.handshake.headers.origin);
     }
 };

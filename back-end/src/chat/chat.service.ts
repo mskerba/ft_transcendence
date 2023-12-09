@@ -14,6 +14,7 @@ export class ChatService {
            where: {userId: userid},
            select: {
             name : true,
+            sockId: true,
            },
        });
    }
@@ -80,6 +81,9 @@ export class ChatService {
 
 
     async addDirectMessage(sender: number, receiver: number, msg: string): Promise<object>{
+        
+        console.log("the param is : ", sender, " : ", receiver, " : ", msg);
+        
         let str = await this.findLinkMessage(sender, receiver);
         
         if (!str)
@@ -97,10 +101,45 @@ export class ChatService {
                 text: true,
                 privateId: true,
                 senderId: true,
-            }
-          
-
+            }          
         });
+
         return data;
     }
-}
+
+
+    // add status of online or offline or ingame
+
+    async FriendStatus(userId: number){
+
+        const data =  await this.prismaService.friendship.findMany({
+            
+            where: 
+            {
+                OR: [
+                        {user1Id: userId,},
+                        {user2Id: userId,},
+                    ],
+                AND:[
+                        {user1 :{ sockId : {not: null} }},
+                        {user2: { sockId : {not: null} }}
+                    ]
+            },
+            select:{
+                user1: { select: {sockId: true}},
+                user2: { select: {sockId: true}},
+
+            }
+
+            });
+        
+            return data;
+    }
+
+
+
+
+
+
+
+    }

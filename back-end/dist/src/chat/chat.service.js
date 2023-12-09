@@ -21,6 +21,7 @@ let ChatService = class ChatService {
             where: { userId: userid },
             select: {
                 name: true,
+                sockId: true,
             },
         });
     }
@@ -79,6 +80,7 @@ let ChatService = class ChatService {
         return (data);
     }
     async addDirectMessage(sender, receiver, msg) {
+        console.log("the param is : ", sender, " : ", receiver, " : ", msg);
         let str = await this.findLinkMessage(sender, receiver);
         if (!str)
             str = await this.LinkDirectMessage(sender, receiver);
@@ -93,6 +95,25 @@ let ChatService = class ChatService {
                 text: true,
                 privateId: true,
                 senderId: true,
+            }
+        });
+        return data;
+    }
+    async FriendStatus(userId) {
+        const data = await this.prismaService.friendship.findMany({
+            where: {
+                OR: [
+                    { user1Id: userId, },
+                    { user2Id: userId, },
+                ],
+                AND: [
+                    { user1: { sockId: { not: null } } },
+                    { user2: { sockId: { not: null } } }
+                ]
+            },
+            select: {
+                user1: { select: { sockId: true, name: true } },
+                user2: { select: { sockId: true, name: true } },
             }
         });
         return data;
