@@ -155,21 +155,33 @@ input {
 
 .chat-conversation {
     grid-area: 2 / 1 / 3 / 2;
+    max-width: 880px;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+}
+
+.child-chat-conversation {
+    width: 100%;
     display: flex;
     flex-direction: column-reverse;
     overflow-y: scroll;
     overflow-x: hidden;
-    max-width: 880px;
+    height: fit-content;
+    max-height: 100%;
+    /* height: 100%; */
+    margin: 0;
+    padding-bottom: 15px;
+    /* height: 100px; */
+
 }
 
-
-.chat-conversation::-webkit-scrollbar {
+.child-chat-conversation::-webkit-scrollbar {
     width: 10px;
 }
 
-.chat-conversation:hover::-webkit-scrollbar-thumb {
+.child-chat-conversation:hover::-webkit-scrollbar-thumb {
     box-shadow: inset 0 0 5px grey;
-    /* background:#025951; */
     border-radius: 10px;
 }
 
@@ -202,14 +214,26 @@ input {
     padding: 4px 8px 5px 8px;
     color: white;
     display: flex;
-    white-space: wrap; 
-    overflow-wrap: break-word;
+    flex-direction: column;
+    gap: 3px;
+    white-space: wrap;
+    overflow-wrap: anywhere;
 }
 
 .color-user p,
 .color-is-not-user p {
     padding: 0;
-    margin: 0;    overflow: hidden;
+    margin: 0;
+    overflow: hidden;
+}
+
+.color-user h4,
+.color-is-not-user h4 {
+    color: rgb(65, 156, 241);
+
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
 }
 
 .color-user {
@@ -233,6 +257,14 @@ input {
     display: flex;
     flex-direction: row;
     padding: 0 13px;
+}
+
+
+.user img,
+.is-not-user img{
+    width: 42px;
+    border-radius: 50%;
+    height: 42px;
 }
 
 .user{
@@ -571,8 +603,6 @@ input {
 }
 
 .channel-types input{
-    /* padding-right: 10px; */
-    /* margin: 0; */ 
     width: 10px;
     height: auto;
 }

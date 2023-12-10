@@ -4,7 +4,6 @@ import './chat.css';
 const Member = (prop:any) => {
 
   function handleMoreInfClick(event:any) {
-    // console.log(event)
     const { clientX, clientY } = event;
     prop.setDivPosition((prev:any) => 
                           {

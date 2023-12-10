@@ -42,6 +42,7 @@ const PopupCreatGroup = (prop:any) => {
             />
             Public
           </label>
+
           <label>
             <input
               type="radio"
@@ -52,6 +53,7 @@ const PopupCreatGroup = (prop:any) => {
             />
             Private
           </label>
+
           <label>
             <input
               type="radio"
