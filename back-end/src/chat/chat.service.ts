@@ -1,5 +1,6 @@
 import { Injectable, Param } from '@nestjs/common';
 import {PrismaService} from '../prisma/prisma.service'
+import {CreateGroupDto} from './DTO/create-groups.dto'
 import { faker, tr } from '@faker-js/faker';
 import { TimeoutError } from 'rxjs';
 import { send } from 'process';
@@ -137,9 +138,29 @@ export class ChatService {
     }
 
 
+    // create groups here
 
+    // async createGroup(createGroupDto: CreateGroupDto){
+        
+    //     let room =  await this.prismaService.room.create({
+    //         data: {
+    //             TypeRoom: createGroupDto.TypeRoom,
+    //             avatar: createGroupDto.avatar,
+    //             title: createGroupDto.title,
+    //             password: createGroupDto.password
+    //         }
+    //     });
 
+    //     let roleUser = await this.prismaService.roleUser.create({
+    //         data:{
+    //             //roleUser: {connect:{userId: createGroupDto.UserId}},
+    //             UserId: createGroupDto.UserId,
+    //             RoleName: createGroupDto.RoleName,
+    //             RoomId: room.RoomId
+    //         },
+    //         select:{}
+    //     })
+    //     return roleUser;
+    // }
 
-
-
-    }
+}

@@ -112,8 +112,8 @@ let ChatService = class ChatService {
                 ]
             },
             select: {
-                user1: { select: { sockId: true, name: true } },
-                user2: { select: { sockId: true, name: true } },
+                user1: { select: { sockId: true } },
+                user2: { select: { sockId: true } },
             }
         });
         return data;

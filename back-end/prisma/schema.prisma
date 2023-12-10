@@ -125,9 +125,9 @@ model Room{
 
   RoomId String       @id @default(cuid())
 
-  TypeRoom String
+  TypeRoom  String
 
-  avatar Bytes
+  avatar  String      @default("https://robohash.org/test.png")
 
   title String
 

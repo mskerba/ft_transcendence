@@ -13,11 +13,9 @@ export declare class ChatService {
     addDirectMessage(sender: number, receiver: number, msg: string): Promise<object>;
     FriendStatus(userId: number): Promise<{
         user1: {
-            name: string;
             sockId: string;
         };
         user2: {
-            name: string;
             sockId: string;
         };
     }[]>;
