@@ -1,141 +1,70 @@
-import React, { useState } from 'react'
-import ChatHeader from './ChatHeader'
+import React, { useEffect, useState } from 'react';
+import ChatHeader from './ChatHeader';
 import './chat.css';
 
-function Message(prop:any) {
+function Message(props:any) {
+  const { user, name, message } = props;
   const channel = true;
-  return (
 
-    <div  className='chat-messages'>
-      <div className={prop.user}>
-        {channel && (prop.user != 'user') && <img src='https://thispersondoesnotexist.com/'/>}
-        <div className={`color-${prop.user}`}>
-          {channel && (prop.user != 'user') && <h4>Abdelmounaim skerba</h4>}
-          <p>imad siiir tkhdem</p>
+  return (
+    <div className='chat-messages'>
+      <div className={user}>
+        {channel && user !== 'user' && <img src='https://placekitten.com/50/50' alt='User avatar' />}
+        <div className={`color-${user}`}>
+          {channel && user !== 'user' && <h4>{name}</h4>}
+          <p>{message}</p>
         </div>
       </div>
     </div>
   );
 }
 
+const ChatContainer = (props:any) => {
+  const [message, setMessage] = useState('');
 
-const ChatContainer = (prop:any) => {
+  const [allMessage, setAllMessage] = useState([
+    { name: 'abdelmounaim Skerba', message: "sbab3 kaysefet message", user: 'is-not-user' },
+    { name: 'taha meaizi', message: "sf stafit jaya", user: 'is-not-user' },
+    { name: 'imad harile', message: "taha ghadi imout", user: 'user' },
+  ]);
+
+  const handleMessageChange = (event:any) => {
+    setMessage(event.target.value);
+  };
+
+  const handleSendMessage = () => {
+    if (message == '')
+      return;
+    const newMessage = { name: 'New User', message, user: 'user' };
+    setAllMessage([ newMessage, ...allMessage]);
+    setMessage('');
+  };
 
   return (
     <div className='chat-container'>
+      <ChatHeader setShow={props.setShow} setPopupInfParent={props.setPopupInfParent} />
 
-      <ChatHeader setShow={prop.setShow} setPopupInfParent={prop.setPopupInfParent}/>
-
-      <div  className='chat-conversation'>
-        <div  className='child-chat-conversation'>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
-            <Message user={'user'}/>
-            <Message user={'is-not-user'}/>
+      <div className='chat-conversation'>
+        <div className='child-chat-conversation'>
+          {allMessage.map((element, index) => (
+            <Message key={index} {...element} />
+          ))}
         </div>
       </div>
 
-
-      <div  className='chat-input'>
+      <div className='chat-input'>
         <div className='input-content'>
-          {/* <input type='stylesheet' placeholder='Message' className='input-message'/> */}
-          <textarea placeholder='Message' className='input-message' ></textarea>
+          <textarea
+            placeholder='Message'
+            className='input-message'
+            value={message}
+            onChange={handleMessageChange}
+          ></textarea>
           <div className='message-send'>
-            <img src="src/assets/send.svg" />
+            <img src="src/assets/send.svg" onClick={handleSendMessage}/>
           </div>
         </div>
       </div>
-
     </div>
   );
 };
