@@ -1,1 +1,3 @@
 // retuen data from datbase use Promise<any> work Promise<object> not working
+// check the id of user is have the authorisation to get his friends
+// connect in prisma i will check it why is it necessary sometimes and sometimes not

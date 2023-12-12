@@ -118,6 +118,38 @@ let ChatService = class ChatService {
         });
         return data;
     }
+    async MyFriends(user1) {
+        let mp = new Map();
+        const data = await this.prismaService.linkDirectMessage.findMany({
+            where: {
+                OR: [
+                    { UserId1: user1 },
+                    { UserId2: user1 },
+                ],
+            },
+            select: {
+                user1: { select: { userId: true } },
+                user2: { select: { userId: true } },
+                conversationId: true,
+            },
+        });
+        let ids = data.map((client) => client.conversationId);
+        console.log("this is ids: ", ids);
+        const messages = await this.prismaService.directMessage.findMany({
+            where: {
+                privateId: {
+                    in: ids
+                }
+            },
+            select: {
+                privateId: true,
+                countUnseen: true,
+                text: true,
+            }
+        });
+        console.log("this is messages with give conversation ids: ", messages);
+        return messages;
+    }
 };
 exports.ChatService = ChatService;
 exports.ChatService = ChatService = __decorate([

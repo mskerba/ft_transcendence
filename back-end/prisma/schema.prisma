@@ -101,6 +101,7 @@ model LinkDirectMessage{
   user2 User @relation("UserConv2", fields: [UserId2], references: [userId])
   UserId2 Int 
 
+  @@unique([UserId1,UserId2])
   dmMessage DirectMessage[]
 
 }
@@ -118,6 +119,9 @@ privateId String
 userid User @relation(fields: [senderId], references: [userId])
 senderId Int
 
+isSeen Boolean @default(false)
+
+countUnseen Int @default(0)
 
 }
 

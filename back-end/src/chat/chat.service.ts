@@ -1,10 +1,11 @@
-import { Injectable, Param } from '@nestjs/common';
+import { ConsoleLogger, Injectable, Param } from '@nestjs/common';
 import {PrismaService} from '../prisma/prisma.service'
 import {CreateGroupDto} from './DTO/create-groups.dto'
 import { faker, tr } from '@faker-js/faker';
 import { TimeoutError } from 'rxjs';
 import { send } from 'process';
 import { JsPromise, JsonArray } from '@prisma/client/runtime/library';
+import { equal } from 'assert';
 
 @Injectable()
 export class ChatService {
@@ -67,6 +68,7 @@ export class ChatService {
         });
         return (data);
     }
+
     async   LinkDirectMessage(sender: number, receiver: number): Promise<any>{
         const data = await this.prismaService.linkDirectMessage.create({
             data: {
@@ -137,6 +139,52 @@ export class ChatService {
             return data;
     }
 
+    async MyFriends(user1: number){
+
+       let mp = new Map<number, object>();
+        
+        const data = await this.prismaService.linkDirectMessage.findMany({
+            where:{
+                OR: [
+                        {UserId1:  user1},
+                        {UserId2:  user1},
+                    ],
+            },
+            select:{
+                user1: { select: {userId: true}},
+                user2: { select: {userId: true}},
+                conversationId: true,              
+            },
+    
+        })
+        
+        let ids = data.map((client) => client.conversationId);
+        console.log("this is ids: ", ids);
+
+        const messages = await this.prismaService.directMessage.findMany({
+            where: {
+                privateId:{
+                    in: ids                    
+                }
+            },
+            select:{
+                privateId: true,
+                countUnseen: true,
+                text: true,
+            }
+        });
+
+        console.log("this is messages with give conversation ids: ", messages);
+
+        return messages;
+        // let obj;
+        // data.forEach(item => {
+        //     obj = (item.user1.userId != user1) ? item.user1 : item.user2;
+
+
+        // });
+
+    }
 
     // create groups here
 

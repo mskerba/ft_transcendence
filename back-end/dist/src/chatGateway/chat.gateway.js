@@ -41,25 +41,14 @@ let ChatGateway = class ChatGateway {
     }
     async handleConnection(client) {
         console.log("client connected : id: ", client.id);
-        await this.chatService.SockToClient(client.id, client.handshake.headers.origin);
-        const { userId } = await this.chatService.findUserBySockid(client.id);
-        this.mp.set(client.id, userId);
-        console.log("im userId == ", userId);
-        const friends = await this.chatService.FriendStatus(userId);
-        if (friends.length) {
-            friends.forEach(item => {
-                if (item.user1.sockId == client.id)
-                    client.to(item.user2.sockId).emit("status", userId, "online");
-                else
-                    client.to(item.user1.sockId).emit("status", userId, "online");
-            });
-        }
+        return { msg: "sucessfuly connected to socketa" };
     }
     handleDisconnect(client) {
         console.log("disconnected client : ", client.id);
         this.mp.delete(client.id);
         console.log("disconnected name is : ", client.handshake.headers.origin);
         this.chatService.SockToClient(null, client.handshake.headers.origin);
+        return { msg: "client disconnected from socketa" };
     }
 };
 exports.ChatGateway = ChatGateway;
@@ -81,7 +70,7 @@ __decorate([
 ], ChatGateway.prototype, "ShareStatus", null);
 exports.ChatGateway = ChatGateway = __decorate([
     (0, common_1.Injectable)(),
-    (0, websockets_1.WebSocketGateway)(),
+    (0, websockets_1.WebSocketGateway)({ cors: true }),
     __metadata("design:paramtypes", [chat_service_1.ChatService])
 ], ChatGateway);
 //# sourceMappingURL=chat.gateway.js.map

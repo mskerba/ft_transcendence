@@ -20,12 +20,23 @@ let ChatController = class ChatController {
     constructor(chatService) {
         this.chatService = chatService;
     }
+    async MyFriends(param) {
+        const id = parseInt(param.ide);
+        return await this.chatService.MyFriends(id);
+    }
     createGroup(createGroupDto) {
         console.log("this is the data that come : ", createGroupDto);
         return { msg: "cool things happen" };
     }
 };
 exports.ChatController = ChatController;
+__decorate([
+    (0, common_1.Get)(':ide'),
+    __param(0, (0, common_1.Param)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ChatController.prototype, "MyFriends", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),

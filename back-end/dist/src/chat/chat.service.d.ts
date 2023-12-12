@@ -19,4 +19,9 @@ export declare class ChatService {
             sockId: string;
         };
     }[]>;
+    MyFriends(user1: number): Promise<{
+        text: string;
+        privateId: string;
+        countUnseen: number;
+    }[]>;
 }
