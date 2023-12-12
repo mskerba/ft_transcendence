@@ -38,20 +38,19 @@ export class AuthController {
 
         res.cookie('accessToken', tokens.access_token, {
             httpOnly: true,
-            maxAge: 15 * 60 * 1000, // 15 minutes in milliseconds
+            maxAge: 15 * 60 * 1000,
           });
-      
-          // Set refresh token as a cookie with a 7-day expiration
+
           res.cookie('refreshToken', tokens.refresh_token, {
             httpOnly: true,
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+            maxAge: 7 * 24 * 60 * 60 * 1000,
           });
 
           res.cookie('2faToken', tokens.refresh_token, {
             httpOnly: true,
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+            maxAge: 7 * 24 * 60 * 60 * 1000,
           });
-        return res.redirect('http://localhost:3001/profile');
+        return res.redirect(process.env.FRONTEND_DOMAIN + '/profile');
     }
 
     @Public()
@@ -76,7 +75,7 @@ export class AuthController {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
           });
-        return res.redirect('http://localhost:3001/profile');
+          return res.redirect(process.env.FRONTEND_DOMAIN + '/profile');
     }
 
     @Post('logout')
@@ -91,7 +90,7 @@ export class AuthController {
     }
 
     @Public()
-    @Post('refresh')
+    @Get('refresh')
     @UseGuards(JwtRTAuthGuard)
     refreshTokens(
         @GetCurrentUserId() userId: number,

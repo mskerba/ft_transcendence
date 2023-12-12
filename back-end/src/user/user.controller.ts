@@ -6,7 +6,6 @@ import { UserEntity } from './entities/user.entity';
 import { Public } from 'src/common/decorators';
 
 @Controller('user')
-@Public()
 export class UserController {
   constructor(private readonly userService: UserService) { }
 

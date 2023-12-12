@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install vite react react-dom react-router-dom
+RUN npm install vite react react-dom react-router-dom axios
 
 RUN npm i --save-dev @types/p5
 

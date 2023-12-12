@@ -1,25 +1,44 @@
-import React, { useState } from 'react';
-import Game from "./game/Game";
-import Chat from "./Chat/Chat";
-import Profile from "./Profile/Profile"
+import React, { useEffect, useState } from 'react';
+import Game from "./Components/game/Game";
+import Chat from "./Components/Chat/Chat";
+import Profile from "./Components/Profile/Profile"
 import './App.css'
-import Login from './login/login';
+import Login from './Components/login/login';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import NavBar from './navBar/navBar';
+import RequireAuth from './Components/RequireAuth';
+import { useAuth } from './context/AuthContext';
+import axios from './api/axios';
+
+
 
 
 const App = () => {
+  const { auth, login } = useAuth();
+  console.log("app");
+
+  useEffect(() => {
+    const test = async () => {
+      const response = await axios.get('/user/1');
+      console.log(response.status);
+      if (response.status == 200) {
+        login();
+      }
+      console.log("--->", auth);
+    }
+    test();
+  }, [auth]);
+
+
   return (
     <>
-    {/* <NavBar/> */}
-      <Router>
         <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/game" element={<Game />} />
-          <Route path="/Chat" element={<Chat />} />
+          <Route element={<RequireAuth auth={auth}/>}>
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/game" element={<Game />} />
+            <Route path="/Chat" element={<Chat />} />
+          </Route>
+          <Route path="/login" element={<Login />} />
         </Routes>
-      </Router>
     </>
   );
 };
