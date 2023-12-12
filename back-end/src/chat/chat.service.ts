@@ -2,10 +2,11 @@ import { ConsoleLogger, Injectable, Param } from '@nestjs/common';
 import {PrismaService} from '../prisma/prisma.service'
 import {CreateGroupDto} from './DTO/create-groups.dto'
 import { faker, tr } from '@faker-js/faker';
-import { TimeoutError } from 'rxjs';
+import { TimeoutError, distinct, map } from 'rxjs';
 import { send } from 'process';
 import { JsPromise, JsonArray } from '@prisma/client/runtime/library';
 import { equal } from 'assert';
+var Multimap = require('multimap');
 
 @Injectable()
 export class ChatService {
@@ -141,6 +142,8 @@ export class ChatService {
 
     async MyFriends(user1: number){
 
+        
+
        let mp = new Map<number, object>();
         
         const data = await this.prismaService.linkDirectMessage.findMany({
@@ -151,38 +154,56 @@ export class ChatService {
                     ],
             },
             select:{
-                user1: { select: {userId: true}},
-                user2: { select: {userId: true}},
+                user1: { select: {userId: true, name : true}},
+                user2: { select: {userId: true, name: true}},
                 conversationId: true,              
             },
     
         })
         
+        let user = data.map((id) => {
+            if (id.user1.userId != user1)
+                return id.user1;
+            return id.user2;
+        });
+
+        console.log ("this is user Id : ", user );
         let ids = data.map((client) => client.conversationId);
         console.log("this is ids: ", ids);
 
         const messages = await this.prismaService.directMessage.findMany({
             where: {
                 privateId:{
-                    in: ids                    
+                    in: ids           
                 }
             },
+            orderBy:[{
+                dateMessage: 'desc',
+                },
+            ],
+            distinct: ['privateId'],
             select:{
                 privateId: true,
                 countUnseen: true,
                 text: true,
+                
             }
         });
 
         console.log("this is messages with give conversation ids: ", messages);
 
-        return messages;
-        // let obj;
-        // data.forEach(item => {
-        //     obj = (item.user1.userId != user1) ? item.user1 : item.user2;
 
+        let i = 0;        
+        messages.forEach(item => { 
+            let obj: object = {"Unseen": item.countUnseen, "name": user[i].name , lastMsg: item.text }
+            mp.set(user[i].userId, obj);
+            i++;
+        })
 
-        // });
+        
+        return mp;
+        
+        
 
     }
 

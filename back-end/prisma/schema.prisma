@@ -113,6 +113,8 @@ DirectMessageId String       @id @default(cuid())
 
 text String
 
+dateMessage     DateTime  @default(now())
+
 PrvMsgId LinkDirectMessage @relation(fields: [privateId], references: [conversationId])
 privateId String
 

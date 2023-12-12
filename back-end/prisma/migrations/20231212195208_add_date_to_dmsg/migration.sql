@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "DirectMessage" ADD COLUMN     "dateMessage" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

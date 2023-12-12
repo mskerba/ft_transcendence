@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChatService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
+var Multimap = require('multimap');
 let ChatService = class ChatService {
     constructor(prismaService) {
         this.prismaService = prismaService;
@@ -128,11 +129,17 @@ let ChatService = class ChatService {
                 ],
             },
             select: {
-                user1: { select: { userId: true } },
-                user2: { select: { userId: true } },
+                user1: { select: { userId: true, name: true } },
+                user2: { select: { userId: true, name: true } },
                 conversationId: true,
             },
         });
+        let user = data.map((id) => {
+            if (id.user1.userId != user1)
+                return id.user1;
+            return id.user2;
+        });
+        console.log("this is user Id : ", user);
         let ids = data.map((client) => client.conversationId);
         console.log("this is ids: ", ids);
         const messages = await this.prismaService.directMessage.findMany({
@@ -141,6 +148,11 @@ let ChatService = class ChatService {
                     in: ids
                 }
             },
+            orderBy: [{
+                    dateMessage: 'desc',
+                },
+            ],
+            distinct: ['privateId'],
             select: {
                 privateId: true,
                 countUnseen: true,
@@ -148,7 +160,13 @@ let ChatService = class ChatService {
             }
         });
         console.log("this is messages with give conversation ids: ", messages);
-        return messages;
+        let i = 0;
+        messages.forEach(item => {
+            let obj = { "Unseen": item.countUnseen, "name": user[i].name, lastMsg: item.text };
+            mp.set(user[i].userId, obj);
+            i++;
+        });
+        return mp;
     }
 };
 exports.ChatService = ChatService;
