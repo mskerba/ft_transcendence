@@ -63,4 +63,4 @@ networks:
 
 volumes:
   pgdata_vol:
-
+    name: postgres_vol
