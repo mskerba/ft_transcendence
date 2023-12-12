@@ -8,6 +8,8 @@ RUN npm install vite react react-dom react-router-dom axios
 
 RUN npm i --save-dev @types/p5
 
+Run npm install socket.io-client
+
 COPY . .
 
 

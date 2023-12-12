@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import RequireAuth from './Components/RequireAuth';
 import { useAuth } from './context/AuthContext';
 import axios from './api/axios';
+import NavBar from './Components/navBar/navBar';
 
 
 
@@ -31,6 +32,7 @@ const App = () => {
 
   return (
     <>
+        <NavBar />
         <Routes>
           <Route element={<RequireAuth auth={auth}/>}>
             <Route path="/profile" element={<Profile />} />

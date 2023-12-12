@@ -4,7 +4,7 @@ import './chat.css';
 
 
 const ChatList = (prop:any) => {
-  function handleClick(){
+  function handleClick() {
     prop.setPopupParent((prev:any) => {
       return ({
         ...prev,
