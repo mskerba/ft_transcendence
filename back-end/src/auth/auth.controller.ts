@@ -38,7 +38,7 @@ export class AuthController {
 
         res.cookie('accessToken', tokens.access_token, {
             httpOnly: true,
-            maxAge: 15 * 60 * 1000,
+            maxAge: 1 * 60 * 1000,
           });
 
           res.cookie('refreshToken', tokens.refresh_token, {
@@ -62,20 +62,20 @@ export class AuthController {
 
         res.cookie('accessToken', tokens.access_token, {
             httpOnly: true,
-            maxAge: 15 * 60 * 1000, // 15 minutes in milliseconds
-          });
+            maxAge: 1 * 60 * 1000, // 15 minutes in milliseconds
+        });
       
-          // Set refresh token as a cookie with a 7-day expiration
-          res.cookie('refreshToken', tokens.refresh_token, {
+        // Set refresh token as a cookie with a 7-day expiration
+        res.cookie('refreshToken', tokens.refresh_token, {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
-          });
+        });
 
-          res.cookie('2faToken', tokens.refresh_token, {
+        res.cookie('2faToken', tokens.refresh_token, {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
-          });
-          return res.redirect(process.env.FRONTEND_DOMAIN + '/profile');
+        });
+        return res.redirect(process.env.FRONTEND_DOMAIN + '/profile');
     }
 
     @Post('logout')
@@ -92,12 +92,32 @@ export class AuthController {
     @Public()
     @Get('refresh')
     @UseGuards(JwtRTAuthGuard)
-    refreshTokens(
+    async refreshTokens(
         @GetCurrentUserId() userId: number,
         @GetCurrentUser('refreshToken') refreshToken: string,
+        @Res() res
     ) {
         
-        return this.authService.refreshTokens(userId, refreshToken);
+        const tokens = await this.authService.refreshTokens(userId, refreshToken);
+
+        console.log(tokens);
+        res.cookie('accessToken', tokens.access_token, {
+            httpOnly: true,
+            maxAge: 1 * 60 * 1000, // 15 minutes in milliseconds
+        });
+      
+        // Set refresh token as a cookie with a 7-day expiration
+        res.cookie('refreshToken', tokens.refresh_token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+        });
+
+        res.cookie('2faToken', tokens.refresh_token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+        });
+
+        res.send(tokens);
     }
 
     @Get('secret-2fa')

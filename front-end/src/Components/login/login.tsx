@@ -5,9 +5,9 @@ import { Link, Navigate } from 'react-router-dom';
 const Login = () => {
   const { auth } = useAuth();
 
-  
+
   return (
-    (auth ? <Navigate to="/profile" />
+    (auth ? <Navigate to={-1} />
     :
     <div className='login-container'>
       <h1>Welcome back</h1>
@@ -20,7 +20,6 @@ const Login = () => {
         <img src='src/assets/42.svg'/>
         Continue with 42 intra
       </a>
-      <Link to="/profile">profile</Link>
     </div>
   ));
 };

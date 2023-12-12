@@ -10,7 +10,6 @@ import { FriendModule } from './friend/friend.module';
 
 @Module({
   imports: [AuthModule, PrismaModule, UserModule, FriendModule],
-  controllers: [AppController],
   providers: [
     AppService,
     {
