@@ -50,6 +50,7 @@ export class AuthController {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000,
           });
+
         return res.redirect(process.env.FRONTEND_DOMAIN + '/profile');
     }
 
@@ -78,15 +79,17 @@ export class AuthController {
         return res.redirect(process.env.FRONTEND_DOMAIN + '/profile');
     }
 
-    @Post('logout')
+    @Get('logout')
     async logout(
         @GetCurrentUserId() userId: number,
         @Res() res,
     ) {
         res.clearCookie('accessToken');
         res.clearCookie('refreshToken');
+        res.clearCookie('2faToken');
         await this.authService.logout(userId);
-        return res.send('Logout successful');
+        res.send('.');
+
     }
 
     @Public()

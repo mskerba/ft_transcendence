@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import './navBar.css';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import axios from '../../api/axios';
 
 
 const NavBar = () => {
@@ -22,6 +24,20 @@ const NavBar = () => {
                           });
   }
 
+  const { logout } = useAuth();
+
+
+
+  const handleLogout = async () => {
+  
+    try {
+      await axios.get('auth/logout');
+    } catch (errot) {}
+    logout();
+    
+  }
+  
+  
   return (
     <>
 
@@ -77,7 +93,7 @@ const NavBar = () => {
 
           <div className='profile-exit'>
             <li><Link to="/profile"><img src="https://thispersondoesnotexist.com" className='profile-button-navbar'/></Link></li>
-            <li><img src='src/assets/exit.svg' /></li>
+            <li onClick={handleLogout}><img src='src/assets/exit.svg' /></li>
           </div>
           
         </ul>

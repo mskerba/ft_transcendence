@@ -1,23 +1,31 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState(false);
+  const [auth, setAuth] = useState(1);
+  const [user, setUser] = useState({});
+  const navigate = useNavigate();
 
-  const login = () => {
-    // Implement your login logic, and set isLoggedIn to true
-    setAuth(true);
+  const login = (user) => {
+    setAuth(2);
+    setUser(user);
   };
 
   const logout = () => {
-    // Implement your logout logic, and set isLoggedIn to false
-    setAuth(false);
+    setAuth(0);
+    setUser({});
+    Navigate("/login");
+  };
+
+  const loading = () => {
+    setAuth(1);
   };
 
 
   return (
-    <AuthContext.Provider value={{ auth, login, logout }}>
+    <AuthContext.Provider value={{ auth, loading, login, logout, user, setUser }}>
       {children}
     </AuthContext.Provider>
   );

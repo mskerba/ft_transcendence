@@ -14,28 +14,33 @@ import  useAxiosPrivate  from './hooks/UseAxiosPrivate';
 
 
 const App = () => {
-  const { auth, login } = useAuth();
-  const axios = useAxiosPrivate();
+  const { auth, login, logout } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
   console.log("app");
 
   useEffect(() => {
     const test = async () => {
-      const response = await axios.get('/user/1');
+      try {
+      const response = await axiosPrivate.get('/user/1');
       console.log(response.status);
       if (response.status == 200) {
-        login();
+        login(response?.data);
       }
-      console.log("--->", auth);
+    }
+      catch (error) { logout(); }
     }
     test();
+    console.log("--->", auth);
   }, [auth]);
 
 
   return (
     <>
+    {auth != 1 &&
+        <>
         <NavBar />
         <Routes>
-          <Route element={<RequireAuth auth={auth}/>}>
+          <Route element={<RequireAuth />}>
             <Route path="/profile" element={<Profile />} />
             <Route path="/*" element={<Profile />} />
             <Route path="/game" element={<Game />} />
@@ -43,8 +48,10 @@ const App = () => {
           </Route>
           <Route path="/login" element={<Login />} />
         </Routes>
-    </>
-  );
+        </>
+}
+</>
+    );
 };
 
 export default App;
