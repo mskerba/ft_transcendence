@@ -24,11 +24,13 @@ let ChatGateway = class ChatGateway {
     }
     async Message(client, data) {
         console.log("id of sender : ", client.id);
+        const { userId } = await this.chatService.findUserBySockid(client.id);
         const obj = await this.chatService.findUserById(data.to);
         if (obj.sockId) {
             console.log("msg sent to the socket");
-            client.to(obj.sockId).emit("FrontDirectMessage", this.mp[client.id], data.msg);
+            client.to(obj.sockId).emit("FrontDirectMessage", this.mp[client.id], data.msg, data.Unseen);
         }
+        const obj2 = await this.chatService.addDirectMessage(userId, data.to, data.msg, 3);
     }
     async ShareStatus(client) {
         const friends = await this.chatService.FriendStatus(this.mp[client.id]);
@@ -41,13 +43,34 @@ let ChatGateway = class ChatGateway {
     }
     async handleConnection(client) {
         console.log("client connected : id: ", client.id);
-        return { msg: "sucessfuly connected to socketa" };
+        await this.chatService.SockToClient(client.id, client.handshake.headers.origin);
+        const { userId } = await this.chatService.findUserBySockid(client.id);
+        this.mp.set(client.id, userId);
+        console.log("im userId == ", userId);
+        const friends = await this.chatService.FriendStatus(userId);
+        if (friends.length) {
+            friends.forEach(item => {
+                if (item.user1.sockId == client.id)
+                    client.to(item.user2.sockId).emit("status", userId, "online");
+                else
+                    client.to(item.user1.sockId).emit("status", userId, "online");
+            });
+        }
+    }
+    joinGroup(client, data) {
+        console.log("clientId: ", client.id, " join group ", data.group);
+        client.join(data.group);
+    }
+    async messageTogroup(client, data) {
+        const groupId = await this.chatService.findGroupById(data.group);
+        if (!groupId)
+            return { "error": "group not found" };
+        this.server.to(data.group).emit("BunchOfpeople", data.message);
+        const { userId } = await this.chatService.findUserBySockid(client.id);
+        this.chatService.addMessageToRoom(data.group, data.message, userId);
     }
     handleDisconnect(client) {
         console.log("disconnected client : ", client.id);
-        this.mp.delete(client.id);
-        console.log("disconnected name is : ", client.handshake.headers.origin);
-        this.chatService.SockToClient(null, client.handshake.headers.origin);
         return { msg: "client disconnected from socketa" };
     }
 };
@@ -68,6 +91,18 @@ __decorate([
     __metadata("design:paramtypes", [socket_io_1.Socket]),
     __metadata("design:returntype", Promise)
 ], ChatGateway.prototype, "ShareStatus", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)("joinGroup"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
+    __metadata("design:returntype", void 0)
+], ChatGateway.prototype, "joinGroup", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)("messageTogroup"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
+    __metadata("design:returntype", Promise)
+], ChatGateway.prototype, "messageTogroup", null);
 exports.ChatGateway = ChatGateway = __decorate([
     (0, common_1.Injectable)(),
     (0, websockets_1.WebSocketGateway)({ cors: true }),

@@ -80,7 +80,7 @@ let ChatService = class ChatService {
         });
         return (data);
     }
-    async addDirectMessage(sender, receiver, msg) {
+    async addDirectMessage(sender, receiver, msg, Unseen) {
         console.log("the param is : ", sender, " : ", receiver, " : ", msg);
         let str = await this.findLinkMessage(sender, receiver);
         if (!str)
@@ -91,6 +91,7 @@ let ChatService = class ChatService {
                 text: msg,
                 userid: { connect: { userId: sender } },
                 PrvMsgId: { connect: { conversationId: str.conversationId } },
+                countUnseen: Unseen
             },
             select: {
                 text: true,
@@ -159,7 +160,7 @@ let ChatService = class ChatService {
                 text: true,
             }
         });
-        console.log("this is messages with give conversation ids: ", messages);
+        console.log("this is messages with given conversation ids: ", messages);
         let i = 0;
         messages.forEach(item => {
             let obj = { "Unseen": item.countUnseen, "name": user[i].name, lastMsg: item.text };
@@ -167,6 +168,174 @@ let ChatService = class ChatService {
             i++;
         });
         return mp;
+    }
+    async chatHistory(id1, id2) {
+        const getLink = await this.prismaService.linkDirectMessage.findFirst({
+            where: {
+                OR: [
+                    { AND: [{ UserId1: id1 }, { UserId2: id2 }] },
+                    { AND: [{ UserId1: id2 }, { UserId2: id1 }] },
+                ]
+            },
+            select: {
+                conversationId: true,
+            }
+        });
+        return await this.prismaService.directMessage.findMany({
+            where: {
+                privateId: getLink.conversationId,
+            },
+            select: {
+                text: true,
+                senderId: true,
+            },
+        });
+    }
+    async createGroup(createGroupDto) {
+        let room = await this.prismaService.room.create({
+            data: {
+                TypeRoom: createGroupDto.TypeRoom,
+                avatar: createGroupDto.avatar,
+                title: createGroupDto.title,
+                password: createGroupDto.password
+            },
+            select: {
+                RoomId: true,
+                TypeRoom: true,
+                password: true,
+            }
+        });
+        if (room.TypeRoom == "protected" && room.password == null) {
+            this.prismaService.room.delete({
+                where: {
+                    RoomId: room.RoomId
+                }
+            });
+            return ({ "error": "set the password for protected group" });
+        }
+        let UserGroup = await this.prismaService.roleUser.create({
+            data: {
+                roleUser: { connect: { userId: createGroupDto.UserId } },
+                RoleName: "owner",
+                roomId: { connect: { RoomId: room.RoomId } }
+            },
+            select: {
+                UserId: true,
+                RoleName: true,
+                RoomId: true,
+            }
+        });
+        return UserGroup;
+    }
+    async addTogroup(createROle) {
+        const checkGroup = await this.prismaService.room.findUnique({
+            where: {
+                RoomId: createROle.roomId
+            },
+        });
+        if (!checkGroup)
+            return { "error": "group not found" };
+        return await this.prismaService.roleUser.create({
+            data: {
+                roleUser: { connect: { userId: createROle.userId } },
+                RoleName: createROle.roleName,
+                roomId: { connect: { RoomId: createROle.roomId } }
+            }
+        });
+    }
+    async findGroupById(roomId) {
+        const data = await this.prismaService.room.findUnique({
+            where: {
+                RoomId: roomId,
+            }
+        });
+        return data;
+    }
+    async addMessageToRoom(roomId, message, uId) {
+        const userInGroup = await this.findUserInGroup(uId, roomId);
+        if (!userInGroup)
+            return { "error": "this user is Not in this group" };
+        return await this.prismaService.roomMessage.create({
+            data: {
+                text: message,
+                roomId: { connect: { RoomId: roomId } },
+                userId: { connect: { userId: uId } }
+            }
+        });
+    }
+    async historyOfGroup(group) {
+        return await this.prismaService.roomMessage.findMany({
+            where: {
+                RoomId: group
+            },
+            select: {
+                text: true,
+                UserId: true,
+            }
+        });
+    }
+    async findUserInGroup(userId, roomId) {
+        return await this.prismaService.roleUser.findFirst({
+            where: {
+                RoomId: roomId,
+                UserId: userId,
+            },
+            select: {
+                RoleId: true,
+            }
+        });
+    }
+    async findRoleUser(senderId, group) {
+        return await this.prismaService.roleUser.findFirst({
+            where: {
+                UserId: senderId,
+                RoomId: group,
+            },
+            select: {
+                RoleName: true,
+            }
+        });
+    }
+    async kickUser(punishDto) {
+        const userInGroup = await this.findUserInGroup(punishDto.userId, punishDto.roomId);
+        if (!userInGroup)
+            return { "error": "this user or group not found!!" };
+        const Role1 = await this.findRoleUser(punishDto.senderId, punishDto.roomId);
+        const Role2 = await this.findRoleUser(punishDto.userId, punishDto.roomId);
+        if (!Role1 || !Role2)
+            return { status: common_1.HttpStatus.NOT_FOUND, "error": "user or group not found" };
+        const senderId = Role1.RoleName;
+        const userId = Role2.RoleName;
+        if (senderId == "member")
+            return { "error": "the sender who wanna delete is regular member" };
+        if (senderId == "admin" && userId != "member")
+            return { "error": "admin can't kick another admin or owner" };
+        console.log("senderId: ", senderId, " action On : ", userId);
+        await this.prismaService.roleUser.deleteMany({
+            where: {
+                UserId: punishDto.userId,
+                RoomId: punishDto.roomId,
+            }
+        });
+        return { success: true };
+    }
+    async banUser(punishDto) {
+        this.prismaService.banUser.create({
+            data: {
+                roomId: { connect: { RoomId: punishDto.roomId } },
+                userId: { connect: { userId: punishDto.userId } },
+            }
+        });
+    }
+    async muteUser(muteDto) {
+        this.prismaService.muteUser.create({
+            data: {
+                roomId: { connect: { RoomId: muteDto.roomId } },
+                userId: { connect: { userId: muteDto.userId } },
+                StartTime: muteDto.timeStart,
+                EndTime: muteDto.timeEnd,
+            }
+        });
     }
 };
 exports.ChatService = ChatService;

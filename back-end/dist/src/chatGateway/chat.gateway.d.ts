@@ -10,10 +10,18 @@ export declare class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
     Message(client: Socket, data: {
         to: number;
         msg: string;
+        Unseen: number;
     }): Promise<void>;
     ShareStatus(client: Socket): Promise<void>;
-    handleConnection(client: Socket): Promise<{
-        msg: string;
+    handleConnection(client: Socket): Promise<void>;
+    joinGroup(client: Socket, data: {
+        group: string;
+    }): void;
+    messageTogroup(client: Socket, data: {
+        group: string;
+        message: string;
+    }): Promise<{
+        error: string;
     }>;
     handleDisconnect(client: Socket): {
         msg: string;

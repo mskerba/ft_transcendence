@@ -74,17 +74,17 @@ async function main() {
 
 
 // prisma.directMessage.deleteMany();
-const arr = [8 ,7 , 14];
+// const arr = [8 ,7 , 14];
 
-for (let i = 0; i < 5; i++)
-  await prisma.directMessage.create({
-    data:{
-      text: faker.lorem.text(),
-      privateId: "clq2uzvon0007kb54vti74r2j",
-      senderId: 8,
-    }
+// for (let i = 0; i < 5; i++)
+//   await prisma.directMessage.create({
+//     data:{
+//       text: faker.lorem.text(),
+//       privateId: "clq2uzvon0007kb54vti74r2j",
+//       senderId: 8,
+//     }
 
-  });
+//   });
 }
 
 // execute the main function

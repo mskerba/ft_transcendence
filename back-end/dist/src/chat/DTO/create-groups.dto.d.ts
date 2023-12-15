@@ -1,8 +1,21 @@
 export declare class CreateGroupDto {
     UserId: number;
-    RoleName: 'owner' | 'admin' | 'member';
-    TypeRoom: 'public' | 'protected' | 'private';
+    TypeRoom: string;
     avatar?: string;
     title: string;
-    password?: string;
+    password: string;
+}
+export declare class CreateRoleUserDto {
+    userId: number;
+    roomId: string;
+    roleName: string;
+}
+export declare class PunishDto {
+    roomId: string;
+    senderId: number;
+    userId: number;
+}
+export declare class MuteDto extends PunishDto {
+    timeStart: Date;
+    timeEnd: Date;
 }

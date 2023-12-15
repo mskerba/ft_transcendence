@@ -6,7 +6,7 @@ const common_1 = require("@nestjs/common");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.enableCors();
-    app.useGlobalPipes(new common_1.ValidationPipe({ whitelist: true }));
+    app.useGlobalPipes(new common_1.ValidationPipe({ transform: true }));
     app.useGlobalInterceptors(new common_1.ClassSerializerInterceptor(app.get(core_1.Reflector)));
     await app.listen(3000);
 }

@@ -41,7 +41,8 @@ model User {
   User2                   LinkDirectMessage[]    @relation("UserConv2")
 
   roleUser                RoleUser[]
-  roomMessage             RoomMessage[]
+
+  roomMessage RoomMessage[]
 
   block1                BlockUser[]             @relation("Blocking")
   block2                BlockUser[]             @relation("Blocked")
@@ -165,6 +166,7 @@ model RoleUser{
   roomId Room @relation(fields: [RoomId], references: [RoomId])
   RoomId String 
 
+  @@unique([UserId, RoomId])
 }
 
 
@@ -204,6 +206,8 @@ model KickUser{
 
   userId User @relation(fields: [UserId], references: [userId])
   UserId Int
+
+  @@unique([RoomId, UserId])
 }
 
 model BanUser{
@@ -215,6 +219,8 @@ model BanUser{
 
   userId User @relation(fields: [UserId], references: [userId])
   UserId Int
+
+  @@unique([RoomId, UserId])
 
 }
 
@@ -228,6 +234,8 @@ model MuteUser{
   userId User @relation(fields: [UserId], references: [userId])
   UserId Int
   
+  @@unique([RoomId, UserId])
+
   StartTime  DateTime
   EndTime    DateTime  
   
