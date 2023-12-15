@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Game from "./Components/game/Game";
 import Chat from "./Components/Chat/Chat";
 import Profile from "./Components/Profile/Profile"
+import Modal from 'react-modal';
 import './App.css'
 import Login from './Components/login/login';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
@@ -10,6 +11,7 @@ import { useAuth } from './context/AuthContext';
 import NavBar from './Components/navBar/navBar';
 import  useAxiosPrivate  from './hooks/UseAxiosPrivate';
 import { Navigate, useNavigate } from 'react-router-dom';
+import TwoFactorVerification from './Components/TwoFactorAuth/TwoFactorAuth';
 
 
 
@@ -31,19 +33,27 @@ const App = () => {
     test();
   }, [auth]);
 
+  useEffect(() => {
+    Modal.setAppElement('#root');
+  }, []);
+
+
 
   return (
     <>
     {auth != 1 &&
         <>
         <Routes>
-          <Route element={<RequireAuth />}>
-            <Route path="/profile" element={<><NavBar /><Profile /></>} />
-            <Route path="/*" element={<> <NavBar /> <Profile /> </>} />
-            <Route path="/game" element={<> <NavBar /> <Game /> </>} />
-            <Route path="/chat" element={<> <NavBar /> <Chat /> </>} />
+          <Route element={ <RequireAuth /> }>
+            <Route path="/profile" element={ <><NavBar /><Profile /></> } />
+            <Route path="/*" element={ <> <NavBar /> <Profile /> </> } />
+            <Route path="/game" element={ <> <NavBar /> <Game /> </> } />
+            <Route path="/chat" element={ <> <NavBar /> <Chat /> </> } />
           </Route>
-          <Route path="/login" element={<Login />} />
+
+          <Route path="/login" element={ <Login /> } />
+          <Route path="/2FA" element={ <TwoFactorVerification /> } />
+
         </Routes>
         </>
 }

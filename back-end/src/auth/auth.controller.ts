@@ -122,6 +122,13 @@ export class AuthController {
         res.send(tokens);
     }
 
+    @Get('is-2fa-enabled')
+    async isTwoFA_enabled(@Req() req) {
+        const user: UserEntity = req.user;
+
+        return user.twoFA_Enabled;
+    }
+
     @Get('secret-2fa')
     async generateTwoFactorAuthSecret(@Req() req) {
         const user: UserEntity = req.user;
@@ -129,13 +136,6 @@ export class AuthController {
         const { secretKey, qrCodeUrl } = await this.authService.generateTwoFactorAuthSecret(user);
 
         return ({ secretKey, qrCodeUrl });
-    }
-
-    @Get('is-2fa-enabled')
-    async isTwoFA_enabled(@Req() req) {
-        const user: UserEntity = req.user;
-
-        return user.twoFA_Enabled;
     }
 
     @Post('enable-2fa')
@@ -146,9 +146,21 @@ export class AuthController {
         const user: UserEntity = req.user;
 
         const enabled = await this.authService.enableTwoFactorAuth(user, tokenDto.token);
-        return ({success: enabled});
+        return (enabled);
     }
 
+    @Public()
+    @Post('verify-2fa')
+    @UseGuards(Jwt2FAGuard)
+    async verifyTwoFactorAuth(
+        @Req() req,
+        @Body() tokenDto: TwoFATokenDto,
+    ) {
+        const user: UserEntity = req.user;
+        const verified = await this.authService.verifyTwoFactorAuth(user, tokenDto.token);
+        console.log("verified");
+        return verified;
+    }
 
     @Public()
     @Post('send-otp')
@@ -168,18 +180,5 @@ export class AuthController {
         const disabled = await this.authService.disableTwoFactorAuth(userId, otpCodeDto.otp);
         return ({success: disabled});
     }
-
-    @Public()
-    @Post('verify-2fa')
-    @UseGuards(Jwt2FAGuard)
-    async verifyTwoFactorAuth(
-        @Req() req,
-        @Body() tokenDto: TwoFATokenDto,
-    ) {
-        const user: UserEntity = req.user;
-        const verified = await this.authService.verifyTwoFactorAuth(user, tokenDto.token);
-        return({ success: verified });
-    }
-
 
 }

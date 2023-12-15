@@ -88,8 +88,8 @@ export class AuthService {
                     email: email,
                 },
                 {
-                    secret: 'at-secret',
-                    expiresIn: 60 * 15 /*to be removed after*/ * 60,
+                    secret: process.env.AT_SECRET,
+                    expiresIn: 60 * 15,
                 }
             ),
             this.jwtService.signAsync(
@@ -98,7 +98,7 @@ export class AuthService {
                     email: email,
                 },
                 {
-                    secret: 'rt-secret',
+                    secret: process.env.RT_SECRET,
                     expiresIn: 60 * 60 * 24 * 7,
                 }
             ),
@@ -108,7 +108,7 @@ export class AuthService {
                     email: email,
                 },
                 {
-                    secret: '2fa-secret',
+                    secret: process.env.TWOFA_SECRET,
                     expiresIn: 60 * 60 * 24 * 7,
                 }
             ),

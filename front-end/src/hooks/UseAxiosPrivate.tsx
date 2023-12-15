@@ -13,12 +13,15 @@ const useAxiosPrivate = () => {
             async (error) => {
                 const prevRequest = error?.config;
                 if (error?.response?.status === 401 && !prevRequest?.sent) {
-                    prevRequest.sent = true;
-                    const isRefreshed = await refresh();
-                    if (isRefreshed)
-                        return (axiosPrivate(prevRequest));
-                    else {
-                        navigate("/login");
+                    console.log(error?.response?.data);
+                    if (error?.response?.data.message === 'verify 2FA!') {
+                        navigate("/2FA");
+                    } else {
+                        prevRequest.sent = true;
+                        const isRefreshed = await refresh();
+                        if (isRefreshed)
+                            return (axiosPrivate(prevRequest));
+                        else navigate("/login");
                     }
                 }
                 return Promise.reject(error);

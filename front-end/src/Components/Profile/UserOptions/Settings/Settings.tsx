@@ -3,9 +3,13 @@ import './Settings.css'
 import { useEffect, useState } from 'react';
 import TwoFactorAuthPopup from './TwoFactorAuthPopup/TwoFactorAuthPopup';
 
+
 const Settings = () => {
     const [isSwitchedOn, setIsSwitchedOn] = useState(true);
-    const [inputValue, setInputValue] = useState('momeaizi');
+    const [username, setUsername] = useState<string>('momeaizi');
+    const [isPopupOpen, setPopupOpen] = useState<boolean>(false);
+    const [secretKey, setSecretKey] = useState<string>();
+    
     const   axiosPrivate = useAxiosPrivate();
 
     useEffect(() => {
@@ -17,18 +21,18 @@ const Settings = () => {
       }, []);
 
 
-    const handleSwitchToggle = () => {
-        if (!isSwitchedOn) setPopupOpen(true);
-        setIsSwitchedOn(!isSwitchedOn);
+    const handleSwitchToggle = async () => {
+        if (!isSwitchedOn) {
+            const res = await axiosPrivate.get('auth/secret-2fa');
+            console.log(res.data);
+            setSecretKey(res.data.secretKey);
+            setPopupOpen(true);
+        } // else { show the user where he can type the token the disable the 2FA }
     };
     
     const handleInputChange = (e: any) => {
-        setInputValue(e.target.value);
+        setUsername(e.target.value);
     };
-
-
-    const [isPopupOpen, setPopupOpen] = useState(false);
-    const secretKey = 'your-secret-key-from-server';
   
     const closePopup = () => {
       setPopupOpen(false);
@@ -40,7 +44,7 @@ const Settings = () => {
             <input
                 type="text"
                 id="username-input"
-                value={inputValue}
+                value={username}
                 onChange={handleInputChange}
             />
             <div className='twoFA'>
