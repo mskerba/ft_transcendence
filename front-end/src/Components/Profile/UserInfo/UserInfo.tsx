@@ -5,12 +5,12 @@ import UserStats from './UserStats/UserStats';
 import './UserInfo.css'
 
 
-const UserInfo = () => {
+const UserInfo = ({ otherProfile }: any) => {
     return (
         <div className='user-info-container'>
             <UserAvatar />
             <UserProfile />
-            <UserProfileButtons />
+            {!otherProfile && <UserProfileButtons /> }
             <UserStats />
         </div>
     );

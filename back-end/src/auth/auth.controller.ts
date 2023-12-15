@@ -38,7 +38,7 @@ export class AuthController {
 
         res.cookie('accessToken', tokens.access_token, {
             httpOnly: true,
-            maxAge: 1 * 60 * 1000,
+            maxAge: 15 * 60 * 1000,
           });
 
           res.cookie('refreshToken', tokens.refresh_token, {
@@ -63,7 +63,7 @@ export class AuthController {
 
         res.cookie('accessToken', tokens.access_token, {
             httpOnly: true,
-            maxAge: 1 * 60 * 1000, // 15 minutes in milliseconds
+            maxAge: 15 * 60 * 1000, // 15 minutes in milliseconds
         });
       
         // Set refresh token as a cookie with a 7-day expiration
@@ -103,10 +103,9 @@ export class AuthController {
         
         const tokens = await this.authService.refreshTokens(userId, refreshToken);
 
-        console.log(tokens);
         res.cookie('accessToken', tokens.access_token, {
             httpOnly: true,
-            maxAge: 1 * 60 * 1000, // 15 minutes in milliseconds
+            maxAge: 15 * 60 * 1000, // 15 minutes in milliseconds
         });
       
         // Set refresh token as a cookie with a 7-day expiration
@@ -130,6 +129,13 @@ export class AuthController {
         const { secretKey, qrCodeUrl } = await this.authService.generateTwoFactorAuthSecret(user);
 
         return ({ secretKey, qrCodeUrl });
+    }
+
+    @Get('is-2fa-enabled')
+    async isTwoFA_enabled(@Req() req) {
+        const user: UserEntity = req.user;
+
+        return user.twoFA_Enabled;
     }
 
     @Post('enable-2fa')

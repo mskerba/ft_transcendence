@@ -1,6 +1,6 @@
 import './UserOptionsNavBar.css'
 
-const UserOptionsNavBar = ({option, onStateChange}: any) => {
+const UserOptionsNavBar = ({option, onStateChange, otherProfile}: any) => {
     const handleButtonClick = (active: number) => {
         option = active;
         onStateChange(active);
@@ -28,27 +28,32 @@ const UserOptionsNavBar = ({option, onStateChange}: any) => {
                 <img src='src/assets/friends-hovered.svg' className='hovered'/>
                 <span>Friends</span>
             </div>
-            <div className={`user-options-navbar-button ${option == 3 ? 'active' : ''}`}
-                onClick={() => handleButtonClick(3)}
-            >
-                <img src='src/assets/friend-requests.svg'/>
-                <img src='src/assets/friend-requests-hovered.svg' className='hovered'/>
-                <span>Friend Requests</span>
-            </div>
-            <div className={`user-options-navbar-button ${option == 4 ? 'active' : ''}`}
-                onClick={() => handleButtonClick(4)}
-            >
-                <img src='src/assets/blocked.svg'/>
-                <img src='src/assets/blocked-hovered.svg' className='hovered'/>
-                <span>Blocked Users</span>
-            </div>
-            <div className={`user-options-navbar-button ${option == 5 ? 'active' : ''}`}
-                onClick={() => handleButtonClick(5)}
-            >
-                <img src='src/assets/settings.svg'/>
-                <img src='src/assets/settings-hovered.svg' className='hovered'/>
-                <span>settings</span>
-            </div>
+            {
+                otherProfile && 
+                <>
+                    <div className={`user-options-navbar-button ${option == 3 ? 'active' : ''}`}
+                        onClick={() => handleButtonClick(3)}
+                    >
+                        <img src='src/assets/friend-requests.svg'/>
+                        <img src='src/assets/friend-requests-hovered.svg' className='hovered'/>
+                        <span>Friend Requests</span>
+                    </div>
+                    <div className={`user-options-navbar-button ${option == 4 ? 'active' : ''}`}
+                        onClick={() => handleButtonClick(4)}
+                    >
+                        <img src='src/assets/blocked.svg'/>
+                        <img src='src/assets/blocked-hovered.svg' className='hovered'/>
+                        <span>Blocked Users</span>
+                    </div>
+                    <div className={`user-options-navbar-button ${option == 5 ? 'active' : ''}`}
+                        onClick={() => handleButtonClick(5)}
+                    >
+                        <img src='src/assets/settings.svg'/>
+                        <img src='src/assets/settings-hovered.svg' className='hovered'/>
+                        <span>settings</span>
+                    </div>
+                </>
+            }
         </nav>
     );
 }

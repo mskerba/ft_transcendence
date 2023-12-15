@@ -5,10 +5,11 @@ import Profile from "./Components/Profile/Profile"
 import './App.css'
 import Login from './Components/login/login';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import RequireAuth from './Components/RequireAuth';
+import RequireAuth from './Components/RequireAuth/RequireAuth';
 import { useAuth } from './context/AuthContext';
 import NavBar from './Components/navBar/navBar';
 import  useAxiosPrivate  from './hooks/UseAxiosPrivate';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 
 
@@ -16,13 +17,11 @@ import  useAxiosPrivate  from './hooks/UseAxiosPrivate';
 const App = () => {
   const { auth, login, logout } = useAuth();
   const axiosPrivate = useAxiosPrivate();
-  console.log("app");
 
   useEffect(() => {
     const test = async () => {
       try {
-      const response = await axiosPrivate.get('/user/1');
-      console.log(response.status);
+        const response = await axiosPrivate.get('/user/1');
       if (response.status == 200) {
         login(response?.data);
       }
@@ -30,7 +29,6 @@ const App = () => {
       catch (error) { logout(); }
     }
     test();
-    console.log("--->", auth);
   }, [auth]);
 
 
@@ -38,13 +36,12 @@ const App = () => {
     <>
     {auth != 1 &&
         <>
-        <NavBar />
         <Routes>
           <Route element={<RequireAuth />}>
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/*" element={<Profile />} />
-            <Route path="/game" element={<Game />} />
-            <Route path="/chat" element={<Chat />} />
+            <Route path="/profile" element={<><NavBar /><Profile /></>} />
+            <Route path="/*" element={<> <NavBar /> <Profile /> </>} />
+            <Route path="/game" element={<> <NavBar /> <Game /> </>} />
+            <Route path="/chat" element={<> <NavBar /> <Chat /> </>} />
           </Route>
           <Route path="/login" element={<Login />} />
         </Routes>

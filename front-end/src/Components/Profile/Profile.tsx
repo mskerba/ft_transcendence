@@ -18,8 +18,7 @@ const Profile = () => {
         <div className='profile'>
             <section className='row-0'>
                 <UserInfo />
-            {/* <UserList /> */}
-                <UserOptionsNavBar option={option} onStateChange={handleStateChange}/>
+                <UserOptionsNavBar option={option} onStateChange={handleStateChange} otherProfile={true}/>
             </section>
             <section className='row-1'>
                 <UserOptions option={option} />

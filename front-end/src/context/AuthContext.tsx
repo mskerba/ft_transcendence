@@ -1,12 +1,10 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState(1);
   const [user, setUser] = useState({});
-  const navigate = useNavigate();
 
   const login = (user) => {
     setAuth(2);
@@ -16,7 +14,6 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setAuth(0);
     setUser({});
-    Navigate("/login");
   };
 
   const loading = () => {

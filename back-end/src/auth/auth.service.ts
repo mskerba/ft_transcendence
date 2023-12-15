@@ -242,8 +242,7 @@ export class AuthService {
                     expiresAt: new Date(Date.now() + 36000000),
                 }
             });
-            
-            console.log(await this.prisma.userOTPVerification.findMany({}));
+
             
             await this.emailService.sendMail(
                 user.email,

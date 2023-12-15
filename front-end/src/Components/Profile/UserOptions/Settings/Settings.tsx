@@ -1,16 +1,37 @@
+import useAxiosPrivate from '../../../../hooks/UseAxiosPrivate';
 import './Settings.css'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import TwoFactorAuthPopup from './TwoFactorAuthPopup/TwoFactorAuthPopup';
 
 const Settings = () => {
-    const [isSwitchedOn, setIsSwitchedOn] = useState(false);
+    const [isSwitchedOn, setIsSwitchedOn] = useState(true);
     const [inputValue, setInputValue] = useState('momeaizi');
+    const   axiosPrivate = useAxiosPrivate();
+
+    useEffect(() => {
+        const isEnabled = async () => {
+            const res = await axiosPrivate.get('/auth/is-2fa-enabled');
+            setIsSwitchedOn(res.data);
+        }
+        isEnabled();
+      }, []);
+
 
     const handleSwitchToggle = () => {
+        if (!isSwitchedOn) setPopupOpen(true);
         setIsSwitchedOn(!isSwitchedOn);
     };
     
     const handleInputChange = (e: any) => {
         setInputValue(e.target.value);
+    };
+
+
+    const [isPopupOpen, setPopupOpen] = useState(false);
+    const secretKey = 'your-secret-key-from-server';
+  
+    const closePopup = () => {
+      setPopupOpen(false);
     };
 
     return (
@@ -28,6 +49,11 @@ const Settings = () => {
                     <div className="switch-circle"></div>
                 </div>
             </div>
+            <TwoFactorAuthPopup
+                isOpen={isPopupOpen}
+                onClose={closePopup}
+                secretKey={secretKey}
+            />
         </div>
     );
 }
