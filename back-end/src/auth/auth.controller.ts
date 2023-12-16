@@ -46,7 +46,7 @@ export class AuthController {
             maxAge: 7 * 24 * 60 * 60 * 1000,
           });
 
-          res.cookie('2faToken', tokens.refresh_token, {
+          res.cookie('2faToken', tokens.TwoFA_token, {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000,
           });
@@ -72,7 +72,7 @@ export class AuthController {
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
         });
 
-        res.cookie('2faToken', tokens.refresh_token, {
+        res.cookie('2faToken', tokens.TwoFA_token, {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
         });
@@ -114,7 +114,7 @@ export class AuthController {
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
         });
 
-        res.cookie('2faToken', tokens.refresh_token, {
+        res.cookie('2faToken', tokens.TwoFA_token, {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
         });
@@ -158,12 +158,11 @@ export class AuthController {
     ) {
         const user: UserEntity = req.user;
         const verified = await this.authService.verifyTwoFactorAuth(user, tokenDto.token);
-        console.log("verified");
         return verified;
     }
 
     @Public()
-    @Post('send-otp')
+    @Get('send-otp')
     @UseGuards(Jwt2FAGuard)
     async sendOTPVerificationEmail(@Req() req) {
         const user: UserEntity = req.user;

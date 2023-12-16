@@ -8,8 +8,7 @@ import axios from '../../api/axios';
 
 const TwoFactorVerification = () => {
     const [code, setCode] = useState<string>('');
-    const { auth } = useAuth();
-    // const axiosPrivate = useAxiosPrivate();
+    const { auth, login } = useAuth();
 
     const handleInputChange = (e: any) => {
         setCode(e.target.value);
@@ -19,6 +18,7 @@ const TwoFactorVerification = () => {
         try {
             const res = await axios.post('/auth/verify-2fa', { token: code });
             console.log(res.data);
+            if (res?.data == true) login();
 
         } catch (error) { console.log(error); }
 

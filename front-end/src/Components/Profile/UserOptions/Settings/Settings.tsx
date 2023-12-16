@@ -27,7 +27,10 @@ const Settings = () => {
             console.log(res.data);
             setSecretKey(res.data.secretKey);
             setPopupOpen(true);
-        } // else { show the user where he can type the token the disable the 2FA }
+        } else {
+            await axiosPrivate.get('/auth/send-otp');
+            setPopupOpen(true);
+        }
     };
     
     const handleInputChange = (e: any) => {
@@ -54,9 +57,11 @@ const Settings = () => {
                 </div>
             </div>
             <TwoFactorAuthPopup
+                isSwitchedOn
                 isOpen={isPopupOpen}
                 onClose={closePopup}
                 secretKey={secretKey}
+                onEnable={setIsSwitchedOn}
             />
         </div>
     );
