@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import useAxiosPrivate from '../../../../../hooks/UseAxiosPrivate';
-import EnableTwoFactorAuth from './Enable2FAPopup';
-import DisableTwoFactorAuth from './Disable2FAPopup';
+import EnableTwoFactorAuth from './Enable2FA';
+import DisableTwoFactorAuth from './Disable2FA';
 
 const TwoFactorAuthPopup = ({ isOpen, onClose, secretKey, onEnable, isSwitchedOn }) => {
 
@@ -14,8 +14,8 @@ const TwoFactorAuthPopup = ({ isOpen, onClose, secretKey, onEnable, isSwitchedOn
     >
         {
             (isSwitchedOn)
-             ? <DisableTwoFactorAuth onClose onEnable/>
-             : <EnableTwoFactorAuth onClose secretKey onEnable/>
+             ? <DisableTwoFactorAuth onClose={onClose} onEnable={onEnable}/>
+             : <EnableTwoFactorAuth onClose={onClose} secretKey={secretKey} onEnable={onEnable}/>
         }
 
       <button onClick={onClose}>Close</button>

@@ -12,10 +12,9 @@ const DisableTwoFactorAuth = ({ onClose, onEnable }) => {
   };
 
   const handleSubmit = async () => {
-    console.log('Submitted token:', token);
 
     try {
-      const res = await axiosPrivate.post('/auth/disable-2fa', { otpCode: token })
+      const res = await axiosPrivate.post('/auth/disable-2fa', { otp: token })
       console.log(res.data);
       if (res?.data) {
         onClose();
@@ -31,9 +30,6 @@ const DisableTwoFactorAuth = ({ onClose, onEnable }) => {
   return (
     <>
         <h2>Disable Two Factor Authentication</h2>
-
-
-
         <label>
           Enter the code that you have received in your email:
           <input type="text" value={token} onChange={handleTokenChange} />

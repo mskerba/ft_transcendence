@@ -5,7 +5,7 @@ import TwoFactorAuthPopup from './TwoFactorAuthPopup/TwoFactorAuthPopup';
 
 
 const Settings = () => {
-    const [isSwitchedOn, setIsSwitchedOn] = useState(true);
+    const [isSwitchedOn, setIsSwitchedOn] = useState(false);
     const [username, setUsername] = useState<string>('momeaizi');
     const [isPopupOpen, setPopupOpen] = useState<boolean>(false);
     const [secretKey, setSecretKey] = useState<string>();
@@ -24,13 +24,11 @@ const Settings = () => {
     const handleSwitchToggle = async () => {
         if (!isSwitchedOn) {
             const res = await axiosPrivate.get('auth/secret-2fa');
-            console.log(res.data);
-            setSecretKey(res.data.secretKey);
-            setPopupOpen(true);
+            setSecretKey(res?.data?.secretKey);
         } else {
             await axiosPrivate.get('/auth/send-otp');
-            setPopupOpen(true);
         }
+        setPopupOpen(true);
     };
     
     const handleInputChange = (e: any) => {
@@ -57,7 +55,7 @@ const Settings = () => {
                 </div>
             </div>
             <TwoFactorAuthPopup
-                isSwitchedOn
+                isSwitchedOn={isSwitchedOn}
                 isOpen={isPopupOpen}
                 onClose={closePopup}
                 secretKey={secretKey}

@@ -173,10 +173,11 @@ export class AuthController {
     @Post('disable-2fa')
     @UseGuards(Jwt2FAGuard)
     async disableTwoFactorAuth(
-        @GetCurrentUserId() userId: number,
-        @Body('otpCode') otpCodeDto: OTPCodeDto,
+        @Req() req,
+        @Body() otpCodeDto: OTPCodeDto,
     ) {
-        const disabled = await this.authService.disableTwoFactorAuth(userId, otpCodeDto.otp);
+        const user: UserEntity = req.user;
+        const disabled = await this.authService.disableTwoFactorAuth(user.userId, otpCodeDto.otp);
         return ({success: disabled});
     }
 

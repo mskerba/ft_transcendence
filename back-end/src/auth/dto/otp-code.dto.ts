@@ -7,10 +7,8 @@ import {
 } from 'class-validator';
 
 export class OTPCodeDto {
-    @MinLength(6)
-    @MaxLength(6)
-    @IsString()
-    @IsNotEmpty()
+    @MinLength(4)
+    @MaxLength(4)
     @IsNumberString()
     otp: string;
 }

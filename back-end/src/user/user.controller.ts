@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -15,9 +15,8 @@ export class UserController {
   }
   
   @Get()
-  async findAll() : Promise<UserEntity[]> {
-    const user = await this.userService.findAll();
-    return user.map((user) => new UserEntity(user)); 
+  async findAll(@Req() req) : Promise<UserEntity> {
+    return new UserEntity(req.user);
   }
 
   @Get(':id') 

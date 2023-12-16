@@ -23,9 +23,9 @@ const App = () => {
   useEffect(() => {
     const test = async () => {
       try {
-        const response = await axiosPrivate.get('/user/1');
-      if (response.status == 200) {
-        login(response?.data);
+        const res = await axiosPrivate.get('/user');
+      if (res.status == 200) {
+        login(res?.data);
       }
     }
       catch (error) { logout(); }
