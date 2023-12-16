@@ -1,13 +1,22 @@
 
-import { Controller, Get, Post, Body, Param, HttpStatus, HttpCode, BadRequestException, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, HttpStatus, HttpCode, BadRequestException, NotFoundException, HttpException } from '@nestjs/common';
 import {ChatService} from './chat.service'
 import {CreateGroupDto, CreateRoleUserDto, PunishDto, MuteDto} from './DTO/create-groups.dto'
 import { STATUS_CODES } from 'http';
+import { da } from '@faker-js/faker';
 
 @Controller('chat')
 export class ChatController {
     constructor(private readonly chatService: ChatService){}
     
+    
+    
+    //return all conversation
+    @Get(':ide')
+    async MyFriends(@Param() param: any) : Promise<any>{
+        const id: number = parseInt(param.ide);
+        return await this.chatService.MyFriends(id); 
+    }
     
     // history chat of group
     @Get('group/:id')
@@ -15,13 +24,6 @@ export class ChatController {
         console.log("group Id : ", group.id);
         //return {"msg": "hello"};
         return this.chatService.historyOfGroup(group.id);
-    }
-      
-    //return all conversation
-    @Get(':ide')
-    async MyFriends(@Param() param: any) : Promise<any>{
-        const id: number = parseInt(param.ide);
-        return await this.chatService.MyFriends(id); 
     }
 
     // return chat history of private messages
@@ -48,23 +50,31 @@ export class ChatController {
         return this.chatService.addTogroup(creatRole);
     }
 
+    // kick user from group
     @Post('group/kick')
-    kickUser(@Body() punishDto: PunishDto){
-         this.chatService.kickUser(punishDto);
-       
-        throw new NotFoundException();
-
-        return {"success": "good"}
+    async kickUser(@Body() punishDto: PunishDto){
+        const data = await this.chatService.kickUser(punishDto);
+        if (data.error !== undefined)
+            throw new HttpException(data.error, HttpStatus.NOT_FOUND);
+        return data;
     }
 
+    // ban user from group
     @Post('group/ban')
-    banUser(@Body() punishDto: PunishDto){
-        return this.chatService.banUser(punishDto);
+    async banUser(@Body() punishDto: PunishDto){
+        const data = await this.chatService.banUser(punishDto);
+        if (data.error !== undefined)
+            throw new HttpException(data.error, data.status);
+        return data;
     }
 
+    // mute user from group
     @Post('group/mute')
-    muteUser(@Body() muteDto: MuteDto){
-        return this.chatService.muteUser(muteDto);
+    async muteUser(@Body() muteDto: MuteDto){
+        const data = await this.chatService.muteUser(muteDto);
+        if (data.error !== undefined)
+            throw new HttpException(data.error, data.status);
+        return data;
     }
 
 }

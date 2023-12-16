@@ -56,10 +56,7 @@ export class PunishDto{
 export class MuteDto extends PunishDto{
 
    @IsNotEmpty()
-   @IsDataURI()
-   timeStart: Date;
+   @IsNumber()
+   numberHour: number;
    
-   @IsNotEmpty()
-   @IsDataURI()
-   timeEnd: Date;
 }

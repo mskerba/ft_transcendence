@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChatService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
-var Multimap = require('multimap');
 let ChatService = class ChatService {
     constructor(prismaService) {
         this.prismaService = prismaService;
@@ -251,17 +250,53 @@ let ChatService = class ChatService {
         });
         return data;
     }
+    async checkIsMuted(roomId, message, uId) {
+        const time = await this.prismaService.muteUser.findFirst({
+            where: {
+                RoomId: roomId,
+                UserId: uId,
+            },
+            select: {
+                StartTime: true,
+                EndTime: true,
+                MuteUserId: true,
+            }
+        });
+        if (time) {
+            if (time.EndTime >= time.StartTime) {
+                this.prismaService.muteUser.delete({
+                    where: {
+                        MuteUserId: time.MuteUserId
+                    }
+                });
+            }
+            else {
+                return {
+                    "error": "User is in Muted mode",
+                    status: common_1.HttpStatus.FORBIDDEN
+                };
+            }
+        }
+        return {
+            success: true,
+            status: common_1.HttpStatus.OK
+        };
+    }
     async addMessageToRoom(roomId, message, uId) {
         const userInGroup = await this.findUserInGroup(uId, roomId);
-        if (!userInGroup)
-            return { "error": "this user is Not in this group" };
-        return await this.prismaService.roomMessage.create({
+        if (userInGroup.error != undefined)
+            return userInGroup;
+        const isMuted = await this.checkIsMuted(roomId, message, uId);
+        if (isMuted.error != undefined)
+            return isMuted;
+        await this.prismaService.roomMessage.create({
             data: {
                 text: message,
                 roomId: { connect: { RoomId: roomId } },
                 userId: { connect: { userId: uId } }
             }
         });
+        return { success: true, status: common_1.HttpStatus.OK };
     }
     async historyOfGroup(group) {
         return await this.prismaService.roomMessage.findMany({
@@ -275,7 +310,7 @@ let ChatService = class ChatService {
         });
     }
     async findUserInGroup(userId, roomId) {
-        return await this.prismaService.roleUser.findFirst({
+        const data = await this.prismaService.roleUser.findFirst({
             where: {
                 RoomId: roomId,
                 UserId: userId,
@@ -284,6 +319,9 @@ let ChatService = class ChatService {
                 RoleId: true,
             }
         });
+        if (data)
+            return { success: true, status: common_1.HttpStatus.OK };
+        return { "error": "user not belong to this room or you are banned", status: common_1.HttpStatus.BAD_REQUEST };
     }
     async findRoleUser(senderId, group) {
         return await this.prismaService.roleUser.findFirst({
@@ -296,46 +334,86 @@ let ChatService = class ChatService {
             }
         });
     }
-    async kickUser(punishDto) {
-        const userInGroup = await this.findUserInGroup(punishDto.userId, punishDto.roomId);
-        if (!userInGroup)
-            return { "error": "this user or group not found!!" };
+    async PunishCheker(punishDto) {
         const Role1 = await this.findRoleUser(punishDto.senderId, punishDto.roomId);
         const Role2 = await this.findRoleUser(punishDto.userId, punishDto.roomId);
         if (!Role1 || !Role2)
-            return { status: common_1.HttpStatus.NOT_FOUND, "error": "user or group not found" };
+            return { "error": "users or group not found " };
         const senderId = Role1.RoleName;
         const userId = Role2.RoleName;
         if (senderId == "member")
-            return { "error": "the sender who wanna delete is regular member" };
+            return { "error": "the sender who wanna delete is regular member",
+                status: common_1.HttpStatus.NOT_FOUND
+            };
         if (senderId == "admin" && userId != "member")
-            return { "error": "admin can't kick another admin or owner" };
-        console.log("senderId: ", senderId, " action On : ", userId);
+            return { error: "admin can't kick another admin or owner",
+                status: common_1.HttpStatus.NOT_FOUND
+            };
+        return { "success": true, status: common_1.HttpStatus.CREATED };
+    }
+    async kickUser(punishDto) {
+        const data = await this.PunishCheker(punishDto);
+        if (data.error !== undefined)
+            return data;
         await this.prismaService.roleUser.deleteMany({
             where: {
-                UserId: punishDto.userId,
-                RoomId: punishDto.roomId,
+                AND: [
+                    { UserId: punishDto.userId },
+                    { RoomId: punishDto.roomId },
+                ]
             }
         });
-        return { success: true };
+        return data;
     }
     async banUser(punishDto) {
-        this.prismaService.banUser.create({
-            data: {
-                roomId: { connect: { RoomId: punishDto.roomId } },
-                userId: { connect: { userId: punishDto.userId } },
-            }
-        });
+        const data = await this.PunishCheker(punishDto);
+        if (data.error !== undefined)
+            return data;
+        try {
+            await this.prismaService.banUser.create({
+                data: {
+                    roomId: { connect: { RoomId: punishDto.roomId } },
+                    userId: { connect: { userId: punishDto.userId } },
+                }
+            });
+            await this.prismaService.roleUser.deleteMany({
+                where: {
+                    AND: [
+                        { UserId: punishDto.userId },
+                        { RoomId: punishDto.roomId },
+                    ]
+                }
+            });
+            return data;
+        }
+        catch (error) {
+            return {
+                "error": "user already is banned or can't be banned",
+                "status": common_1.HttpStatus.NOT_ACCEPTABLE
+            };
+        }
     }
     async muteUser(muteDto) {
-        this.prismaService.muteUser.create({
-            data: {
-                roomId: { connect: { RoomId: muteDto.roomId } },
-                userId: { connect: { userId: muteDto.userId } },
-                StartTime: muteDto.timeStart,
-                EndTime: muteDto.timeEnd,
-            }
-        });
+        const data = await this.PunishCheker(muteDto);
+        if (data.error != undefined)
+            return data;
+        try {
+            await this.prismaService.muteUser.create({
+                data: {
+                    roomId: { connect: { RoomId: muteDto.roomId } },
+                    userId: { connect: { userId: muteDto.userId } },
+                    StartTime: new Date(Date.now()),
+                    EndTime: new Date(Date.now() + (muteDto.numberHour * 60 * 60 * 1000)),
+                }
+            });
+            return data;
+        }
+        catch (error) {
+            return {
+                "error": "user already muted or can't be muted",
+                "status": common_1.HttpStatus.NOT_ACCEPTABLE
+            };
+        }
     }
 };
 exports.ChatService = ChatService;

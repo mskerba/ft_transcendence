@@ -75,12 +75,7 @@ class MuteDto extends PunishDto {
 exports.MuteDto = MuteDto;
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsDataURI)(),
-    __metadata("design:type", Date)
-], MuteDto.prototype, "timeStart", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsDataURI)(),
-    __metadata("design:type", Date)
-], MuteDto.prototype, "timeEnd", void 0);
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], MuteDto.prototype, "numberHour", void 0);
 //# sourceMappingURL=create-groups.dto.js.map
