@@ -69,27 +69,28 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     //return {msg: "sucessfuly connected to socketa"}
     // i will replace this using the id that will be sent to me  -- client.handshake.headers.origin
-    await this.chatService.SockToClient(client.id , client.handshake.headers.origin);
+   
+    // await this.chatService.SockToClient(client.id , client.handshake.headers.origin);
  
-    const {userId} = await this.chatService.findUserBySockid(client.id);
+    // const {userId} = await this.chatService.findUserBySockid(client.id);
     
-    this.mp.set(client.id, userId);
+    // this.mp.set(client.id, userId);
     
-    console.log("im userId == ", userId);
-    const friends = await this.chatService.FriendStatus(userId);
-    // console.log(friends.length);  
-    // console.log("all friends that i talk with", friends);
+    // console.log("im userId == ", userId);
+    // const friends = await this.chatService.FriendStatus(userId);
+    // // console.log(friends.length);  
+    // // console.log("all friends that i talk with", friends);
 
-     if (friends.length)
-     {
+    //  if (friends.length)
+    //  {
 
-        friends.forEach(item => {
-          if (item.user1.sockId == client.id)
-            client.to(item.user2.sockId).emit("status", userId, "online");
-          else
-            client.to(item.user1.sockId).emit("status", userId, "online");
-          })
-     }
+    //     friends.forEach(item => {
+    //       if (item.user1.sockId == client.id)
+    //         client.to(item.user2.sockId).emit("status", userId, "online");
+    //       else
+    // client.to(item.user1.sockId).emit("status", userId, "online");
+    //       })
+    //  }
   
   }
 
