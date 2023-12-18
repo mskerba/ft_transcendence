@@ -5,20 +5,41 @@ import { useEffect, useState } from 'react';
 
 import UserOptionsNavBar from './UserOptionsNavBar/UserOptionsNavBar';
 import UserOptions from './UserOptions/UserOptions';
-import UserList from '../../userList';
+// import { useParams } from 'react-router-dom';
+import useAxiosPrivate from '../../hooks/UseAxiosPrivate';
+import { useAuth } from '../../context/AuthContext';
 
 const Profile = () => {
     const [option, setOption] = useState(0);
+    const [user, setUser] = useState({});
+    const axiosPrivate = useAxiosPrivate();
+    const  userId  = 1;
+    const { authUser } = useAuth();
 
     const handleStateChange = (option: number) => {
         setOption(option);
     };
 
+    useEffect(() => {
+        const test = async () => {
+        //   try {
+        //     const res = await axiosPrivate.get(`/user/${userId}`);
+            // if (res.status == 200) {
+                setUser(authUser)
+            // }
+        // }
+        //   catch (error) {  }
+        }
+        test();
+    }, []);
+
     return (
-        <div className='profile'>
+        !user
+        ? <></>
+        : <div className='profile'>
             <section className='row-0'>
-                <UserInfo />
-                <UserOptionsNavBar option={option} onStateChange={handleStateChange} otherProfile={true}/>
+                <UserInfo user={user}/>
+                <UserOptionsNavBar option={option} onStateChange={handleStateChange} otherProfile={user.userId === authUser.userId}/>
             </section>
             <section className='row-1'>
                 <UserOptions option={option} />

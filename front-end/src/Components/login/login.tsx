@@ -7,7 +7,7 @@ const Login = () => {
 
 
   return (
-    (auth == 2 ? <Navigate to="/profile" />
+    (auth == 2 ? <Navigate to="/" />
     :
     <div className='login-container'>
       <h1>Welcome back</h1>

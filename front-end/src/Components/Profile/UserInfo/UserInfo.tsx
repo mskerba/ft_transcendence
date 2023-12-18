@@ -3,14 +3,17 @@ import UserProfile from './UserProfile/UserProfile';
 import UserProfileButtons from './UserProfileButtons/UserProfileButtons';
 import UserStats from './UserStats/UserStats';
 import './UserInfo.css'
+import { useAuth } from '../../../context/AuthContext';
 
 
-const UserInfo = ({ otherProfile }: any) => {
+const UserInfo = ({ user }: any) => {
+    const { authUser } = useAuth();
+
     return (
         <div className='user-info-container'>
-            <UserAvatar />
-            <UserProfile />
-            {!otherProfile && <UserProfileButtons /> }
+            <UserAvatar avatar={user.avatar} />
+            <UserProfile username={user.name} />
+            {authUser.userId !== user.userId && <UserProfileButtons /> }
             <UserStats />
         </div>
     );

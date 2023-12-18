@@ -51,7 +51,7 @@ export class AuthController {
             maxAge: 7 * 24 * 60 * 60 * 1000,
           });
 
-        return res.redirect(process.env.FRONTEND_DOMAIN + '/profile');
+        return res.redirect(process.env.FRONTEND_DOMAIN + '/');
     }
 
     @Public()
@@ -76,7 +76,7 @@ export class AuthController {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
         });
-        return res.redirect(process.env.FRONTEND_DOMAIN + '/profile');
+        return res.redirect(process.env.FRONTEND_DOMAIN + '/');
     }
 
     @Get('logout')
@@ -88,6 +88,20 @@ export class AuthController {
         res.clearCookie('refreshToken');
         res.clearCookie('2faToken');
         await this.authService.logout(userId);
+        res.send('.');
+
+    }
+
+    @Public()
+    @Get('clear-cookies')
+    @UseGuards(JwtRTAuthGuard)
+    async clearCookies(
+        @GetCurrentUserId() userId: number,
+        @Res() res,
+    ) {
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+        res.clearCookie('2faToken');
         res.send('.');
 
     }
@@ -133,9 +147,9 @@ export class AuthController {
     async generateTwoFactorAuthSecret(@Req() req) {
         const user: UserEntity = req.user;
     
-        const { secretKey, qrCodeUrl } = await this.authService.generateTwoFactorAuthSecret(user);
+        const qrCode = await this.authService.generateTwoFactorAuthSecret(user);
 
-        return ({ secretKey, qrCodeUrl });
+        return ({ qrCode });
     }
 
     @Post('enable-2fa')

@@ -1,8 +1,8 @@
 import './UserAvatar.css'
 
-const UserAvatar = () => {
+const UserAvatar = ({ avatar }: any) => {
     return (
-        <img src="https://thispersondoesnotexist.com/" className='user-avatar' />
+        <img src={avatar} className='user-avatar' />
     );
 }
 

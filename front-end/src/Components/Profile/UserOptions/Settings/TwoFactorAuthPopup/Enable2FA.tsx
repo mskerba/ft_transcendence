@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import QRCode from 'qrcode.react';
 import useAxiosPrivate from '../../../../../hooks/UseAxiosPrivate';
 
-const EnableTwoFactorAuth = ({ onClose, secretKey, onEnable }) => {
+const EnableTwoFactorAuth = ({ onClose, qrCode, onEnable }) => {
   const [token, setToken] = useState<string>('');
   const axiosPrivate = useAxiosPrivate();
 
@@ -33,11 +33,7 @@ const EnableTwoFactorAuth = ({ onClose, secretKey, onEnable }) => {
         <h2>Two Factor Authentication</h2>
         <p>Scan the QR code or enter the code into your authenticator app:</p>
 
-        <div>
-          <QRCode value={secretKey} />
-        </div>
-
-        <p>Code: {secretKey}</p>
+        <img src={qrCode}/>
 
         <label>
           Enter Token:

@@ -8,7 +8,7 @@ const Settings = () => {
     const [isSwitchedOn, setIsSwitchedOn] = useState(false);
     const [username, setUsername] = useState<string>('momeaizi');
     const [isPopupOpen, setPopupOpen] = useState<boolean>(false);
-    const [secretKey, setSecretKey] = useState<string>();
+    const [qrCode, setQrCode] = useState();
     
     const   axiosPrivate = useAxiosPrivate();
 
@@ -24,7 +24,7 @@ const Settings = () => {
     const handleSwitchToggle = async () => {
         if (!isSwitchedOn) {
             const res = await axiosPrivate.get('auth/secret-2fa');
-            setSecretKey(res?.data?.secretKey);
+            setQrCode(res?.data.qrCode);
         } else {
             await axiosPrivate.get('/auth/send-otp');
         }
@@ -58,7 +58,7 @@ const Settings = () => {
                 isSwitchedOn={isSwitchedOn}
                 isOpen={isPopupOpen}
                 onClose={closePopup}
-                secretKey={secretKey}
+                qrCode={qrCode}
                 onEnable={setIsSwitchedOn}
             />
         </div>

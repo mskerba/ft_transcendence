@@ -45,10 +45,10 @@ const NavBar = () => {
       <div style={{ top: divPosition.x, left: divPosition.y, display: divPosition.display }} className='dropdown-navbar-ham'>
         <ul>
           <li><Link to="/game">Game</Link></li>
-          <li>Home</li>
+          <li><Link to="/">Home</Link></li>
           <li><Link to="/chat">Chat</Link></li>
           <div className='dropdown-ham-profile'>
-            <li><Link to="/profile">Profile</Link></li>
+            <li><Link to="/user/1">Profile</Link></li>
             <li>Exit</li>
           </div>
         </ul>
@@ -84,7 +84,7 @@ const NavBar = () => {
 
           <div className='middle-navbar'>
             <li><Link to="/game">Game</Link></li>
-            <li><a>Home</a></li>
+            <li><Link to="/">Home</Link></li>
             <li><Link to="/chat">Chat</Link></li>
           </div>
 
@@ -93,7 +93,7 @@ const NavBar = () => {
           </div>
 
           <div className='profile-exit'>
-            <li><Link to="/profile"><img src="https://thispersondoesnotexist.com" className='profile-button-navbar' /></Link></li>
+            <li><Link to="/user/1"><img src="https://thispersondoesnotexist.com" className='profile-button-navbar' /></Link></li>
             <li onClick={handleLogout}><img src='src/assets/exit.svg' /></li>
           </div>
 

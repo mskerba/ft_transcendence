@@ -12,6 +12,7 @@ import NavBar from './Components/navBar/navBar';
 import  useAxiosPrivate  from './hooks/UseAxiosPrivate';
 import { Navigate, useNavigate } from 'react-router-dom';
 import TwoFactorVerification from './Components/TwoFactorAuth/TwoFactorAuth';
+import Home from './Components/Home/Home';
 
 
 
@@ -45,8 +46,8 @@ const App = () => {
         <>
         <Routes>
           <Route element={ <RequireAuth /> }>
-            <Route path="/profile" element={ <><NavBar /><Profile /></> } />
-            <Route path="/*" element={ <> <NavBar /> <Profile /> </> } />
+            <Route path="/user" element={ <><NavBar /><Profile /></> } />
+            <Route path="/" element={ <> <NavBar /> <Home /> </> } />
             <Route path="/game" element={ <> <NavBar /> <Game /> </> } />
             <Route path="/chat" element={ <> <NavBar /> <Chat /> </> } />
           </Route>

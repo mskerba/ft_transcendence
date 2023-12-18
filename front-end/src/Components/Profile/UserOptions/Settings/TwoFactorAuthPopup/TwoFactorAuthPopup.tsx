@@ -4,7 +4,7 @@ import useAxiosPrivate from '../../../../../hooks/UseAxiosPrivate';
 import EnableTwoFactorAuth from './Enable2FA';
 import DisableTwoFactorAuth from './Disable2FA';
 
-const TwoFactorAuthPopup = ({ isOpen, onClose, secretKey, onEnable, isSwitchedOn }) => {
+const TwoFactorAuthPopup = ({ isOpen, onClose, qrCode, onEnable, isSwitchedOn }) => {
 
   return (
     <Modal
@@ -15,7 +15,7 @@ const TwoFactorAuthPopup = ({ isOpen, onClose, secretKey, onEnable, isSwitchedOn
         {
             (isSwitchedOn)
              ? <DisableTwoFactorAuth onClose={onClose} onEnable={onEnable}/>
-             : <EnableTwoFactorAuth onClose={onClose} secretKey={secretKey} onEnable={onEnable}/>
+             : <EnableTwoFactorAuth onClose={onClose} qrCode={qrCode} onEnable={onEnable}/>
         }
 
       <button onClick={onClose}>Close</button>
