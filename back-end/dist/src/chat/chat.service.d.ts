@@ -27,8 +27,8 @@ export declare class ChatService {
         text: string;
     }[]>;
     createGroup(createGroupDto: CreateGroupDto): Promise<{
-        UserId: number;
         RoomId: string;
+        UserId: number;
         RoleName: string;
     } | {
         error: string;
@@ -58,13 +58,13 @@ export declare class ChatService {
         error?: undefined;
     }>;
     addMessageToRoom(roomId: string, message: string, uId: number): Promise<{
-        error: string;
-        status: HttpStatus;
-        success?: undefined;
-    } | {
         success: boolean;
         status: HttpStatus;
         error?: undefined;
+    } | {
+        error: string;
+        status: HttpStatus;
+        success?: undefined;
     }>;
     historyOfGroup(group: string): Promise<{
         UserId: number;
