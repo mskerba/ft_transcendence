@@ -2,9 +2,11 @@ import React from 'react'
 import { useEffect, useState }  from 'react';
 import ScoreBoard from "./score-board/ScoreBoard";
 import Canva from "./canva/Canva";
-// import './Game.css'
+// import io from 'socket.io-client';
+import './Game.css'
 
 function Game() {
+  // const socket = io('ws://localhost:3000');
   const test:String='canva';
 
   let [canvaStyle,setCanvaStyle]: any = useState({
@@ -26,6 +28,19 @@ function Game() {
     100,
   ];
   
+  // useEffect(() => {
+  //   socket.on('gamepaddleResponse', (data:any) => {
+  //     console.log('Received gamepaddleResponse:', data);
+  //   });
+
+  //   socket.emit('gamepaddle', {'x': 78})
+    
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, []);
+
+
   useEffect(
     () =>{
     function handleResize(){

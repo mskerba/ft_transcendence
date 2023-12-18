@@ -12,6 +12,8 @@ RUN npm install @prisma/client @nestjs/mapped-types   class-validator class-tran
 
 RUN npm install @nestjs/jwt @nestjs/passport passport passport-google-oauth20 passport-jwt passport-42 speakeasy qrcode @nestjs/platform-express cookie-parser @types/express
 
+RUN npm i --save @nestjs/websockets @nestjs/platform-socket.io
+
 COPY . .
 
 RUN npm run build

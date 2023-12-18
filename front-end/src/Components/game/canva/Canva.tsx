@@ -106,8 +106,11 @@ const P5Component = (props: any) => {
           player2 -= paddeleMv;
         else if (player2 < canva.y - paddeleMv - paddleHeight / 2  && p.keyIsDown(40))
           player2 += paddeleMv;
+        let playerCount = p.map(p.mouseY, 0, p.width, 0, canva.x, canva.y - canva.x);
+        if ((p.mouseY - paddleHeight / 2) > 0  && (p.mouseY + paddleHeight / 2) < 600)
+          player1 = p.mouseY
       }
-      
+
       function ballInPlayer1()
       {
         let sizeH = paddleHeight / 2 + ball.diameter / 2;
@@ -153,7 +156,7 @@ const P5Component = (props: any) => {
         y = (y > 0.01) ? y: 0;
         return y * (val / p.abs(val));
       }
-      
+
     };
 
     if (!p5Instance)
