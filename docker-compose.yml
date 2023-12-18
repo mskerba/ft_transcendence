@@ -1,34 +1,34 @@
 version: '3.5'
 
 services:
-  db:
-    image: postgres
-    restart: always
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    container_name: postgres
-    volumes:
-      - pgdata_vol:/var/lib/postgresql/data
-    networks:
-      - internal_network
+  # db:
+  #   image: postgres
+  #   restart: always
+  #   environment:
+  #     - POSTGRES_USER=${POSTGRES_USER}
+  #     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+  #   container_name: postgres
+  #   volumes:
+  #     - pgdata_vol:/var/lib/postgresql/data
+  #   networks:
+  #     - internal_network
 
-  back-end:
-    build:
-      context: ./back-end
-      dockerfile: ./Dockerfile
-    container_name: back-end
-    restart: always
-    env_file:
-      - ./.env
-    networks:
-      - internal_network
-    depends_on:
-      - db
-    ports:
-      - '3000:3000'
-    volumes:
-      - ./back-end/src:/app/src
+  # back-end:
+  #   build:
+  #     context: ./back-end
+  #     dockerfile: ./Dockerfile
+  #   container_name: back-end
+  #   restart: always
+  #   env_file:
+  #     - ./.env
+  #   networks:
+  #     - internal_network
+  #   depends_on:
+  #     - db
+  #   ports:
+  #     - '3000:3000'
+  #   volumes:
+  #     - ./back-end/src:/app/src
 
   front-end:
     build:
@@ -39,8 +39,8 @@ services:
       - '3001:3001'
     networks:
       - internal_network
-    depends_on:
-      - back-end
+    # depends_on:
+    #   - back-end
     volumes:
       - ./front-end/src:/app/src
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ChatHeader from './ChatHeader';
 import io from 'socket.io-client';
+
 import './chat.css';
 
 function Message(props:any) {
@@ -20,6 +21,7 @@ function Message(props:any) {
   );
 }
 
+// get message here using axios
 const ChatContainer = (props:any) => {
   const [message, setMessage] = useState('');
 

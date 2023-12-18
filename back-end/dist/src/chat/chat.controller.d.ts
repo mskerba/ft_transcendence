@@ -6,13 +6,13 @@ export declare class ChatController {
     constructor(chatService: ChatService);
     MyFriends(param: any): Promise<any>;
     historyOfGroup(group: any): Promise<{
-        text: string;
         UserId: number;
+        text: string;
     }[]>;
     ChatHistory(param: any): Promise<any>;
     createGroup(createGroupDto: CreateGroupDto): Promise<{
-        RoomId: string;
         UserId: number;
+        RoomId: string;
         RoleName: string;
     } | {
         error: string;

@@ -23,12 +23,12 @@ export declare class ChatService {
     }[]>;
     MyFriends(user1: number): Promise<Map<number, object>>;
     chatHistory(id1: number, id2: number): Promise<{
-        text: string;
         senderId: number;
+        text: string;
     }[]>;
     createGroup(createGroupDto: CreateGroupDto): Promise<{
-        RoomId: string;
         UserId: number;
+        RoomId: string;
         RoleName: string;
     } | {
         error: string;
@@ -67,8 +67,8 @@ export declare class ChatService {
         error?: undefined;
     }>;
     historyOfGroup(group: string): Promise<{
-        text: string;
         UserId: number;
+        text: string;
     }[]>;
     findUserInGroup(userId: number, roomId: string): Promise<{
         success: boolean;
