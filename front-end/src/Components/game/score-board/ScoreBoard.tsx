@@ -17,7 +17,6 @@ function ScoreBoard(prop:any) {
           width: `${prop.size.width - 20}px`,
         }
       })
-      console.log("-->>>",SBstyle.width)
   } ,[prop.size])
 
 

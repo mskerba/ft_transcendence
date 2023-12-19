@@ -25,10 +25,12 @@ const P5Component = (props: any) => {
 
 
         canva= {x : props.size.width, y : props.size.width / 1.8}
-        canvas = p.createCanvas(props.size.width, props.size.height);
+        // canva= {x : 1080, y : 600}
+        canvas = p.createCanvas(canva.x, canva.y);
         canvas.parent(container);
         player1 = canva.y / 2;
         player2 = canva.y / 2;
+
         let diameter = canva.x * diam /600;
         if (!ball)
         {
@@ -38,52 +40,25 @@ const P5Component = (props: any) => {
             y : canva.y  - diameter//ball.diameter 
           };
         }
-          sign = {
-                    x : 1,
-                    y : 1
-                  };
-        derection = {
-          x : canva.x * speed / 600,
-          y : -p.random(0.1, canva.x * 10 / 600)
-        };
         paddleHeight = canva.y * 70 /300;
         paddelWidth = canva.x * 10 /600;
       };
 
       p.draw = () => {
         shapesDraw()
-    
         paddleControl();
-    
-        if (ball.y <= ball.diameter/2 || ball.y >= canva.y - ball.diameter /2)
-          derection.y *= -1;
-    
-        restIsGoal();
-      
-        //calculate green paddle 
-        ballInPlayer1();
-        
-        //calculate blue paddle 
-        ballInPlayer2();
-    
-        ball.x += derection.x * sign.x;
-        ball.y += derection.y;
       };
 
       
       function shapesDraw()
       {
-        // scale(test);
-        // resizeCanvas(canva.x, canva.y);
         p.background(44, 43, 43);
 
-        // setGradient(0, 0, canva.x, canva.y, p.color(44, 43, 43), p.color(0));
         p.rectMode(p.CENTER);
 
-        p.fill('rgb(160,160,46)');
-        // translate(width / 2, height / 2);
-        // rotateDrawBall();
-        p.circle(ball.x, ball.y, ball.diameter )
+        p.fill('rgb(160,160,46)')
+        
+        p.circle(ball.width, ball.height, ball.diameter )
 
         p.noStroke()
 
@@ -106,58 +81,17 @@ const P5Component = (props: any) => {
           player2 -= paddeleMv;
         else if (player2 < canva.y - paddeleMv - paddleHeight / 2  && p.keyIsDown(40))
           player2 += paddeleMv;
-        let playerCount = p.map(p.mouseY, 0, p.width, 0, canva.x, canva.y - canva.x);
-        if ((p.mouseY - paddleHeight / 2) > 0  && (p.mouseY + paddleHeight / 2) < 600)
-          player1 = p.mouseY
+
+        props.socket.emit('gamepaddle', {'player1': player1, 'player2': player2})
       }
 
-      function ballInPlayer1()
-      {
-        let sizeH = paddleHeight / 2 + ball.diameter / 2;
-        let sizeW = paddelWidth + 5 + ball.diameter / 2;
-        if (ball.x <= sizeW && ball.x >=  ball.diameter / 2 + 5 && (ball.y >= player1 - sizeH && ball.y <= player1 + sizeH))
-        { 
-          sign.x *= -1;
-          derection.y = derectionY(ball.y - player1, derection.x);
-        }
-      }
-
-      function ballInPlayer2()
-      {
-        let sizeH = paddleHeight / 2 + ball.diameter / 2;
-        let sizeW = canva.x - paddelWidth - 5 - ball.diameter / 2;
-        if (ball.x >= sizeW && ball.x <=  canva.x - ball.diameter / 2 - 5 && (ball.y >= player2 - sizeH && ball.y <= player2 + sizeH))
-        {
-          sign.x *= -1;
-          derection.y = 5;
-          derection.y = derectionY(ball.y - player2, derection.x);
-        }
-      }
-
-      function restIsGoal()
-      {
-          if(ball.x < 0 || ball.x > canva.x)
-          {
-            derection.y = -p.random(0.1, canva.x * 10 / 600);
-            ball.x = canva.x / 2;
-            ball.y = canva.y - ball.diameter;
-          }
-      }
-
-      function derectionY(val:number, x:number)
-      {
-        let mapVal = p.map(p.abs(val), 0, paddleHeight / 2, 90, 120);
-        let angle = (val > 0) ? 180 - mapVal : mapVal;
-        let adjacent = (val > 0) ? canva.y - ball.y : ball.y;
-        let hypotenuse = adjacent / p.cos(p.radians(angle));
-        let opposit = p.sqrt(p.pow(hypotenuse, 2) - p.pow(adjacent, 2));
-        let stepsXinc = opposit / x;
-        let y = adjacent / stepsXinc;
-        y = (y > 0.01) ? y: 0;
-        return y * (val / p.abs(val));
-      }
 
     };
+
+    props.socket.on('ballPosition', (data:any) => {
+      ball = data.ball;
+      // console.log('Received ballpositionResponse:', ball);
+    });
 
     if (!p5Instance)
       p5Instance = new p5(sketch);
@@ -167,7 +101,7 @@ const P5Component = (props: any) => {
       p5Instance = null;
     };
 
-  }, [props.size]);
+  }, [props.size, props.socket]);
 
   return null;
 };
@@ -202,7 +136,7 @@ const Canva = (props: any) => {
 
   return (
     <div className={`${props.className} grow`} style={style}>
-      <P5Component size={canvaSize} />
+      <P5Component size={canvaSize} socket={props.socket}/>
     </div>
   );
 };

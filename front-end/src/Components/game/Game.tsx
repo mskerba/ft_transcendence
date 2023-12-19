@@ -2,11 +2,14 @@ import React from 'react'
 import { useEffect, useState }  from 'react';
 import ScoreBoard from "./score-board/ScoreBoard";
 import Canva from "./canva/Canva";
-// import io from 'socket.io-client';
+import io from 'socket.io-client';
 import './Game.css'
 
 function Game() {
-  // const socket = io('ws://localhost:3000');
+  const socket = io('ws://localhost:3000', {
+    transports: ["websocket"],
+    withCredentials: true,
+  });
   const test:String='canva';
 
   let [canvaStyle,setCanvaStyle]: any = useState({
@@ -27,18 +30,6 @@ function Game() {
     200,
     100,
   ];
-  
-  // useEffect(() => {
-  //   socket.on('gamepaddleResponse', (data:any) => {
-  //     console.log('Received gamepaddleResponse:', data);
-  //   });
-
-  //   socket.emit('gamepaddle', {'x': 78})
-    
-  //   return () => {
-  //     socket.disconnect();
-  //   };
-  // }, []);
 
 
   useEffect(
@@ -71,13 +62,30 @@ function Game() {
   }
   window.addEventListener('load',handleResize);
   window.addEventListener("resize",  handleResize);
-  } ,[window])
+
+  socket.on('gamepaddleResponse', (data:any) => {
+    console.log('Received gamepaddleResponse:', data);
+  });
+
+  socket.on('stopGame', () => {
+    console.log('Game stopped front');
+    window.location.href = '/chat';
+  });
+
+  socket.emit('gamepaddle', {'x': 78})
+  
+  return () => {
+
+    socket.off('stopGame');
+    socket.disconnect();
+  };
+  } ,[window,socket])
   console.log(canvaStyle.width,canvaStyle.height)
   return (
     <div className='game--page'>
         <div className='game--component'  style={canvaStyle} >
             <ScoreBoard size={canvaStyle}/>
-            <Canva className={test} size={canvaStyle}/>
+            <Canva className={test} size={canvaStyle} socket={socket}/>
         </div>
     </div>
   )
