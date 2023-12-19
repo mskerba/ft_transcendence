@@ -17,15 +17,7 @@ import { ChatModule } from './chat/chat.module';
 
 
 @Module({
-  // imports: [AuthModule, PrismaModule, UserModule, FriendModule],
-  imports: [
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../../', 'html'),
-    }),
-    ChatModule,
-    PrismaModule
-  ],
-  controllers: [AppController, ChatController],
+  imports: [AuthModule, PrismaModule, UserModule, FriendModule],
   providers: [
     AppService,
     // {
