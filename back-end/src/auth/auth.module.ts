@@ -18,4 +18,3 @@ import { FortyTwoStrategy } from './strategies/42.startegy';
   imports: [UserModule, PrismaModule, JwtModule.register({})],
 })
 export class AuthModule {}
-

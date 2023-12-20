@@ -3,11 +3,11 @@ import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
-import * as speakeasy from 'speakeasy';
 import * as qrcode from 'qrcode';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { EmailService } from './email.service';
+import { authenticator } from 'otplib';
 
 
 export type OtpVerification = {
@@ -88,8 +88,8 @@ export class AuthService {
                     email: email,
                 },
                 {
-                    secret: 'at-secret',
-                    expiresIn: 60 * 15 /*to be removed after*/ * 60,
+                    secret: process.env.AT_SECRET,
+                    expiresIn: 60 * 15,
                 }
             ),
             this.jwtService.signAsync(
@@ -98,7 +98,7 @@ export class AuthService {
                     email: email,
                 },
                 {
-                    secret: 'rt-secret',
+                    secret: process.env.RT_SECRET,
                     expiresIn: 60 * 60 * 24 * 7,
                 }
             ),
@@ -108,7 +108,7 @@ export class AuthService {
                     email: email,
                 },
                 {
-                    secret: '2fa-secret',
+                    secret: process.env.TWOFA_SECRET,
                     expiresIn: 60 * 60 * 24 * 7,
                 }
             ),
@@ -124,19 +124,16 @@ export class AuthService {
     async generateTwoFactorAuthSecret(user: UserEntity): Promise<{ secretKey: string; qrCodeUrl: string }> {
         if (user.twoFA_Enabled) throw new ForbiddenException("the 2FA is already enabled");
 
-        const secretKey = speakeasy.generateSecret().base32;
-        const otpAuthUrl = speakeasy.otpauthURL({
-          secret: secretKey,
-          label: 'PingPong',
-          issuer: 'Taha',
-        });
+        const secret = authenticator.generateSecret();
+        const otpAuth = authenticator.keyuri(user.email, 'PongGreen', secret);
+        const qrCode = await qrcode.toDataURL(otpAuth);
+  
 
-        const qrCodeUrl = await qrcode.toDataURL(otpAuthUrl);
         await this.userService.update(user.userId, {
-            twoFA_SecretKey: secretKey,
+            twoFA_SecretKey: secret,
         });
 
-        return { secretKey, qrCodeUrl };
+        return qrCode;
     }
 
     async enableTwoFactorAuth(user: UserEntity, token: string): Promise<boolean> {
@@ -144,11 +141,7 @@ export class AuthService {
         if (!user.twoFA_SecretKey) throw new ForbiddenException("No secret exists!");
 
         if (user.twoFA_SecretKey) {
-            const verified = speakeasy.totp.verify({
-                secret: user.twoFA_SecretKey,
-                encoding: 'base32',
-                token,
-            });
+            const verified = authenticator.check(token, user.twoFA_SecretKey);
             if (verified) {
                 await this.userService.update(user.userId, {
                     twoFA_Enabled: true,
@@ -208,11 +201,7 @@ export class AuthService {
           return false;
         }
     
-        const verified = speakeasy.totp.verify({
-          secret: secretKey,
-          encoding: 'base32',
-          token,
-        });
+        const verified = authenticator.check(token, secretKey);
 
         if (verified) {
             await this.userService.update(user.userId, {
@@ -242,8 +231,7 @@ export class AuthService {
                     expiresAt: new Date(Date.now() + 36000000),
                 }
             });
-            
-            console.log(await this.prisma.userOTPVerification.findMany({}));
+
             
             await this.emailService.sendMail(
                 user.email,

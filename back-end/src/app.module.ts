@@ -10,22 +10,12 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { UserModule } from './user/user.module';
 import { FriendModule } from './friend/friend.module';
 import { ChatGateway } from './chatGateway/chat.gateway';
-import { join } from 'path';
 import { ChatService } from './chat/chat.service';
-import { ChatController } from './chat/chat.controller';
 import { ChatModule } from './chat/chat.module';
 
 
 @Module({
-  // imports: [AuthModule, PrismaModule, UserModule, FriendModule],
-  imports: [
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../../', 'html'),
-    }),
-    ChatModule,
-    PrismaModule
-  ],
-  controllers: [AppController, ChatController],
+  imports: [AuthModule, PrismaModule, UserModule, FriendModule, ChatModule],
   providers: [
     AppService,
     // {

@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, ExtractJwt } from 'passport-jwt';
+import { Strategy } from 'passport-jwt';
 import { UserService } from 'src/user/user.service';
 
 export type JwtPayload = {
@@ -11,10 +11,21 @@ export type JwtPayload = {
 @Injectable()
 export class Jwt2FAStrategy extends PassportStrategy(Strategy, 'jwt-2fa') {
     constructor(private userService: UserService) {
+
+        const extractJwtFromCookie = (req) => {
+            let token = null;
+
+            if (req && req.cookies) {
+                token = req.cookies['2faToken'];
+            }
+            
+            return token;
+        };
+
           
         super({
-            secretOrKey: "2fa-secret",
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            secretOrKey: process.env.TWOFA_SECRET,
+            jwtFromRequest: extractJwtFromCookie,
         });
     }
 

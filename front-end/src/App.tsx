@@ -1,27 +1,63 @@
-import React, { useState } from 'react';
-import Game from "./game/Game";
-import Chat from "./Chat/Chat";
-import Profile from "./Profile/Profile"
+import { useEffect, useState } from 'react';
+import Game from "./Components/game/Game";
+import Chat from "./Components/Chat/Chat";
+import Profile from "./Components/Profile/Profile"
+import Modal from 'react-modal';
 import './App.css'
-import Login from './login/login';
+import Login from './Components/login/login';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import NavBar from './navBar/navBar';
+import RequireAuth from './Components/RequireAuth/RequireAuth';
+import { useAuth } from './context/AuthContext';
+import NavBar from './Components/navBar/navBar';
+import  useAxiosPrivate  from './hooks/UseAxiosPrivate';
+import { Navigate, useNavigate } from 'react-router-dom';
+import TwoFactorVerification from './Components/TwoFactorAuth/TwoFactorAuth';
+import Home from './Components/Home/Home';
+
+
 
 
 const App = () => {
+  const { auth, login, logout } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
+
+  useEffect(() => {
+    const test = async () => {
+      try {
+        const res = await axiosPrivate.get('/user');
+      if (res.status == 200) {
+        login(res?.data);
+      }
+    }
+      catch (error) { logout(); }
+    }
+    test();
+  }, [auth]);
+
+  useEffect(() => {
+    Modal.setAppElement('#root');
+  }, []);
+
+
+
   return (
     <>
-      <NavBar/>
-      <Router>
+    {auth != 1 &&
         <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/game" element={<Game />} />
-          <Route path="/Chat" element={<Chat />} />
+          <Route element={ <RequireAuth /> }>
+            <Route path="user/:userId" element={ <><NavBar /><Profile /></> } />
+            <Route path="/" element={ <> <NavBar /> <Home /> </> } />
+            <Route path="/game" element={ <> <NavBar /> <Game /> </> } />
+            <Route path="/chat" element={ <> <NavBar /> <Chat /> </> } />
+          </Route>
+
+          <Route path="/login" element={ <Login /> } />
+          <Route path="/2FA" element={ <TwoFactorVerification /> } />
+
         </Routes>
-      </Router>
-    </>
-  );
+    }
+</>
+    );
 };
 
 export default App;

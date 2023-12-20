@@ -9,14 +9,14 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
+  "alone": "npx prisma db seed && nest start --watch",
 // schema.prisma
 
 model User {
   userId                  Int       @id @default(autoincrement())
   name                    String?   @unique
-  email                   String    @unique
-  avatar                  String    @default("https://www.svgrepo.com/show/213882/avatar-user.svg")
+  email                   String    @uniquedocker rm -f fals
+  avatar                  String    @default("/src/assets/avatar.svg")
   hashedRt                String?
   twoFA_Enabled           Boolean   @default(false)
   twoFA_Verified          Boolean   @default(false)

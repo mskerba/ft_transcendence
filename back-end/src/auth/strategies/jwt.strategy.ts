@@ -11,10 +11,18 @@ export type JwtPayload = {
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     constructor(private userService: UserService) {
-          
+        const extractJwtFromCookie = (req) => {
+            let token = null;
+            if (req && req.cookies) {
+                token = req.cookies['accessToken'];
+            }
+
+            return token;
+        };
+
         super({
-            secretOrKey: "at-secret",
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            secretOrKey: process.env.AT_SECRET,
+            jwtFromRequest: extractJwtFromCookie,
         });
     }
 

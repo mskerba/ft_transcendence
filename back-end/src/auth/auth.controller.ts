@@ -38,20 +38,20 @@ export class AuthController {
 
         res.cookie('accessToken', tokens.access_token, {
             httpOnly: true,
-            maxAge: 15 * 60 * 1000, // 15 minutes in milliseconds
-          });
-      
-          // Set refresh token as a cookie with a 7-day expiration
-          res.cookie('refreshToken', tokens.refresh_token, {
-            httpOnly: true,
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+            maxAge: 15 * 60 * 1000,
           });
 
-          res.cookie('2faToken', tokens.refresh_token, {
+          res.cookie('refreshToken', tokens.refresh_token, {
             httpOnly: true,
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+            maxAge: 7 * 24 * 60 * 60 * 1000,
           });
-        return res.redirect('http://localhost:3001/profile');
+
+          res.cookie('2faToken', tokens.TwoFA_token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+          });
+
+        return res.redirect(process.env.FRONTEND_DOMAIN + '/');
     }
 
     @Public()
@@ -64,50 +64,92 @@ export class AuthController {
         res.cookie('accessToken', tokens.access_token, {
             httpOnly: true,
             maxAge: 15 * 60 * 1000, // 15 minutes in milliseconds
-          });
+        });
       
-          // Set refresh token as a cookie with a 7-day expiration
-          res.cookie('refreshToken', tokens.refresh_token, {
+        // Set refresh token as a cookie with a 7-day expiration
+        res.cookie('refreshToken', tokens.refresh_token, {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
-          });
+        });
 
-          res.cookie('2faToken', tokens.refresh_token, {
+        res.cookie('2faToken', tokens.TwoFA_token, {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
-          });
-        return res.redirect('http://localhost:3001/profile');
+        });
+        return res.redirect(process.env.FRONTEND_DOMAIN + '/');
     }
 
-    @Post('logout')
+    @Get('logout')
     async logout(
         @GetCurrentUserId() userId: number,
         @Res() res,
     ) {
         res.clearCookie('accessToken');
         res.clearCookie('refreshToken');
+        res.clearCookie('2faToken');
         await this.authService.logout(userId);
-        return res.send('Logout successful');
+        res.send('.');
+
     }
 
     @Public()
-    @Post('refresh')
+    @Get('clear-cookies')
     @UseGuards(JwtRTAuthGuard)
-    refreshTokens(
+    async clearCookies(
+        @GetCurrentUserId() userId: number,
+        @Res() res,
+    ) {
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+        res.clearCookie('2faToken');
+        res.send('.');
+
+    }
+
+    @Public()
+    @Get('refresh')
+    @UseGuards(JwtRTAuthGuard)
+    async refreshTokens(
         @GetCurrentUserId() userId: number,
         @GetCurrentUser('refreshToken') refreshToken: string,
+        @Res() res
     ) {
         
-        return this.authService.refreshTokens(userId, refreshToken);
+        const tokens = await this.authService.refreshTokens(userId, refreshToken);
+
+        res.cookie('accessToken', tokens.access_token, {
+            httpOnly: true,
+            maxAge: 15 * 60 * 1000, // 15 minutes in milliseconds
+        });
+      
+        // Set refresh token as a cookie with a 7-day expiration
+        res.cookie('refreshToken', tokens.refresh_token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+        });
+
+        res.cookie('2faToken', tokens.TwoFA_token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+        });
+
+        res.send(tokens);
+    }
+
+    @Get('is-2fa-enabled')
+    async isTwoFA_enabled(@Req() req) {
+        const user: UserEntity = req.user;
+
+        return user.twoFA_Enabled;
     }
 
     @Get('secret-2fa')
     async generateTwoFactorAuthSecret(@Req() req) {
         const user: UserEntity = req.user;
     
-        const { secretKey, qrCodeUrl } = await this.authService.generateTwoFactorAuthSecret(user);
+        const qrCode = await this.authService.generateTwoFactorAuthSecret(user);
 
-        return ({ secretKey, qrCodeUrl });
+        return ({ qrCode });
     }
 
     @Post('enable-2fa')
@@ -118,27 +160,7 @@ export class AuthController {
         const user: UserEntity = req.user;
 
         const enabled = await this.authService.enableTwoFactorAuth(user, tokenDto.token);
-        return ({success: enabled});
-    }
-
-
-    @Public()
-    @Post('send-otp')
-    @UseGuards(Jwt2FAGuard)
-    async sendOTPVerificationEmail(@Req() req) {
-        const user: UserEntity = req.user;
-        return await this.authService.sendOTPVerificationEmail(user);
-    }
-
-    @Public()
-    @Post('disable-2fa')
-    @UseGuards(Jwt2FAGuard)
-    async disableTwoFactorAuth(
-        @GetCurrentUserId() userId: number,
-        @Body('otpCode') otpCodeDto: OTPCodeDto,
-    ) {
-        const disabled = await this.authService.disableTwoFactorAuth(userId, otpCodeDto.otp);
-        return ({success: disabled});
+        return (enabled);
     }
 
     @Public()
@@ -150,8 +172,27 @@ export class AuthController {
     ) {
         const user: UserEntity = req.user;
         const verified = await this.authService.verifyTwoFactorAuth(user, tokenDto.token);
-        return({ success: verified });
+        return verified;
     }
 
+    @Public()
+    @Get('send-otp')
+    @UseGuards(Jwt2FAGuard)
+    async sendOTPVerificationEmail(@Req() req) {
+        const user: UserEntity = req.user;
+        return await this.authService.sendOTPVerificationEmail(user);
+    }
+
+    @Public()
+    @Post('disable-2fa')
+    @UseGuards(Jwt2FAGuard)
+    async disableTwoFactorAuth(
+        @Req() req,
+        @Body() otpCodeDto: OTPCodeDto,
+    ) {
+        const user: UserEntity = req.user;
+        const disabled = await this.authService.disableTwoFactorAuth(user.userId, otpCodeDto.otp);
+        return ({success: disabled});
+    }
 
 }
