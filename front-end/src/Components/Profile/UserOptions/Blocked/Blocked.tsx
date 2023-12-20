@@ -9,7 +9,7 @@ const Blocked = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='blocked-buttons'>
-                <div className='blocked-unblock-button'><img src='src/assets/unblock.svg'/></div>
+                <div className='blocked-unblock-button'><img src='/src/assets/unblock.svg'/></div>
             </div>
         </div>
         <div className='blocked'>
@@ -18,7 +18,7 @@ const Blocked = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='blocked-buttons'>
-                <div className='blocked-unblock-button'><img src='src/assets/unblock.svg'/></div>
+                <div className='blocked-unblock-button'><img src='/src/assets/unblock.svg'/></div>
             </div>
         </div>
         <div className='blocked'>
@@ -27,7 +27,7 @@ const Blocked = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='blocked-buttons'>
-                <div className='blocked-unblock-button'><img src='src/assets/unblock.svg'/></div>
+                <div className='blocked-unblock-button'><img src='/src/assets/unblock.svg'/></div>
             </div>
         </div>
         <div className='blocked'>
@@ -36,7 +36,7 @@ const Blocked = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='blocked-buttons'>
-                <div className='blocked-unblock-button'><img src='src/assets/unblock.svg'/></div>
+                <div className='blocked-unblock-button'><img src='/src/assets/unblock.svg'/></div>
             </div>
         </div>
         <div className='blocked'>
@@ -45,7 +45,7 @@ const Blocked = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='blocked-buttons'>
-                <div className='blocked-unblock-button'><img src='src/assets/unblock.svg'/></div>
+                <div className='blocked-unblock-button'><img src='/src/assets/unblock.svg'/></div>
             </div>
         </div>
         <div className='blocked'>
@@ -54,7 +54,7 @@ const Blocked = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='blocked-buttons'>
-                <div className='blocked-unblock-button'><img src='src/assets/unblock.svg'/></div>
+                <div className='blocked-unblock-button'><img src='/src/assets/unblock.svg'/></div>
             </div>
         </div>
         <div className='blocked'>
@@ -63,7 +63,7 @@ const Blocked = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='blocked-buttons'>
-                <div className='blocked-unblock-button'><img src='src/assets/unblock.svg'/></div>
+                <div className='blocked-unblock-button'><img src='/src/assets/unblock.svg'/></div>
             </div>
         </div>
         <div className='blocked'>
@@ -72,7 +72,7 @@ const Blocked = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='blocked-buttons'>
-                <div className='blocked-unblock-button'><img src='src/assets/unblock.svg'/></div>
+                <div className='blocked-unblock-button'><img src='/src/assets/unblock.svg'/></div>
             </div>
         </div>
         <div className='blocked'>
@@ -81,7 +81,7 @@ const Blocked = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='blocked-buttons'>
-                <div className='blocked-unblock-button'><img src='src/assets/unblock.svg'/></div>
+                <div className='blocked-unblock-button'><img src='/src/assets/unblock.svg'/></div>
             </div>
         </div>
         <div className='blocked'>
@@ -90,7 +90,7 @@ const Blocked = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='blocked-buttons'>
-                <div className='blocked-unblock-button'><img src='src/assets/unblock.svg'/></div>
+                <div className='blocked-unblock-button'><img src='/src/assets/unblock.svg'/></div>
             </div>
         </div>
         <div className='blocked'>
@@ -99,7 +99,7 @@ const Blocked = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='blocked-buttons'>
-                <div className='blocked-unblock-button'><img src='src/assets/unblock.svg'/></div>
+                <div className='blocked-unblock-button'><img src='/src/assets/unblock.svg'/></div>
             </div>
         </div>
         <div className='blocked'>
@@ -108,7 +108,7 @@ const Blocked = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='blocked-buttons'>
-                <div className='blocked-unblock-button'><img src='src/assets/unblock.svg'/></div>
+                <div className='blocked-unblock-button'><img src='/src/assets/unblock.svg'/></div>
             </div>
         </div>
         </>

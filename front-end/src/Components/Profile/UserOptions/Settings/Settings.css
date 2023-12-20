@@ -10,12 +10,9 @@
     color: #FFFFFF;
 }
 
-.settings img {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border: 2px solid #ffffff;
-    border-radius: 50%;
+.change-username p {
+    color: red;
+    font-size: .9rem;
 }
 
 #username-input {

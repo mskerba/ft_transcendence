@@ -19,7 +19,7 @@ const ChatHeader = (prop:any) => {
   return (
       <div className='chat-header'>
         <div className='side-bar-controle-button' onClick={handelClick}>
-          <img src='src/assets/arrow.svg' className='arrow-svg'/>
+          <img src='/src/assets/arrow.svg' className='arrow-svg'/>
         </div>
         <div className='right-part-header'>
           <div className='chat-info'>
@@ -29,10 +29,10 @@ const ChatHeader = (prop:any) => {
                 <p>online</p>
             </div>
           </div>
-          {group && <div  className='info-group-button' onClick={handelClickInf} ><img src='src/assets/info-group.svg'/></div>}
+          {group && <div  className='info-group-button' onClick={handelClickInf} ><img src='/src/assets/info-group.svg'/></div>}
           {!group && <div className='play-button-chat'>
               <p>Play Now</p>
-              <img src='src/assets/play-now.svg' />
+              <img src='/src/assets/play-now.svg' />
           </div>}
         </div>
       </div>

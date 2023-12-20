@@ -9,8 +9,8 @@ const Friend = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='friend-buttons'>
-                <div className='friend-play-button'><img src='src/assets/play.svg'/></div>
-                <div className='friend-message-button'><img src='src/assets/message.svg'/></div>
+                <div className='friend-play-button'><img src='/src/assets/play.svg'/></div>
+                <div className='friend-message-button'><img src='/src/assets/message.svg'/></div>
             </div>
         </div>
         <div className='friend'>
@@ -19,8 +19,8 @@ const Friend = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='friend-buttons'>
-                <div className='friend-play-button'><img src='src/assets/play.svg'/></div>
-                <div className='friend-message-button'><img src='src/assets/message.svg'/></div>
+                <div className='friend-play-button'><img src='/src/assets/play.svg'/></div>
+                <div className='friend-message-button'><img src='/src/assets/message.svg'/></div>
             </div>
         </div>
         <div className='friend'>
@@ -29,8 +29,8 @@ const Friend = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='friend-buttons'>
-                <div className='friend-play-button'><img src='src/assets/play.svg'/></div>
-                <div className='friend-message-button'><img src='src/assets/message.svg'/></div>
+                <div className='friend-play-button'><img src='/src/assets/play.svg'/></div>
+                <div className='friend-message-button'><img src='/src/assets/message.svg'/></div>
             </div>
         </div>
         <div className='friend'>
@@ -39,8 +39,8 @@ const Friend = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='friend-buttons'>
-                <div className='friend-play-button'><img src='src/assets/play.svg'/></div>
-                <div className='friend-message-button'><img src='src/assets/message.svg'/></div>
+                <div className='friend-play-button'><img src='/src/assets/play.svg'/></div>
+                <div className='friend-message-button'><img src='/src/assets/message.svg'/></div>
             </div>
         </div>
         <div className='friend'>
@@ -49,8 +49,8 @@ const Friend = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='friend-buttons'>
-                <div className='friend-play-button'><img src='src/assets/play.svg'/></div>
-                <div className='friend-message-button'><img src='src/assets/message.svg'/></div>
+                <div className='friend-play-button'><img src='/src/assets/play.svg'/></div>
+                <div className='friend-message-button'><img src='/src/assets/message.svg'/></div>
             </div>
         </div>
         <div className='friend'>
@@ -59,8 +59,8 @@ const Friend = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='friend-buttons'>
-                <div className='friend-play-button'><img src='src/assets/play.svg'/></div>
-                <div className='friend-message-button'><img src='src/assets/message.svg'/></div>
+                <div className='friend-play-button'><img src='/src/assets/play.svg'/></div>
+                <div className='friend-message-button'><img src='/src/assets/message.svg'/></div>
             </div>
         </div>
         <div className='friend'>
@@ -69,8 +69,8 @@ const Friend = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='friend-buttons'>
-                <div className='friend-play-button'><img src='src/assets/play.svg'/></div>
-                <div className='friend-message-button'><img src='src/assets/message.svg'/></div>
+                <div className='friend-play-button'><img src='/src/assets/play.svg'/></div>
+                <div className='friend-message-button'><img src='/src/assets/message.svg'/></div>
             </div>
         </div>
         <div className='friend'>
@@ -79,8 +79,8 @@ const Friend = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='friend-buttons'>
-                <div className='friend-play-button'><img src='src/assets/play.svg'/></div>
-                <div className='friend-message-button'><img src='src/assets/message.svg'/></div>
+                <div className='friend-play-button'><img src='/src/assets/play.svg'/></div>
+                <div className='friend-message-button'><img src='/src/assets/message.svg'/></div>
             </div>
         </div>
         <div className='friend'>
@@ -89,8 +89,8 @@ const Friend = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='friend-buttons'>
-                <div className='friend-play-button'><img src='src/assets/play.svg'/></div>
-                <div className='friend-message-button'><img src='src/assets/message.svg'/></div>
+                <div className='friend-play-button'><img src='/src/assets/play.svg'/></div>
+                <div className='friend-message-button'><img src='/src/assets/message.svg'/></div>
             </div>
         </div>
         <div className='friend'>
@@ -99,8 +99,8 @@ const Friend = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='friend-buttons'>
-                <div className='friend-play-button'><img src='src/assets/play.svg'/></div>
-                <div className='friend-message-button'><img src='src/assets/message.svg'/></div>
+                <div className='friend-play-button'><img src='/src/assets/play.svg'/></div>
+                <div className='friend-message-button'><img src='/src/assets/message.svg'/></div>
             </div>
         </div>
         <div className='friend'>
@@ -109,8 +109,8 @@ const Friend = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='friend-buttons'>
-                <div className='friend-play-button'><img src='src/assets/play.svg'/></div>
-                <div className='friend-message-button'><img src='src/assets/message.svg'/></div>
+                <div className='friend-play-button'><img src='/src/assets/play.svg'/></div>
+                <div className='friend-message-button'><img src='/src/assets/message.svg'/></div>
             </div>
         </div>
         <div className='friend'>
@@ -119,8 +119,8 @@ const Friend = () => {
                 <h4>taha_meaizi</h4>
             </div>
             <div className='friend-buttons'>
-                <div className='friend-play-button'><img src='src/assets/play.svg'/></div>
-                <div className='friend-message-button'><img src='src/assets/message.svg'/></div>
+                <div className='friend-play-button'><img src='/src/assets/play.svg'/></div>
+                <div className='friend-message-button'><img src='/src/assets/message.svg'/></div>
             </div>
         </div>
         </>

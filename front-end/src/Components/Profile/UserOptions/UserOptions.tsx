@@ -6,7 +6,7 @@ import Game from './Games/Games';
 import Settings from './Settings/Settings';
 import './UserOptions.css'
 
-const UserOptions = ({option}: any) => {
+const UserOptions = ({ option, user, onStateChange }: any) => {
     return (
         <div className='user-options-container'>
             {option == 0 && <Game />}
@@ -14,7 +14,7 @@ const UserOptions = ({option}: any) => {
             {option == 2 && <Friend />}
             {option == 3 && <FriendRequest />}
             {option == 4 && <Blocked />}
-            {option == 5 && <Settings />}
+            {option == 5 && <Settings user={user} onStateChange={onStateChange} />}
         </div>
     );
 }

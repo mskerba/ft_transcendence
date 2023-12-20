@@ -43,10 +43,9 @@ const App = () => {
   return (
     <>
     {auth != 1 &&
-        <>
         <Routes>
           <Route element={ <RequireAuth /> }>
-            <Route path="/user" element={ <><NavBar /><Profile /></> } />
+            <Route path="user/:userId" element={ <><NavBar /><Profile /></> } />
             <Route path="/" element={ <> <NavBar /> <Home /> </> } />
             <Route path="/game" element={ <> <NavBar /> <Game /> </> } />
             <Route path="/chat" element={ <> <NavBar /> <Chat /> </> } />
@@ -56,8 +55,7 @@ const App = () => {
           <Route path="/2FA" element={ <TwoFactorVerification /> } />
 
         </Routes>
-        </>
-}
+    }
 </>
     );
 };

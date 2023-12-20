@@ -37,13 +37,21 @@ export class UserService {
     });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return this.prisma.user.update({
-      where: {
-        userId: id,
-      },
-      data: updateUserDto,
-    });
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    try {
+      return await this.prisma.user.update({
+        where: {
+          userId: id,
+        },
+        data: updateUserDto,
+      });
+    } catch (e) {
+      if (e.code === 'P2002' && e.meta?.target?.includes('name')) {
+        throw new ConflictException('Unique constraint violation: Duplicate value for the unique field.');
+      }
+
+      throw e;
+    }
   }
 
   remove(id: number) {

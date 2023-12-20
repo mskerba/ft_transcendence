@@ -5,7 +5,7 @@ function Setting() {
 
   return (
     <div className='setting'>
-      <img src="src/assets/setting.png" alt='setting'/>
+      <img src="/src/assets/setting.png" alt='setting'/>
     </div>
   )
 }

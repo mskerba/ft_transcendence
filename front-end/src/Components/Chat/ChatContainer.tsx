@@ -62,7 +62,7 @@ const ChatContainer = (props:any) => {
             onChange={handleMessageChange}
           ></textarea>
           <div className='message-send'>
-            <img src="src/assets/send.svg" onClick={handleSendMessage}/>
+            <img src="/src/assets/send.svg" onClick={handleSendMessage}/>
           </div>
         </div>
       </div>

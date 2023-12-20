@@ -1,0 +1,12 @@
+.settings img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.settings img:hover {
+    opacity: .8;
+}

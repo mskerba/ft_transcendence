@@ -20,7 +20,7 @@ const ChatList = (prop:any) => {
                 placeholder="       Search"
                 className="input-search-input" />
             <div className='add-group-icon'>
-              <img src='src/assets/group-add.svg' onClick={handleClick}/>
+              <img src='/src/assets/group-add.svg' onClick={handleClick}/>
             </div>
         </div>
         <div className='conversations-content'>

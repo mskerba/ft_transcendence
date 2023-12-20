@@ -39,7 +39,7 @@ input {
 }
 
 .chat-container{
-    background-image: url("src/assets/download.png");
+    background-image: url("/src/assets/download.png");
     grid-area: 1 / 2 / 2 / 3;
     background-color: #034159;
     display: grid;
@@ -363,7 +363,7 @@ input {
     border-radius: 40px 40px 40px 40px;
     color: rgb(223, 223, 223);
     display: flex;
-    background: url("src/assets/search.svg")  no-repeat left;
+    background: url("/src/assets/search.svg")  no-repeat left;
     font-size: large;
     font-weight: 600;
     background-size: 30px;

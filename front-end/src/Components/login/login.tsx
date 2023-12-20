@@ -13,11 +13,11 @@ const Login = () => {
       <h1>Welcome back</h1>
       <p>Welcome to the Ping Pong Party! Smash some rallies, chat with your pingGreen pals, and sign in to the fun. Let's bounce into the action! 🏓🎉</p>
       <a href="http://localhost:3000/auth/google" className="login-button">
-        <img src='src/assets/google.svg'/>
+        <img src='/src/assets/google.svg'/>
         Continue with Google
       </a>
       <a href="http://localhost:3000/auth/42" className="login-button">
-        <img src='src/assets/42.svg'/>
+        <img src='/src/assets/42.svg'/>
         Continue with 42 intra
       </a>
     </div>

@@ -27,7 +27,7 @@ const PopupCreatGroup = (prop:any) => {
       <div className='add-group-popup'>
         <span className="close"  onClick={handleCloseClick}>&times;</span>
         <div className='add-group-avatar'>
-          <img src='src/assets/group-defaul-image.png'/>
+          <img src='/src/assets/group-defaul-image.png'/>
         </div>
         <input type="text" placeholder='Group name' className='add-group-name' />
         <h2>Channel Type:</h2>

@@ -8,12 +8,13 @@ import UserOptions from './UserOptions/UserOptions';
 // import { useParams } from 'react-router-dom';
 import useAxiosPrivate from '../../hooks/UseAxiosPrivate';
 import { useAuth } from '../../context/AuthContext';
+import { useParams } from 'react-router-dom';
 
 const Profile = () => {
     const [option, setOption] = useState(0);
     const [user, setUser] = useState({});
     const axiosPrivate = useAxiosPrivate();
-    const  userId  = 1;
+    const  { userId }  = useParams();
     const { authUser } = useAuth();
 
     const handleStateChange = (option: number) => {
@@ -22,16 +23,16 @@ const Profile = () => {
 
     useEffect(() => {
         const test = async () => {
-        //   try {
-        //     const res = await axiosPrivate.get(`/user/${userId}`);
-            // if (res.status == 200) {
-                setUser(authUser)
-            // }
-        // }
-        //   catch (error) {  }
+          try {
+            const res = await axiosPrivate.get(`/user/${userId}`);
+            if (res.status == 200) {
+                setUser(res.data)
+            }
+        }
+          catch (error) {  }
         }
         test();
-    }, []);
+    }, [userId]);
 
     return (
         !user
@@ -42,7 +43,7 @@ const Profile = () => {
                 <UserOptionsNavBar option={option} onStateChange={handleStateChange} otherProfile={user.userId === authUser.userId}/>
             </section>
             <section className='row-1'>
-                <UserOptions option={option} />
+                <UserOptions option={option} user={user} onStateChange={setUser}/>
             </section>
         </div>
     );

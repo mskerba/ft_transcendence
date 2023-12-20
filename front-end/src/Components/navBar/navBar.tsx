@@ -25,7 +25,7 @@ const NavBar = () => {
     });
   }
 
-  const { logout } = useAuth();
+  const { authUser, logout } = useAuth();
 
 
 
@@ -33,8 +33,8 @@ const NavBar = () => {
 
     try {
       await axios.get('auth/logout');
+      logout();
     } catch (errot) { }
-    logout();
 
   }
 
@@ -48,7 +48,7 @@ const NavBar = () => {
           <li><Link to="/">Home</Link></li>
           <li><Link to="/chat">Chat</Link></li>
           <div className='dropdown-ham-profile'>
-            <li><Link to="/user/1">Profile</Link></li>
+            <li><Link to={`/user/${authUser.userId}`}>Profile</Link></li>
             <li>Exit</li>
           </div>
         </ul>
@@ -60,7 +60,7 @@ const NavBar = () => {
 
         <div className='logo-minsize'>
           <h1>
-            <img src="src/assets/pingpong.png" />
+            <img src="/src/assets/pingpong.png" />
             PingPong</h1>
         </div>
 
@@ -68,7 +68,7 @@ const NavBar = () => {
           <div className='logo-search'>
             <li>
               <h1>
-                <img src="src/assets/pingpong.png" />
+                <img src="/src/assets/pingpong.png" />
                 PingPong</h1>
             </li>
             <li>
@@ -89,12 +89,12 @@ const NavBar = () => {
           </div>
 
           <div className='middle-navbar-hamburger'>
-            <li onClick={handleMoreInfClick}><img src='src/assets/Hamburger-Menu.svg' /></li>
+            <li onClick={handleMoreInfClick}><img src='/src/assets/Hamburger-Menu.svg' /></li>
           </div>
 
           <div className='profile-exit'>
-            <li><Link to="/user/1"><img src="https://thispersondoesnotexist.com" className='profile-button-navbar' /></Link></li>
-            <li onClick={handleLogout}><img src='src/assets/exit.svg' /></li>
+            <li><Link to={`/user/${authUser.userId}`}><img src={authUser.avatar} className='profile-button-navbar' /></Link></li>
+            <li onClick={handleLogout}><img src='/src/assets/exit.svg' /></li>
           </div>
 
         </ul>
