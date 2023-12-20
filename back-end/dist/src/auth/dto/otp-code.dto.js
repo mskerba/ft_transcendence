@@ -15,10 +15,8 @@ class OTPCodeDto {
 }
 exports.OTPCodeDto = OTPCodeDto;
 __decorate([
-    (0, class_validator_1.MinLength)(6),
-    (0, class_validator_1.MaxLength)(6),
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.MinLength)(4),
+    (0, class_validator_1.MaxLength)(4),
     (0, class_validator_1.IsNumberString)(),
     __metadata("design:type", String)
 ], OTPCodeDto.prototype, "otp", void 0);

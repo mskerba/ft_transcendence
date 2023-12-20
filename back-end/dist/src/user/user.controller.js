@@ -18,7 +18,6 @@ const user_service_1 = require("./user.service");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const update_user_dto_1 = require("./dto/update-user.dto");
 const user_entity_1 = require("./entities/user.entity");
-const decorators_1 = require("../common/decorators");
 let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
@@ -26,9 +25,8 @@ let UserController = class UserController {
     async create(createUserDto) {
         return new user_entity_1.UserEntity(await this.userService.create(createUserDto));
     }
-    async findAll() {
-        const user = await this.userService.findAll();
-        return user.map((user) => new user_entity_1.UserEntity(user));
+    async findAll(req) {
+        return new user_entity_1.UserEntity(req.user);
     }
     async findOne(id) {
         return new user_entity_1.UserEntity(await this.userService.findOne(id));
@@ -50,8 +48,9 @@ __decorate([
 ], UserController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "findAll", null);
 __decorate([
@@ -78,7 +77,6 @@ __decorate([
 ], UserController.prototype, "remove", null);
 exports.UserController = UserController = __decorate([
     (0, common_1.Controller)('user'),
-    (0, decorators_1.Public)(),
     __metadata("design:paramtypes", [user_service_1.UserService])
 ], UserController);
 //# sourceMappingURL=user.controller.js.map

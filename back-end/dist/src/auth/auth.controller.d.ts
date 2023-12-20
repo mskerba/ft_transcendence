@@ -8,19 +8,15 @@ export declare class AuthController {
     fortyTwoLogin(): Promise<void>;
     googleLoginCallBack(req: any, res: any): Promise<any>;
     fortyTwoCallBack(req: any, res: any): Promise<any>;
-    logout(userId: number, res: any): Promise<any>;
-    refreshTokens(userId: number, refreshToken: string): Promise<{
-        access_token: string;
-        refresh_token: string;
-        TwoFA_token: string;
-    }>;
+    logout(userId: number, res: any): Promise<void>;
+    refreshTokens(userId: number, refreshToken: string, res: any): Promise<void>;
+    isTwoFA_enabled(req: any): Promise<boolean>;
     generateTwoFactorAuthSecret(req: any): Promise<{
         secretKey: string;
         qrCodeUrl: string;
     }>;
-    enableTwoFactorAuth(req: any, tokenDto: TwoFATokenDto): Promise<{
-        success: boolean;
-    }>;
+    enableTwoFactorAuth(req: any, tokenDto: TwoFATokenDto): Promise<boolean>;
+    verifyTwoFactorAuth(req: any, tokenDto: TwoFATokenDto): Promise<boolean>;
     sendOTPVerificationEmail(req: any): Promise<{
         status: string;
         message: string;
@@ -33,10 +29,7 @@ export declare class AuthController {
         message: any;
         data?: undefined;
     }>;
-    disableTwoFactorAuth(userId: number, otpCodeDto: OTPCodeDto): Promise<{
-        success: boolean;
-    }>;
-    verifyTwoFactorAuth(req: any, tokenDto: TwoFATokenDto): Promise<{
+    disableTwoFactorAuth(req: any, otpCodeDto: OTPCodeDto): Promise<{
         success: boolean;
     }>;
 }

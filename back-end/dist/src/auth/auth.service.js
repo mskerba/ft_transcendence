@@ -75,21 +75,21 @@ let AuthService = class AuthService {
                 sub: userId,
                 email: email,
             }, {
-                secret: 'at-secret',
-                expiresIn: 60 * 15 * 60,
+                secret: process.env.AT_SECRET,
+                expiresIn: 60 * 15,
             }),
             this.jwtService.signAsync({
                 sub: userId,
                 email: email,
             }, {
-                secret: 'rt-secret',
+                secret: process.env.RT_SECRET,
                 expiresIn: 60 * 60 * 24 * 7,
             }),
             this.jwtService.signAsync({
                 sub: userId,
                 email: email,
             }, {
-                secret: '2fa-secret',
+                secret: process.env.TWOFA_SECRET,
                 expiresIn: 60 * 60 * 24 * 7,
             }),
         ]);
@@ -203,7 +203,6 @@ let AuthService = class AuthService {
                     expiresAt: new Date(Date.now() + 36000000),
                 }
             });
-            console.log(await this.prisma.userOTPVerification.findMany({}));
             await this.emailService.sendMail(user.email, "Verification code to disable the two factor authentificator", `<p>Enter <b>${otp}</b> in the app to disable the two factor authentificator</P><p>This code <b>expires in 1 hour</b></p>`);
             return ({
                 status: "PENDING",

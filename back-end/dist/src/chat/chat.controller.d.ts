@@ -11,8 +11,8 @@ export declare class ChatController {
     }[]>;
     ChatHistory(param: any): Promise<any>;
     createGroup(createGroupDto: CreateGroupDto): Promise<{
-        RoomId: string;
         UserId: number;
+        RoomId: string;
         RoleName: string;
     } | {
         error: string;
