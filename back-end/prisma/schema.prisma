@@ -13,52 +13,207 @@ datasource db {
 // schema.prisma
 
 model User {
-  userId                  Int       @id @default(autoincrement())
-  name                    String?   @unique
-  email                   String    @uniquedocker rm -f fals
-  avatar                  String    @default("/src/assets/avatar.svg")
-  hashedRt                String?
-  twoFA_Enabled           Boolean   @default(false)
-  twoFA_Verified          Boolean   @default(false)
-  twoFA_SecretKey         String?
-  registrationDate        DateTime  @default(now())
+  userId           Int      @id @default(autoincrement())
+  name             String?  @unique
+  email            String   @unique
+  avatar           String   @default("/src/assets/avatar.svg")
+  hashedRt         String?
+  twoFA_Enabled    Boolean  @default(false)
+  twoFA_Verified   Boolean  @default(false)
+  twoFA_SecretKey  String?
+  registrationDate DateTime @default(now())
 
-  otpVerification         UserOTPVerification?
+  otpVerification UserOTPVerification?
 
-  sentFriendRequests      FriendRequest[] @relation("SentFriendRequests")
+  sentFriendRequests FriendRequest[] @relation("SentFriendRequests")
 
-  receivedFriendRequests  FriendRequest[] @relation("ReceivedFriendRequests")
+  receivedFriendRequests FriendRequest[] @relation("ReceivedFriendRequests")
 
-  user1Friends            Friendship[]    @relation("User1Friends")
-  user2Friends            Friendship[]    @relation("User2Friends")
+  user1Friends Friendship[] @relation("User1Friends")
+  user2Friends Friendship[] @relation("User2Friends")
+
+  // iharile 
+
+  dmMessage1 DirectMessage[]
+
+  User1 LinkDirectMessage[] @relation("UserConv1")
+  User2 LinkDirectMessage[] @relation("UserConv2")
+
+  roleUser RoleUser[]
+
+  roomMessage RoomMessage[]
+
+  block1 BlockUser[] @relation("Blocking")
+  block2 BlockUser[] @relation("Blocked")
+
+  kick KickUser[]
+  bann BanUser[]
+  mute MuteUser[]
+
+  sockId String?
 }
 
 model UserOTPVerification {
-  id                      Int       @id @default(autoincrement())
-  userId                  Int       @unique
-  otp                     String
-  expiresAt               DateTime
-  user                    User      @relation(fields: [userId], references: [userId])
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  otp       String
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [userId])
 }
 
 model FriendRequest {
-  requestId               Int       @id @default(autoincrement())
-  senderId                Int       @unique
-  receiverId              Int       @unique
-  requestDate             DateTime
+  requestId   String   @id @default(cuid())
+  senderId    Int      @unique
+  receiverId  Int      @unique
+  requestDate DateTime
 
-  sender                  User      @relation("SentFriendRequests", fields: [senderId], references: [userId])
+  sender User @relation("SentFriendRequests", fields: [senderId], references: [userId])
 
-  receiver                User      @relation("ReceivedFriendRequests", fields: [receiverId], references: [userId])
+  receiver User @relation("ReceivedFriendRequests", fields: [receiverId], references: [userId])
 }
 
 model Friendship {
-  friendshipId            Int       @id @default(autoincrement())
-  user1Id                 Int
-  user2Id                 Int
-  friendshipDate          DateTime
+  friendshipId   String   @id @default(cuid())
+  user1Id        Int
+  user2Id        Int
+  friendshipDate DateTime @default(now())
 
-  user1                   User      @relation("User1Friends", fields: [user1Id], references: [userId])
+  user1 User @relation("User1Friends", fields: [user1Id], references: [userId])
 
-  user2                   User      @relation("User2Friends", fields: [user2Id], references: [userId])
+  user2 User @relation("User2Friends", fields: [user2Id], references: [userId])
+
+  @@unique([user1Id, user2Id])
+}
+
+// chat tables
+
+// i need to make this two ids unique
+model LinkDirectMessage {
+  conversationId String @id @default(cuid())
+
+  user1   User @relation("UserConv1", fields: [UserId1], references: [userId])
+  UserId1 Int
+
+  user2     User            @relation("UserConv2", fields: [UserId2], references: [userId])
+  UserId2   Int
+  dmMessage DirectMessage[]
+
+  @@unique([UserId1, UserId2])
+}
+
+model DirectMessage {
+  DirectMessageId String @id @default(cuid())
+
+  text String
+
+  dateMessage DateTime @default(now())
+
+  PrvMsgId  LinkDirectMessage @relation(fields: [privateId], references: [conversationId])
+  privateId String
+
+  userid   User @relation(fields: [senderId], references: [userId])
+  senderId Int
+
+  isSeen Boolean @default(false)
+
+  countUnseen Int @default(0)
+}
+
+model Room {
+  RoomId String @id @default(cuid())
+
+  TypeRoom String
+
+  avatar String @default("https://robohash.org/test.png")
+
+  title String
+
+  password String?
+
+  roleUser RoleUser[]
+
+  roomMessage RoomMessage[]
+
+  kick KickUser[]
+
+  bann BanUser[]
+
+  mute MuteUser[]
+}
+
+model RoleUser {
+  RoleId String @id @default(cuid())
+
+  roleUser User @relation(fields: [UserId], references: [userId])
+  UserId   Int
+
+  RoleName String
+
+  roomId Room   @relation(fields: [RoomId], references: [RoomId])
+  RoomId String
+
+  @@unique([UserId, RoomId])
+}
+
+model RoomMessage {
+  RoomMessageId String @id @default(cuid())
+
+  text String
+
+  roomId Room   @relation(fields: [RoomId], references: [RoomId])
+  RoomId String
+
+  userId User @relation(fields: [UserId], references: [userId])
+  UserId Int
+}
+
+// this between two user 
+model BlockUser {
+  BlockedUserId Int @id @default(autoincrement())
+
+  block1            User @relation("Blocking", fields: [TheBlockingUserId], references: [userId])
+  TheBlockingUserId Int
+
+  block2           User @relation("Blocked", fields: [TheBlockedUserId], references: [userId])
+  TheBlockedUserId Int
+}
+
+// this happen in groups
+model KickUser {
+  KickUserId Int @id @default(autoincrement())
+
+  roomId Room   @relation(fields: [RoomId], references: [RoomId])
+  RoomId String
+
+  userId User @relation(fields: [UserId], references: [userId])
+  UserId Int
+
+  @@unique([RoomId, UserId])
+}
+
+model BanUser {
+  BannUserId Int @id @default(autoincrement())
+
+  roomId Room   @relation(fields: [RoomId], references: [RoomId])
+  RoomId String
+
+  userId User @relation(fields: [UserId], references: [userId])
+  UserId Int
+
+  @@unique([RoomId, UserId])
+}
+
+model MuteUser {
+  MuteUserId Int @id @default(autoincrement())
+
+  roomId Room   @relation(fields: [RoomId], references: [RoomId])
+  RoomId String
+
+  userId User @relation(fields: [UserId], references: [userId])
+  UserId Int
+
+  StartTime DateTime
+  EndTime   DateTime
+
+  @@unique([RoomId, UserId])
 }
