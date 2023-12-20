@@ -23,12 +23,12 @@ export declare class ChatService {
     }[]>;
     MyFriends(user1: number): Promise<Map<number, object>>;
     chatHistory(id1: number, id2: number): Promise<{
-        text: string;
         senderId: number;
+        text: string;
     }[]>;
     createGroup(createGroupDto: CreateGroupDto): Promise<{
-        RoomId: string;
         UserId: number;
+        RoomId: string;
         RoleName: string;
     } | {
         error: string;
@@ -48,37 +48,90 @@ export declare class ChatService {
         title: string;
         password: string;
     }>;
-    addMessageToRoom(roomId: string, message: string, uId: number): Promise<{
-        RoomMessageId: string;
-        text: string;
-        RoomId: string;
-        UserId: number;
-    } | {
+    checkIsMuted(roomId: string, message: string, uId: number): Promise<{
         error: string;
+        status: HttpStatus;
+        success?: undefined;
+    } | {
+        success: boolean;
+        status: HttpStatus;
+        error?: undefined;
+    }>;
+    addMessageToRoom(roomId: string, message: string, uId: number): Promise<{
+        error: string;
+        status: HttpStatus;
+        success?: undefined;
+    } | {
+        success: boolean;
+        status: HttpStatus;
+        error?: undefined;
     }>;
     historyOfGroup(group: string): Promise<{
-        text: string;
         UserId: number;
+        text: string;
     }[]>;
     findUserInGroup(userId: number, roomId: string): Promise<{
-        RoleId: string;
+        success: boolean;
+        status: HttpStatus;
+        error?: undefined;
+    } | {
+        error: string;
+        status: HttpStatus;
+        success?: undefined;
     }>;
     findRoleUser(senderId: number, group: string): Promise<{
         RoleName: string;
+    }>;
+    PunishCheker(punishDto: PunishDto): Promise<{
+        error: string;
+        status?: undefined;
+        success?: undefined;
+    } | {
+        error: string;
+        status: HttpStatus;
+        success?: undefined;
+    } | {
+        success: boolean;
+        status: HttpStatus;
+        error?: undefined;
     }>;
     kickUser(punishDto: PunishDto): Promise<{
         error: string;
         status?: undefined;
         success?: undefined;
     } | {
-        status: HttpStatus;
         error: string;
+        status: HttpStatus;
         success?: undefined;
     } | {
         success: boolean;
+        status: HttpStatus;
         error?: undefined;
-        status?: undefined;
     }>;
-    banUser(punishDto: PunishDto): Promise<void>;
-    muteUser(muteDto: MuteDto): Promise<void>;
+    banUser(punishDto: PunishDto): Promise<{
+        error: string;
+        status?: undefined;
+        success?: undefined;
+    } | {
+        error: string;
+        status: HttpStatus;
+        success?: undefined;
+    } | {
+        success: boolean;
+        status: HttpStatus;
+        error?: undefined;
+    }>;
+    muteUser(muteDto: MuteDto): Promise<{
+        error: string;
+        status?: undefined;
+        success?: undefined;
+    } | {
+        error: string;
+        status: HttpStatus;
+        success?: undefined;
+    } | {
+        success: boolean;
+        status: HttpStatus;
+        error?: undefined;
+    }>;
 }

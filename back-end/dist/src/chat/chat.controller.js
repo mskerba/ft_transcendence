@@ -20,13 +20,13 @@ let ChatController = class ChatController {
     constructor(chatService) {
         this.chatService = chatService;
     }
-    async historyOfGroup(group) {
-        console.log("group Id : ", group.id);
-        return this.chatService.historyOfGroup(group.id);
-    }
     async MyFriends(param) {
         const id = parseInt(param.ide);
         return await this.chatService.MyFriends(id);
+    }
+    async historyOfGroup(group) {
+        console.log("group Id : ", group.id);
+        return this.chatService.historyOfGroup(group.id);
     }
     async ChatHistory(param) {
         const id1 = parseInt(param.id1);
@@ -41,26 +41,26 @@ let ChatController = class ChatController {
     addToGroup(creatRole) {
         return this.chatService.addTogroup(creatRole);
     }
-    kickUser(punishDto) {
-        this.chatService.kickUser(punishDto);
-        throw new common_1.NotFoundException();
-        return { "success": "good" };
+    async kickUser(punishDto) {
+        const data = await this.chatService.kickUser(punishDto);
+        if (data.error !== undefined)
+            throw new common_1.HttpException(data.error, common_1.HttpStatus.NOT_FOUND);
+        return data;
     }
-    banUser(punishDto) {
-        return this.chatService.banUser(punishDto);
+    async banUser(punishDto) {
+        const data = await this.chatService.banUser(punishDto);
+        if (data.error !== undefined)
+            throw new common_1.HttpException(data.error, data.status);
+        return data;
     }
-    muteUser(muteDto) {
-        return this.chatService.muteUser(muteDto);
+    async muteUser(muteDto) {
+        const data = await this.chatService.muteUser(muteDto);
+        if (data.error !== undefined)
+            throw new common_1.HttpException(data.error, data.status);
+        return data;
     }
 };
 exports.ChatController = ChatController;
-__decorate([
-    (0, common_1.Get)('group/:id'),
-    __param(0, (0, common_1.Param)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], ChatController.prototype, "historyOfGroup", null);
 __decorate([
     (0, common_1.Get)(':ide'),
     __param(0, (0, common_1.Param)()),
@@ -68,6 +68,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], ChatController.prototype, "MyFriends", null);
+__decorate([
+    (0, common_1.Get)('group/:id'),
+    __param(0, (0, common_1.Param)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ChatController.prototype, "historyOfGroup", null);
 __decorate([
     (0, common_1.Get)(":id1/:id2"),
     __param(0, (0, common_1.Param)()),
@@ -94,21 +101,21 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_groups_dto_1.PunishDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], ChatController.prototype, "kickUser", null);
 __decorate([
     (0, common_1.Post)('group/ban'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_groups_dto_1.PunishDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], ChatController.prototype, "banUser", null);
 __decorate([
     (0, common_1.Post)('group/mute'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_groups_dto_1.MuteDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], ChatController.prototype, "muteUser", null);
 exports.ChatController = ChatController = __decorate([
     (0, common_1.Controller)('chat'),

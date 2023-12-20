@@ -1,13 +1,7 @@
-import { ConsoleLogger, HttpStatus, Injectable, Param } from '@nestjs/common';
+import { ConsoleLogger, HttpStatus, Injectable, Param, HttpException } from '@nestjs/common';
 import {PrismaService} from '../prisma/prisma.service'
 import {CreateGroupDto, CreateRoleUserDto, PunishDto, MuteDto} from './DTO/create-groups.dto'
 import { faker, tr } from '@faker-js/faker';
-import { TimeoutError, distinct, map } from 'rxjs';
-import { send } from 'process';
-import { JsPromise, JsonArray } from '@prisma/client/runtime/library';
-import { equal } from 'assert';
-import { get } from 'http';
-var Multimap = require('multimap');
 
 @Injectable()
 export class ChatService {
@@ -141,6 +135,7 @@ export class ChatService {
             return data;
     }
 
+
     async MyFriends(user1: number){
 
         
@@ -200,10 +195,8 @@ export class ChatService {
             mp.set(user[i].userId, obj);
             i++;
         })
-
         
         return mp;
-        
 
     }
 
@@ -309,21 +302,58 @@ export class ChatService {
         return data;
     }
 
+    // checker user is muted or not
+    async checkIsMuted(roomId: string, message: string, uId: number){
+        const time = await this.prismaService.muteUser.findFirst({
+            where:{
+                RoomId: roomId,
+                UserId: uId,
+            },
+            select:{
+                StartTime: true,
+                EndTime: true,
+                MuteUserId: true,
+            }
+        })
+        if (time){
+            if (time.EndTime >= time.StartTime){
+                this.prismaService.muteUser.delete({
+                    where:{
+                        MuteUserId: time.MuteUserId
+                    }
+                });
+            }
+            else{
+                return {
+                    "error": "User is in Muted mode",
+                    status: HttpStatus.FORBIDDEN
+                }
+            }
+        }
+        return {
+            success: true,
+            status: HttpStatus.OK    
+        };
+    }
 
     // add message to the group
     async addMessageToRoom(roomId: string, message: string, uId: number){
         
         const userInGroup = await this.findUserInGroup(uId, roomId);
-        if (!userInGroup)
-            return {"error": "this user is Not in this group"};
-
-        return await this.prismaService.roomMessage.create({
+        if (userInGroup.error != undefined)
+            return userInGroup;
+        const isMuted = await this.checkIsMuted(roomId, message, uId);
+        if (isMuted.error != undefined)
+            return isMuted 
+        
+        await this.prismaService.roomMessage.create({
             data: {
                 text: message,
                 roomId: {connect : { RoomId: roomId}},
                 userId: {connect: {userId: uId}}
             }
         })
+        return {success: true, status: HttpStatus.OK};
     }
 
     // histoy of group
@@ -341,7 +371,7 @@ export class ChatService {
     // find user if has this group
     async findUserInGroup(userId : number, roomId: string)
     {
-        return await this.prismaService.roleUser.findFirst({
+       const data =  await this.prismaService.roleUser.findFirst({
             where:{
                 RoomId: roomId,
                 UserId: userId,
@@ -350,6 +380,9 @@ export class ChatService {
                 RoleId: true,
             }
         })
+        if (data)
+            return {success: true, status: HttpStatus.OK};
+        return {"error": "user not belong to this room or you are banned", status: HttpStatus.BAD_REQUEST};
     }
 
     async findRoleUser(senderId: number, group: string){
@@ -364,67 +397,104 @@ export class ChatService {
         });
     }
 
-    // kick user in group
-    async kickUser(punishDto: PunishDto){
-    
-        // this.prismaService.kickUser.create({
-        //     data:{
-        //         roomId : {connect : {RoomId: punishDto.roomId}},
-        //         userId: {connect: {userId: punishDto.userId}},
-        //     }
-        // })
-        // delete this record from group
-        
-        const userInGroup = await this.findUserInGroup(punishDto.userId, punishDto.roomId)
-        if (!userInGroup)
-            return {"error": "this user or group not found!!"};
+
+    async PunishCheker(punishDto: PunishDto) {
         const Role1 = await this.findRoleUser(punishDto.senderId, punishDto.roomId);
         const Role2 = await this.findRoleUser(punishDto.userId, punishDto.roomId)
         if (!Role1 || !Role2)
-            return {status: HttpStatus.NOT_FOUND ,"error": "user or group not found"};
-
+            return {"error": "users or group not found "};
         const senderId = Role1.RoleName;
         const userId = Role2.RoleName;
         
         if (senderId == "member")
-            return {"error": "the sender who wanna delete is regular member"};
+            return {"error": "the sender who wanna delete is regular member",
+            status: HttpStatus.NOT_FOUND
+        };
         if (senderId == "admin" && userId != "member")
-            return {"error": "admin can't kick another admin or owner"};
+            return {error: "admin can't kick another admin or owner",
+            status: HttpStatus.NOT_FOUND
+        };
 
-        console.log("senderId: ", senderId , " action On : ", userId);
-
+        return {"success": true, status: HttpStatus.CREATED};
+    }
+    // kick user in group
+    async kickUser(punishDto: PunishDto){
+    
+        const data = await this.PunishCheker(punishDto);
+        if (data.error !== undefined)
+            return data;
 
         await this.prismaService.roleUser.deleteMany({
             where:{
-                UserId: punishDto.userId,
-                RoomId: punishDto.roomId,
+                AND:[
+
+                   { UserId: punishDto.userId },
+                   { RoomId: punishDto.roomId },
+                ]
             }
         })
-        return {success: true};
+        return data;
     }
 
     // ban user in group
     async banUser(punishDto: PunishDto){
 
-        this.prismaService.banUser.create({
-            data:{
-                roomId : {connect : {RoomId: punishDto.roomId}},
-                userId: {connect: {userId: punishDto.userId}},
-            }
-        })
+        const data = await this.PunishCheker(punishDto);
+        if (data.error !== undefined)
+            return data;
+
+        try{
+
+            await this.prismaService.banUser.create({
+                data:{
+                    roomId : {connect : {RoomId: punishDto.roomId}},
+                    userId: {connect: {userId: punishDto.userId}},
+                }
+            })
+            await this.prismaService.roleUser.deleteMany({
+                where: {
+                    AND:[
+    
+                        { UserId: punishDto.userId },
+                        { RoomId: punishDto.roomId },
+                     ]
+                }
+            })
+
+            return data;
+        }
+        catch(error){  
+            return {
+                "error": "user already is banned or can't be banned", 
+                "status": HttpStatus.NOT_ACCEPTABLE
+            };
+        }
     }
 
     // mute user in group specific type
     async muteUser(muteDto: MuteDto){
 
-        this.prismaService.muteUser.create({
-            data:{
-                roomId : {connect : {RoomId: muteDto.roomId}},
-                userId: {connect: {userId: muteDto.userId}},
-                StartTime: muteDto.timeStart,
-                EndTime: muteDto.timeEnd,
+
+        const data = await this.PunishCheker(muteDto);
+        if (data.error != undefined)
+            return data;
+
+        try{
+            await this.prismaService.muteUser.create({
+                data:{
+                    roomId : {connect : {RoomId: muteDto.roomId}},
+                    userId: {connect: {userId: muteDto.userId}},
+                    StartTime: new Date(Date.now()),
+                    EndTime: new Date(Date.now() + (muteDto.numberHour * 60 * 60 * 1000)),
+                }
+            })
+            return data;
+        }catch(error){
+            return {
+                "error": "user already muted or can't be muted",
+                "status": HttpStatus.NOT_ACCEPTABLE
             }
-        })
+        }
     }
 
 }

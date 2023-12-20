@@ -21,7 +21,8 @@
 -- socket will have type of dto too
 -- i should make all data that comming from network validated by dto classes
 
-
+-- for the banned people when admin or owner want to add to group already banned 
+    - person i will notify him
 
 // pause working on 
 -- dto not working properly of password (not handled)
@@ -31,8 +32,8 @@ we join to the group and catch any message sent to the group.
 -- change the userId in RoomMessage table to RoleId
 -- i need to set status code using throw new exception (each name have specifc status code)
     -- or i can do it wth express (take Req and Res decorator)
-
-
+-- all controller need to response with the correct status code
+-- i need to check the updated version of ban kick or mute
 
 // currently working on
 --  ban and mute user in group

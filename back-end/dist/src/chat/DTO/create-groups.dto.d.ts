@@ -16,6 +16,5 @@ export declare class PunishDto {
     userId: number;
 }
 export declare class MuteDto extends PunishDto {
-    timeStart: Date;
-    timeEnd: Date;
+    numberHour: number;
 }

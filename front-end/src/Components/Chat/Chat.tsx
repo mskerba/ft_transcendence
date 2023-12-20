@@ -4,7 +4,7 @@ import ChatContainer from './ChatContainer'
 import PopupCreatGroup from './PopupCreatGroup';
 import PopupGroupInf from './PopupGroupInf';
 import './chat.css';
-import io from 'socket.io-client';
+
 
 const Chat = () => {
 
@@ -51,35 +51,35 @@ const Chat = () => {
 
     // this is socket start here 
 
-      // Replace 'http://localhost:3000' with the actual URL of your Socket.IO server
-      const socket = io('http://localhost:3000');
+      // // Replace 'http://localhost:3000' with the actual URL of your Socket.IO server
+      // const socket = io('http://localhost:3000');
   
-      // Connect event
-      socket.on('connect', () => {
-        console.log('Connected to server from front');
-      });
+      // // Connect event
+      // socket.on('connect', () => {
+      //   console.log('Connected to server from front');
+      // });
   
-      // Listen for DirectMessage event
-      socket.on('DirectMessage', (message) => {
-        console.log('Received DirectMessage:', message);
-        // Handle the received message in your React component state or dispatch it to Redux, etc.
-      });
+      // // Listen for DirectMessage event
+      // socket.on('DirectMessage', (message) => {
+      //   console.log('Received DirectMessage:', message);
+      //   // Handle the received message in your React component state or dispatch it to Redux, etc.
+      // });
   
-      // Handle disconnect event
-      socket.on('disconnect', () => {
-        console.log('Disconnected from server');
-      });
+      // // Handle disconnect event
+      // socket.on('disconnect', () => {
+      //   console.log('Disconnected from server');
+      // });
   
-      // Handle any errors
-      socket.on('error', (error) => {
-        console.error('Socket.IO Error:', error);
-      });
+      // // Handle any errors
+      // socket.on('error', (error) => {
+      //   console.error('Socket.IO Error:', error);
+      // });
   
-      // Cleanup the socket connection on component unmount
-      return () => {
-        console.log("disconnected from socket in front ")
-        socket.disconnect();
-      };
+      // // Cleanup the socket connection on component unmount
+      // return () => {
+      //   console.log("disconnected from socket in front ")
+      //   socket.disconnect();
+      // };
 
 
 

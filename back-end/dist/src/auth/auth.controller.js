@@ -42,11 +42,11 @@ let AuthController = class AuthController {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
-        res.cookie('2faToken', tokens.refresh_token, {
+        res.cookie('2faToken', tokens.TwoFA_token, {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
-        return res.redirect('http://localhost:3001/profile');
+        return res.redirect(process.env.FRONTEND_DOMAIN + '/profile');
     }
     async fortyTwoCallBack(req, res) {
         const user = req.user;
@@ -59,20 +59,38 @@ let AuthController = class AuthController {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
-        res.cookie('2faToken', tokens.refresh_token, {
+        res.cookie('2faToken', tokens.TwoFA_token, {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
-        return res.redirect('http://localhost:3001/profile');
+        return res.redirect(process.env.FRONTEND_DOMAIN + '/profile');
     }
     async logout(userId, res) {
         res.clearCookie('accessToken');
         res.clearCookie('refreshToken');
+        res.clearCookie('2faToken');
         await this.authService.logout(userId);
-        return res.send('Logout successful');
+        res.send('.');
     }
-    refreshTokens(userId, refreshToken) {
-        return this.authService.refreshTokens(userId, refreshToken);
+    async refreshTokens(userId, refreshToken, res) {
+        const tokens = await this.authService.refreshTokens(userId, refreshToken);
+        res.cookie('accessToken', tokens.access_token, {
+            httpOnly: true,
+            maxAge: 15 * 60 * 1000,
+        });
+        res.cookie('refreshToken', tokens.refresh_token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+        res.cookie('2faToken', tokens.TwoFA_token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+        res.send(tokens);
+    }
+    async isTwoFA_enabled(req) {
+        const user = req.user;
+        return user.twoFA_Enabled;
     }
     async generateTwoFactorAuthSecret(req) {
         const user = req.user;
@@ -82,20 +100,21 @@ let AuthController = class AuthController {
     async enableTwoFactorAuth(req, tokenDto) {
         const user = req.user;
         const enabled = await this.authService.enableTwoFactorAuth(user, tokenDto.token);
-        return ({ success: enabled });
+        return (enabled);
+    }
+    async verifyTwoFactorAuth(req, tokenDto) {
+        const user = req.user;
+        const verified = await this.authService.verifyTwoFactorAuth(user, tokenDto.token);
+        return verified;
     }
     async sendOTPVerificationEmail(req) {
         const user = req.user;
         return await this.authService.sendOTPVerificationEmail(user);
     }
-    async disableTwoFactorAuth(userId, otpCodeDto) {
-        const disabled = await this.authService.disableTwoFactorAuth(userId, otpCodeDto.otp);
-        return ({ success: disabled });
-    }
-    async verifyTwoFactorAuth(req, tokenDto) {
+    async disableTwoFactorAuth(req, otpCodeDto) {
         const user = req.user;
-        const verified = await this.authService.verifyTwoFactorAuth(user, tokenDto.token);
-        return ({ success: verified });
+        const disabled = await this.authService.disableTwoFactorAuth(user.userId, otpCodeDto.otp);
+        return ({ success: disabled });
     }
 };
 exports.AuthController = AuthController;
@@ -136,7 +155,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "fortyTwoCallBack", null);
 __decorate([
-    (0, common_1.Post)('logout'),
+    (0, common_1.Get)('logout'),
     __param(0, (0, index_1.GetCurrentUserId)()),
     __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
@@ -145,14 +164,22 @@ __decorate([
 ], AuthController.prototype, "logout", null);
 __decorate([
     (0, public_decorator_1.Public)(),
-    (0, common_1.Post)('refresh'),
+    (0, common_1.Get)('refresh'),
     (0, common_1.UseGuards)(jwt_rt_auth_guard_1.JwtRTAuthGuard),
     __param(0, (0, index_1.GetCurrentUserId)()),
     __param(1, (0, index_1.GetCurrentUser)('refreshToken')),
+    __param(2, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Number, String, Object]),
+    __metadata("design:returntype", Promise)
 ], AuthController.prototype, "refreshTokens", null);
+__decorate([
+    (0, common_1.Get)('is-2fa-enabled'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "isTwoFA_enabled", null);
 __decorate([
     (0, common_1.Get)('secret-2fa'),
     __param(0, (0, common_1.Req)()),
@@ -170,7 +197,17 @@ __decorate([
 ], AuthController.prototype, "enableTwoFactorAuth", null);
 __decorate([
     (0, public_decorator_1.Public)(),
-    (0, common_1.Post)('send-otp'),
+    (0, common_1.Post)('verify-2fa'),
+    (0, common_1.UseGuards)(jwt_2fa_auth_guard_1.Jwt2FAGuard),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, _2fa_token_dto_1.TwoFATokenDto]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "verifyTwoFactorAuth", null);
+__decorate([
+    (0, public_decorator_1.Public)(),
+    (0, common_1.Get)('send-otp'),
     (0, common_1.UseGuards)(jwt_2fa_auth_guard_1.Jwt2FAGuard),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
@@ -181,22 +218,12 @@ __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Post)('disable-2fa'),
     (0, common_1.UseGuards)(jwt_2fa_auth_guard_1.Jwt2FAGuard),
-    __param(0, (0, index_1.GetCurrentUserId)()),
-    __param(1, (0, common_1.Body)('otpCode')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, otp_code_dto_1.OTPCodeDto]),
-    __metadata("design:returntype", Promise)
-], AuthController.prototype, "disableTwoFactorAuth", null);
-__decorate([
-    (0, public_decorator_1.Public)(),
-    (0, common_1.Post)('verify-2fa'),
-    (0, common_1.UseGuards)(jwt_2fa_auth_guard_1.Jwt2FAGuard),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, _2fa_token_dto_1.TwoFATokenDto]),
+    __metadata("design:paramtypes", [Object, otp_code_dto_1.OTPCodeDto]),
     __metadata("design:returntype", Promise)
-], AuthController.prototype, "verifyTwoFactorAuth", null);
+], AuthController.prototype, "disableTwoFactorAuth", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])

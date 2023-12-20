@@ -16,9 +16,16 @@ const passport_jwt_1 = require("passport-jwt");
 const user_service_1 = require("../../user/user.service");
 let Jwt2FAStrategy = class Jwt2FAStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy, 'jwt-2fa') {
     constructor(userService) {
+        const extractJwtFromCookie = (req) => {
+            let token = null;
+            if (req && req.cookies) {
+                token = req.cookies['2faToken'];
+            }
+            return token;
+        };
         super({
-            secretOrKey: "2fa-secret",
-            jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
+            secretOrKey: process.env.TWOFA_SECRET,
+            jwtFromRequest: extractJwtFromCookie,
         });
         this.userService = userService;
     }

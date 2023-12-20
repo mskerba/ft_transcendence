@@ -15,14 +15,21 @@ const passport_1 = require("@nestjs/passport");
 const passport_jwt_1 = require("passport-jwt");
 let JwtRTStrategy = class JwtRTStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy, 'jwt-refresh') {
     constructor() {
+        const extractJwtFromCookie = (req) => {
+            let token = null;
+            if (req && req.cookies) {
+                token = req.cookies['refreshToken'];
+            }
+            return token;
+        };
         super({
-            secretOrKey: "rt-secret",
-            jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
+            secretOrKey: process.env.RT_SECRET,
+            jwtFromRequest: extractJwtFromCookie,
             passReqToCallback: true,
         });
     }
     validate(req, payload) {
-        const refreshToken = req.get('authorization').replace('Bearer', '').trim();
+        const refreshToken = req.cookies['refreshToken'];
         return {
             ...payload,
             refreshToken,

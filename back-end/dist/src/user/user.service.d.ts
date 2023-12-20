@@ -16,18 +16,6 @@ export declare class UserService {
         registrationDate: Date;
         sockId: string;
     }>;
-    findAll(): import(".prisma/client").Prisma.PrismaPromise<{
-        userId: number;
-        name: string;
-        email: string;
-        avatar: string;
-        hashedRt: string;
-        twoFA_Enabled: boolean;
-        twoFA_Verified: boolean;
-        twoFA_SecretKey: string;
-        registrationDate: Date;
-        sockId: string;
-    }[]>;
     findOne(id: number): import(".prisma/client").Prisma.Prisma__UserClient<{
         userId: number;
         name: string;

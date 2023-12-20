@@ -69,6 +69,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     //return {msg: "sucessfuly connected to socketa"}
     // i will replace this using the id that will be sent to me  -- client.handshake.headers.origin
+   
     await this.chatService.SockToClient(client.id , client.handshake.headers.origin);
  
     const {userId} = await this.chatService.findUserBySockid(client.id);
@@ -87,7 +88,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
           if (item.user1.sockId == client.id)
             client.to(item.user2.sockId).emit("status", userId, "online");
           else
-            client.to(item.user1.sockId).emit("status", userId, "online");
+    client.to(item.user1.sockId).emit("status", userId, "online");
           })
      }
   

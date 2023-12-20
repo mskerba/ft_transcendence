@@ -27,9 +27,6 @@ let UserService = class UserService {
             throw e;
         }
     }
-    findAll() {
-        return this.prisma.user.findMany({});
-    }
     findOne(id) {
         return this.prisma.user.findUnique({
             where: {
