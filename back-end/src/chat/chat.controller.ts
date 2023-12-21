@@ -14,10 +14,11 @@ export class ChatController {
     
     //return all conversation
     @Get(':ide')
-    async MyFriends(@Req() req: any) : Promise<any>{
-        const user: UserEntity = req.user;
-
-        return await this.chatService.MyFriends(user.userId); 
+    async MyFriends(@Param() param: any) : Promise<any>{
+        //const user: UserEntity = req.user;
+        
+        const id: number = parseInt(param.ide);
+        return await this.chatService.MyFriends(id); 
     }
     
     // history chat of group

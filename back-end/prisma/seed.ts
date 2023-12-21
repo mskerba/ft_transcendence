@@ -1,40 +1,121 @@
 // prisma/seed.ts
 
 import { PrismaClient } from '@prisma/client';
+import { faker, tr } from '@faker-js/faker';
 
 // initialize Prisma Client
 const prisma = new PrismaClient();
 
 async function main() {
-  // create two dummy articles
-  const user1 = await prisma.user.upsert({
-    where: { email: 'mohamedtahameaizi@gmail.com' },
-    update: {},
-    create: {
-      email: 'mohamedtahameaizi@gmail.com',
-      name: 'mohamed',
-    },
-  });
 
-  const user2 = await prisma.user.upsert({
-    where: { email: "tahameaizi@gmail.com" },
-    update: {},
-    create: {
-      email: "tahameaizi@gmail.com",
-      name: 'taha',
-    },
-  });
+// delete all users
+  await prisma.directMessage.deleteMany();
+  await prisma.linkDirectMessage.deleteMany();
+  await prisma.user.deleteMany();
 
-  const user3 = await prisma.user.upsert({
-    where: { email: "momeaizi@student.1337.ma" },
-    update: {},
-    create: {
-      email: "momeaizi@student.1337.ma",
-      name: 'momeaizi',
-    },
-  });
+//  // create 30 random Users
+  let userArray = [];
 
-  console.log({ user1, user2, user3 });
+  for (let i = 0; i < 10; i++)
+  {
+    userArray[i] =  await prisma.user.create({
+      data:
+      {
+        userId: i,
+        name: faker.person.firstName(),
+        email: faker.internet.email(),
+      },
+      select:{
+        userId: true,
+      },
+    })
+  }
+
+
+   console.log(await userArray);
+
+  let linkDmId = [];
+  for (let i = 0; i < 4; i++){
+    linkDmId[i] = await  prisma.linkDirectMessage.create({
+      data:{
+        UserId1: userArray[0].userId,
+        UserId2: userArray[i +1].userId,
+      },
+      select: {
+        conversationId : true,
+        UserId1: true,
+      }
+    });
+  }
+
+  for (let i = 4; i < 7; i++){
+    linkDmId[i] =  await  prisma.linkDirectMessage.create({
+      data:{
+        UserId1: userArray[1].userId,
+        UserId2: userArray[i].userId,
+      },
+      select: {
+        conversationId: true,
+        UserId1: true,
+      }
+    });
+  }
+
+  console.log ("---------------");
+  console.log(linkDmId);
+  console.log ("---------------");
+  
+
+  
+  for (let i = 0; i < 20; i++){
+   let rand = Math.floor(Math.random() * 6);
+    await prisma.directMessage.create({
+      data:{
+        text: faker.lorem.text(),
+        privateId: linkDmId[rand].conversationId,
+        senderId: linkDmId[rand].UserId1,
+      }
+    });
+  }
+  // create direct conversation between two users;
+  
+ 
+
+
+// prisma.friendship.deleteMany()
+
+// let userArr = await prisma.user.findMany({});
+
+
+// let j = 0;
+// let k = 19;
+
+// for (let i = 0; i < 10; i++)
+// {
+//      let id1: number = userArr[j++].userId;
+//      let id2: number = userArr[k--].userId;
+
+//     await prisma.friendship.create({
+//       data: {
+          
+//           user1: { connect:{userId : id1}},
+//           user2: { connect: {userId: id2}},
+      
+//           },
+
+//       });
+// }
+
+
+// prisma.directMessage.deleteMany();
+// const arr = [8 ,7 , 14];
+
+
+
+ 
+
+
+  console.log("all things created ");
 }
 
 // execute the main function

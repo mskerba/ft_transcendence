@@ -13,10 +13,10 @@ import { ChatModule } from './chat/chat.module';
   imports: [AuthModule, PrismaModule, UserModule, FriendModule, ChatModule],
   providers: [
     AppService,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard,
+    // },
 
   ],
 })
