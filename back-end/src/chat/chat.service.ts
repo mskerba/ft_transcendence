@@ -150,16 +150,17 @@ export class ChatService {
     }
 
     async lastMessageGroup(groupId: string){
-        return await this.prismaService.roomMessage.findMany({
+        const data = await this.prismaService.roomMessage.findMany({
             where: {
                     RoomId: groupId,
             },
-            orderBy:[{dateSent : "desc"},],
-            distinct:['RoomMessageId'],
+            // orderBy:[{dateSent : "desc"},],
+            // distinct:['RoomMessageId'],
             select:{
                 text: true,
             }
         });
+        return data;
     }
 
     async MyFriends(user1: number){
@@ -224,6 +225,7 @@ export class ChatService {
                 avatar: true,
                 title: true,
             }
+            
         });
     
 
@@ -231,22 +233,28 @@ export class ChatService {
 
 
         let i = 0;   
-        var arrData  = [] ; 
+        let arrData  = [] ; 
         messages.forEach(item => { 
-            let obj: object = {"Unseen": item.countUnseen, "Name": item[i].name , "lastMsg": item.text , "Date": item.dateMessage, 
-                "Avatar": item[i].avatar , "convId": item.privateId, "group": false };
+            let obj: object = {"Unseen": item.countUnseen, "Name": user[i].name , "lastMsg": item.text , "Date": item.dateMessage, 
+                "Avatar": user[i].avatar , "convId": item.privateId, "group": false };
             arrData.push(obj);
             i++;
         })
         
-        // GroupMessages.forEach(item => {
-        
-        //     let obj : object = {"Unseen": "0", "Name": item.title, 
-        //     "lastMessage": lastMsg.text}
-        // })
-
-        // 
-        
+   
+        for (const item of GroupMessages) {
+            let msg : string = "welcome to " + item.title;
+            const lastMsg : any = await this.lastMessageGroup(item.RoomId);
+            console.log(lastMsg);
+            if (lastMsg)
+                msg = lastMsg.text;
+         
+            let obj2 : object = {"Unseen": 0, "Name": item.title, 
+            "lastMsg": msg, "Date": "", "Avatar": item.avatar, "convId": item.RoomId, "group": true };
+            arrData.push(obj2);
+         }
+    
+        console.log(arrData);
         return arrData;
 
     }
@@ -254,18 +262,6 @@ export class ChatService {
     // retrive messages between two users
     async   chatHistory(id1: number, convId: string){
         
-        // const getLink = await this.prismaService.linkDirectMessage.findFirst({
-        //     where: {
-        //         OR: [
-        //             {AND: [{UserId1: id1}, {UserId2: id2}]},
-        //             {AND: [{UserId1: id2}, {UserId2: id1}]},
-        //         ]
-        //     },
-        //     select:{
-        //         conversationId: true,
-        //     }
-        // });
-
         const data = await this.prismaService.directMessage.findMany({
             where :{
                 privateId: convId,
