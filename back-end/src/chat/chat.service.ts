@@ -182,16 +182,22 @@ export class ChatService {
                 privateId: true,
                 countUnseen: true,
                 text: true,
-                
+                dateMessage: true,
+                userid :{
+                    select: {
+                        avatar : true,
+                    },
+                },
             }
         });
+    
 
         console.log("this is messages with given conversation ids: ", messages);
 
 
         let i = 0;        
         messages.forEach(item => { 
-            let obj: object = {"Unseen": item.countUnseen, "name": user[i].name , lastMsg: item.text }
+            let obj: object = {"Unseen": item.countUnseen, "Name": user[i].name , "lastMsg": item.text , "Date": item.dateMessage, "Avatar": item.userid.avatar}
             mp.set(user[i].userId, obj);
             i++;
         })

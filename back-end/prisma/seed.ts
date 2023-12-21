@@ -13,26 +13,32 @@ async function main() {
   await prisma.linkDirectMessage.deleteMany();
   await prisma.user.deleteMany();
 
-//  // create 30 random Users
+//  // create 10 random Users
   let userArray = [];
 
+  
+  let img : String = "https://robohash.org/"; 
   for (let i = 0; i < 10; i++)
   {
+    let fakeName :string = faker.person.firstName();
     userArray[i] =  await prisma.user.create({
       data:
       {
         userId: i,
-        name: faker.person.firstName(),
+        name: fakeName,
         email: faker.internet.email(),
+        avatar: img + fakeName,
       },
       select:{
+        avatar: true,
+        name: true,
         userId: true,
       },
     })
   }
 
 
-   console.log(await userArray);
+   console.log(userArray);
 
   let linkDmId = [];
   for (let i = 0; i < 4; i++){
