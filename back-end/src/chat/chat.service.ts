@@ -157,13 +157,12 @@ export class ChatService {
     
         })
         
-        let user = data.map((id) => {
-            if (id.user1.userId != user1)
-                return id.user1;
-            return id.user2;
-        });
+        // let user = data.map((id) => {
+        //     if (id.user1.userId != user1)
+        //         return id.user1;
+        //     return id.user2;
+        // });
 
-        console.log ("this is user Id : ", user );
         let ids = data.map((client) => client.conversationId);
         console.log("this is ids: ", ids);
 
@@ -186,6 +185,7 @@ export class ChatService {
                 userid :{
                     select: {
                         avatar : true,
+                        name : true,
                     },
                 },
             }
@@ -195,14 +195,15 @@ export class ChatService {
         console.log("this is messages with given conversation ids: ", messages);
 
 
-        let i = 0;        
+        let i = 0;   
+        var arrData  = [] ; 
         messages.forEach(item => { 
-            let obj: object = {"Unseen": item.countUnseen, "Name": user[i].name , "lastMsg": item.text , "Date": item.dateMessage, "Avatar": item.userid.avatar}
-            mp.set(user[i].userId, obj);
+            let obj: object = {"Unseen": item.countUnseen, "Name": item.userid.name , "lastMsg": item.text , "Date": item.dateMessage, "Avatar": item.userid.avatar , "convId": item.privateId }
+            arrData.push(obj);
             i++;
         })
         
-        return mp;
+        return arrData;
 
     }
 
