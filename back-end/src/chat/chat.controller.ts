@@ -34,10 +34,9 @@ export class ChatController {
     async ChatHistory(@Param() param: any): Promise<any>
     {
         const id1: number = parseInt(param.id1);
-        const id2: number = parseInt(param.id2);
-
-        console.log("first id : ", id1, " second id: ", id2);
-        return this.chatService.chatHistory(id1, id2);
+    
+        console.log("first id : ", id1, " second id: ", param.id2);
+        return this.chatService.chatHistory(id1, param.id2);
     }
 
     // create Group    

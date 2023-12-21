@@ -11,6 +11,8 @@ async function main() {
 // delete all users
   await prisma.directMessage.deleteMany();
   await prisma.linkDirectMessage.deleteMany();
+  await prisma.roleUser.deleteMany();
+  await prisma.room.deleteMany();
   await prisma.user.deleteMany();
 
 //  // create 10 random Users
@@ -27,7 +29,7 @@ async function main() {
         userId: i,
         name: fakeName,
         email: faker.internet.email(),
-        avatar: img + fakeName,
+        avatar: img + fakeName + ".png",
       },
       select:{
         avatar: true,
@@ -83,6 +85,41 @@ async function main() {
       }
     });
   }
+
+  console.log("availabe rooms");
+  let Rooms = [];
+  for (let i = 0; i < 5; i++){
+    let fk_title = faker.person.jobTitle();
+
+    Rooms[i]  = await prisma.room.create({
+      data:{
+        TypeRoom: "public",
+        title : fk_title,
+        avatar: img + fk_title + ".png",
+      },
+      select:{
+        RoomId: true,
+      }
+    })  
+  }
+
+  console.log(Rooms);
+  
+  let RoleUser = [];
+  for (let i = 0; i < 5; i++){
+    let fk_title = faker.person.jobTitle();
+
+    RoleUser[i]  = await prisma.roleUser.create({
+      data:{
+        RoleName : "member",
+        roleUser:{connect:{userId: userArray[0].userId}},
+        roomId: {connect: {RoomId: Rooms[i].RoomId}}
+      }
+    })  
+  }
+
+  console.log("ROle users table");
+  console.log(RoleUser);
   // create direct conversation between two users;
   
  
