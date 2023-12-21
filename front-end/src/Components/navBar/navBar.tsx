@@ -60,7 +60,7 @@ const NavBar = () => {
 
         <div className='logo-minsize'>
           <h1>
-            <img src="/src/assets/pingpong.png" />
+            <img src="/src/assets/pingpong.png" className='logo-image'/>
             PingPong</h1>
         </div>
 
@@ -68,7 +68,7 @@ const NavBar = () => {
           <div className='logo-search'>
             <li>
               <h1>
-                <img src="/src/assets/pingpong.png" />
+                <img src="/src/assets/pingpong.png" className='logo-image'/>
                 PingPong</h1>
             </li>
             <li>
@@ -89,12 +89,16 @@ const NavBar = () => {
           </div>
 
           <div className='middle-navbar-hamburger'>
-            <li onClick={handleMoreInfClick}><img src='/src/assets/Hamburger-Menu.svg' /></li>
+            <li onClick={handleMoreInfClick}><img src='/src/assets/Hamburger-Menu.svg'  className='hamburger-svg'/></li>
           </div>
 
           <div className='profile-exit'>
-            <li><Link to={`/user/${authUser.userId}`}><img src={authUser.avatar} className='profile-button-navbar' /></Link></li>
-            <li onClick={handleLogout}><img src='/src/assets/exit.svg' /></li>
+            <li>
+              <Link to={`/user/${authUser.userId}`}>
+                <img src={`http://localhost:3000/avatar/${authUser.avatar}`} className='profile-button-navbar'/>
+              </Link>
+            </li>
+            <li onClick={handleLogout}><img src='/src/assets/exit.svg' className='exit-svg'/></li>
           </div>
 
         </ul>

@@ -21,16 +21,16 @@ const UserOptionsNavBar = ({option, onStateChange, otherProfile}: any) => {
                 <img src='/src/assets/achievements-hovered.svg' className='hovered'/>
                 <span>Achievements</span>
             </div>
-            <div className={`user-options-navbar-button ${option == 2 ? 'active' : ''}`}
-                onClick={() => handleButtonClick(2)}
-            >
-                <img src='/src/assets/friends.svg'/>
-                <img src='/src/assets/friends-hovered.svg' className='hovered'/>
-                <span>Friends</span>
-            </div>
             {
                 otherProfile && 
                 <>
+                    <div className={`user-options-navbar-button ${option == 2 ? 'active' : ''}`}
+                        onClick={() => handleButtonClick(2)}
+                    >
+                        <img src='/src/assets/friends.svg'/>
+                        <img src='/src/assets/friends-hovered.svg' className='hovered'/>
+                        <span>Friends</span>
+                    </div>
                     <div className={`user-options-navbar-button ${option == 3 ? 'active' : ''}`}
                         onClick={() => handleButtonClick(3)}
                     >

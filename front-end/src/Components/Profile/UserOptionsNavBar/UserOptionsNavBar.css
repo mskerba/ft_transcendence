@@ -3,7 +3,8 @@
     height: 20%;
     display: flex;
     justify-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 15px;
 }
 
 .user-options-navbar-button {

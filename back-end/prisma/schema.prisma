@@ -16,7 +16,7 @@ model User {
   userId           Int      @id @default(autoincrement())
   name             String?  @unique
   email            String   @unique
-  avatar           String   @default("/src/assets/avatar.svg")
+  avatar           String   @default("default.svg")
   hashedRt         String?
   twoFA_Enabled    Boolean  @default(false)
   twoFA_Verified   Boolean  @default(false)

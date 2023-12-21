@@ -1,12 +1,15 @@
-import "./ChangeAvatar.css"
-
-
-
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
+import axios from 'axios';
+import "./ChangeAvatar.css";
+import useAxiosPrivate from '../../../../../hooks/UseAxiosPrivate';
+import { useAuth } from '../../../../../context/AuthContext';
 
 const ChangeAvatar = ({ user, onStateChange }: any) => {
-  const [imagePreview, setImagePreview] = useState(user.avatar);
+  const [imagePreview, setImagePreview] = useState(`http://localhost:3000/avatar/${user.avatar}`);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const { setAuthUser } = useAuth();
   const fileInputRef = useRef(null);
+  const axiosPrivate = useAxiosPrivate();
 
   const handleImageClick = () => {
     fileInputRef.current.click();
@@ -23,6 +26,31 @@ const ChangeAvatar = ({ user, onStateChange }: any) => {
       };
 
       reader.readAsDataURL(file);
+      setSelectedImage(file); // Save the selected image for upload
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!selectedImage) {
+      console.error('No image selected.');
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('avatar', selectedImage);
+
+      const response = await axiosPrivate.post('/avatar', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
+      onStateChange(response.data);
+      setAuthUser(response.data);
+
+    } catch (error) {
+      console.error('Error uploading image:', error.message);
     }
   };
 
@@ -41,9 +69,9 @@ const ChangeAvatar = ({ user, onStateChange }: any) => {
         style={{ cursor: 'pointer', maxWidth: '100%', maxHeight: '200px' }}
         onClick={handleImageClick}
       />
+      <button onClick={handleUpload}>Upload Image</button>
     </div>
   );
 };
 
 export default ChangeAvatar;
-

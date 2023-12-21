@@ -3,6 +3,7 @@ import './Settings.css'
 import { useEffect, useState } from 'react';
 import TwoFactorAuthPopup from './TwoFactorAuthPopup/TwoFactorAuthPopup';
 import ChangeAvatar from './ChangeAvatar/ChangeAvatar';
+import { useAuth } from '../../../../context/AuthContext';
 
 
 const Settings = ({ user, onStateChange }: any) => {
@@ -11,6 +12,7 @@ const Settings = ({ user, onStateChange }: any) => {
     const [isPopupOpen, setPopupOpen] = useState<boolean>(false);
     const [errormsg, setError] = useState<string>('');
     const [qrCode, setQrCode] = useState();
+    const { setAuthUser } = useAuth();
     const   axiosPrivate = useAxiosPrivate();
     
 
@@ -48,6 +50,7 @@ const Settings = ({ user, onStateChange }: any) => {
                 return ;
             const res = await axiosPrivate.patch(`/user/${user.userId}`, {name: username});
             onStateChange(res.data);
+            setAuthUser(res.data);
         } catch (error) {
             setError(`the name \`${username}\` already exists!`);
 

@@ -8,9 +8,10 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { UserModule } from './user/user.module';
 import { FriendModule } from './friend/friend.module';
 import { ChatModule } from './chat/chat.module';
+import { AvatarModule } from './avatar/avatar.module';
 
 @Module({
-  imports: [AuthModule, PrismaModule, UserModule, FriendModule, ChatModule],
+  imports: [AuthModule, PrismaModule, UserModule, FriendModule, ChatModule, AvatarModule],
   providers: [
     AppService,
     {

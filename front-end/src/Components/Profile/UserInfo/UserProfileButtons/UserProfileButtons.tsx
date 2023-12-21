@@ -56,10 +56,12 @@ const UserProfileButtons = () => {
                     </div>
                 </>
             }
-            <div className='user-profile-button'>
-                <img src='/src/assets/message.svg'/>
-                <img src='/src/assets/message-hovered.svg' className='hovered'/>
-            </div>
+            {friendshipStatus == Friendship.friend && 
+                <div className='user-profile-button'>
+                    <img src='/src/assets/message.svg'/>
+                    <img src='/src/assets/message-hovered.svg' className='hovered'/>
+                </div>
+            }
             <div className='user-profile-button'>
                 <img src='/src/assets/block.svg'/>
                 <img src='/src/assets/block-hovered.svg' className='hovered'/>

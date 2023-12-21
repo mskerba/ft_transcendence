@@ -1,11 +1,9 @@
-import FriendRequests from './UserOptions/FriendRequests/FriendRequests';
+
 import './Profile.css'
 import UserInfo from './UserInfo/UserInfo';
 import { useEffect, useState } from 'react';
-
 import UserOptionsNavBar from './UserOptionsNavBar/UserOptionsNavBar';
 import UserOptions from './UserOptions/UserOptions';
-// import { useParams } from 'react-router-dom';
 import useAxiosPrivate from '../../hooks/UseAxiosPrivate';
 import { useAuth } from '../../context/AuthContext';
 import { useParams } from 'react-router-dom';
@@ -35,7 +33,7 @@ const Profile = () => {
     }, [userId]);
 
     return (
-        !user
+        user.avatar == undefined
         ? <></>
         : <div className='profile'>
             <section className='row-0'>
