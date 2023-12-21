@@ -1,26 +1,95 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFriendDto } from './dto/create-friend.dto';
 import { UpdateFriendDto } from './dto/update-friend.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class FriendService {
-  create(createFriendDto: CreateFriendDto) {
-    return 'This action adds a new friend';
+
+  constructor(private prisma: PrismaService) { }
+
+  async sendFriendReq(senderId: number, receiverId: number) {
+    await this.prisma.friendRequest.create({
+      data: {
+        senderId,
+        receiverId,
+      }
+    });
   }
 
-  findAll() {
-    return `This action returns all friend`;
+
+  async acceptFriendReq(requestId: string) {
+    const request = await this.deleteReq(requestId);
+    await this.addFriend(request.senderId, request.receiverId);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} friend`;
+  async declineFriendReq(requestId: string) {
+    await this.deleteReq(requestId);
   }
 
-  update(id: number, updateFriendDto: UpdateFriendDto) {
-    return `This action updates a #${id} friend`;
+  async friends(userId: number) {
+    const userFriends = await this.prisma.user.findUnique({
+      where: {
+        userId: userId,
+      },
+      select: {
+        user1Friends: {
+          select: {
+            user2: true,
+          },
+        },
+        user2Friends: {
+          select: {
+            user1: true,
+          },
+        },
+      },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} friend`;
+
+  async friendReqs(userId: number) {
+    const userFriends = await this.prisma.user.findUnique({
+      where: {
+        userId: userId,
+      },
+      select: {
+        receivedFriendRequests: {
+          select: {
+            requestId: true,
+            sender: {
+              select: {
+                userId: true,
+                name: true,
+              },
+            },
+            requestDate: true,
+          },
+        },
+      },
+    });
+  }
+
+
+  // friend  | request-sent | request-received | not-friend
+  friendshipStatus(id: number) {
+  }
+
+  async deleteReq(requestId: string) {
+    return await this.prisma.friendRequest.delete({
+      where: {
+        requestId
+      }
+    });
+  }
+
+  async addFriend(user1Id: number, user2Id: number)
+  {
+    await this.prisma.friendship.create({
+      data: {
+        user1Id,
+        user2Id,
+      }
+    });
   }
 }

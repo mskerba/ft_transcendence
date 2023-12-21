@@ -17,6 +17,11 @@ model User {
   name             String?  @unique
   email            String   @unique
   avatar           String   @default("default.svg")
+  level            Float    @default(0.0)
+  games            Int      @default(0)
+  wins             Int      @default(0)
+  losses           Int      @default(0)
+  Friends          Int      @default(0)
   hashedRt         String?
   twoFA_Enabled    Boolean  @default(false)
   twoFA_Verified   Boolean  @default(false)
@@ -63,9 +68,9 @@ model UserOTPVerification {
 
 model FriendRequest {
   requestId   String   @id @default(cuid())
-  senderId    Int      @unique
-  receiverId  Int      @unique
-  requestDate DateTime
+  senderId    Int
+  receiverId  Int
+  requestDate DateTime @default(now())
 
   sender User @relation("SentFriendRequests", fields: [senderId], references: [userId])
 

@@ -44,6 +44,17 @@
     /* gap: 1rem; */
 }
 
+.link {
+    color: #FFF; /* Set the color to your preferred link color */
+    text-decoration: none; /* Remove default underline */
+    font-weight: bold;
+}
+
+.my-link:hover {
+    text-decoration: underline; /* Add underline on hover */
+    /* Add additional hover styles as needed */
+  }
+
 .logo-search,
 .profile-exit{
     margin: 0;

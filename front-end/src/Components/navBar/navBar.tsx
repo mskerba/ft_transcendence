@@ -44,11 +44,11 @@ const NavBar = () => {
 
       <div style={{ top: divPosition.x, left: divPosition.y, display: divPosition.display }} className='dropdown-navbar-ham'>
         <ul>
-          <li><Link to="/game">Game</Link></li>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/chat">Chat</Link></li>
+          <li><Link to="/game" className="link">Game</Link></li>
+          <li><Link to="/" className="link">Home</Link></li>
+          <li><Link to="/chat" className="link">Chat</Link></li>
           <div className='dropdown-ham-profile'>
-            <li><Link to={`/user/${authUser.userId}`}>Profile</Link></li>
+            <li><Link to={`/user/${authUser.userId}`} className="link">Profile</Link></li>
             <li>Exit</li>
           </div>
         </ul>
@@ -61,7 +61,7 @@ const NavBar = () => {
         <div className='logo-minsize'>
           <h1>
             <img src="/src/assets/pingpong.png" className='logo-image'/>
-            PingPong</h1>
+            PongGreen</h1>
         </div>
 
         <ul>
@@ -69,7 +69,7 @@ const NavBar = () => {
             <li>
               <h1>
                 <img src="/src/assets/pingpong.png" className='logo-image'/>
-                PingPong</h1>
+                PongGreen</h1>
             </li>
             <li>
               <input
@@ -83,9 +83,9 @@ const NavBar = () => {
           </div>
 
           <div className='middle-navbar'>
-            <li><Link to="/game">Game</Link></li>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/chat">Chat</Link></li>
+            <li><Link to="/game" className="link">Game</Link></li>
+            <li><Link to="/" className="link">Home</Link></li>
+            <li><Link to="/chat" className="link">Chat</Link></li>
           </div>
 
           <div className='middle-navbar-hamburger'>
@@ -94,7 +94,7 @@ const NavBar = () => {
 
           <div className='profile-exit'>
             <li>
-              <Link to={`/user/${authUser.userId}`}>
+              <Link to={`/user/${authUser.userId}`} className="link">
                 <img src={`http://localhost:3000/avatar/${authUser.avatar}`} className='profile-button-navbar'/>
               </Link>
             </li>

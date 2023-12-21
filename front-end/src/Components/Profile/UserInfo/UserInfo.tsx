@@ -12,9 +12,9 @@ const UserInfo = ({ user }: any) => {
     return (
         <div className='user-info-container'>
             <UserAvatar avatar={user.avatar} />
-            <UserProfile username={user.name} />
+            <UserProfile username={user.name} level={user.level} />
             {authUser.userId !== user.userId && <UserProfileButtons /> }
-            <UserStats />
+            <UserStats user={user}/>
         </div>
     );
 }
