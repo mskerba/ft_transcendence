@@ -150,16 +150,17 @@ export class ChatService {
     }
 
     async lastMessageGroup(groupId: string){
-        return await this.prismaService.roomMessage.findMany({
+        const data = await this.prismaService.roomMessage.findMany({
             where: {
                     RoomId: groupId,
             },
-            orderBy:[{dateSent : "desc"},],
-            distinct:['RoomMessageId'],
+            // orderBy:[{dateSent : "desc"},],
+            // distinct:['RoomMessageId'],
             select:{
                 text: true,
             }
         });
+        return data;
     }
 
     async MyFriends(user1: number){
@@ -224,6 +225,7 @@ export class ChatService {
                 avatar: true,
                 title: true,
             }
+            
         });
     
 
@@ -231,7 +233,7 @@ export class ChatService {
 
 
         let i = 0;   
-        var arrData  = [] ; 
+        let arrData  = [] ; 
         messages.forEach(item => { 
             let obj: object = {"Unseen": item.countUnseen, "Name": user[i].name , "lastMsg": item.text , "Date": item.dateMessage, 
                 "Avatar": user[i].avatar , "convId": item.privateId, "group": false };
@@ -239,14 +241,20 @@ export class ChatService {
             i++;
         })
         
-        // GroupMessages.forEach(item => {
-        
-        //     let obj : object = {"Unseen": "0", "Name": item.title, 
-        //     "lastMessage": lastMsg.text}
-        // })
-
-        // 
-        
+   
+        for (const item of GroupMessages) {
+            let msg : string = "welcome to " + item.title;
+            const lastMsg : any = await this.lastMessageGroup(item.RoomId);
+            console.log(lastMsg);
+            if (lastMsg)
+                msg = lastMsg.text;
+         
+            let obj2 : object = {"Unseen": 0, "Name": item.title, 
+            "lastMsg": msg, "Date": "", "Avatar": item.avatar, "convId": item.RoomId, "group": true };
+            arrData.push(obj2);
+         }
+    
+        console.log(arrData);
         return arrData;
 
     }
@@ -254,18 +262,6 @@ export class ChatService {
     // retrive messages between two users
     async   chatHistory(id1: number, convId: string){
         
-        // const getLink = await this.prismaService.linkDirectMessage.findFirst({
-        //     where: {
-        //         OR: [
-        //             {AND: [{UserId1: id1}, {UserId2: id2}]},
-        //             {AND: [{UserId1: id2}, {UserId2: id1}]},
-        //         ]
-        //     },
-        //     select:{
-        //         conversationId: true,
-        //     }
-        // });
-
         const data = await this.prismaService.directMessage.findMany({
             where :{
                 privateId: convId,
@@ -283,7 +279,7 @@ export class ChatService {
         
         let arrData = [];
         data.forEach(item => {
-            const obj: object = {"Id": item.senderId, "Message": item.text, "Name": item.userid.name};
+            const obj: object = {"Id": item.senderId, "Message": item.text};
             arrData.push(obj);
         });
         return arrData;
@@ -421,31 +417,52 @@ export class ChatService {
 
     // histoy of group
     async historyOfGroup(group: string){
-        return await this.prismaService.roomMessage.findMany({
-            where: {
-                RoomId: group
-            },
-            select:{
-                text: true,
-                UserId: true,
+        
+        try{
+            const data =  await this.prismaService.roomMessage.findMany({
+                where: {
+                    RoomId: group
+                },
+                select:{
+                    text: true,
+                    UserId: true,
+                    userId:{
+                        select:{name: true, avatar: true},
+                    }
+                }
+            });
+            
+            let arrData = [];
+            for (const dt of data){
+                let obj: object = {"Id": dt.UserId, "Text": dt.text, "Name": dt.userId.name, "Avatar": dt.userId.avatar};
+                arrData.push(obj);
             }
-        });
+            return (arrData);
+        }catch(error){
+            return {"error": "messages can't retrieved from this group", "status": HttpStatus.NOT_FOUND};
+        }
     }
     // find user if has this group
     async findUserInGroup(userId : number, roomId: string)
     {
-       const data =  await this.prismaService.roleUser.findFirst({
-            where:{
-                RoomId: roomId,
-                UserId: userId,
-            },
-            select:{
-                RoleId: true,
-            }
-        })
-        if (data)
-            return {success: true, status: HttpStatus.OK};
-        return {"error": "user not belong to this room or you are banned", status: HttpStatus.BAD_REQUEST};
+        try {
+
+            const data =  await this.prismaService.roleUser.findFirst({
+                 where:{
+                     RoomId: roomId,
+                     UserId: userId,
+                 },
+                 select:{
+                     RoleId: true,
+                 }
+             })
+             if (data)
+                 return {"success": true, status: HttpStatus.OK};
+             return {"error": "user not found in this group", "status": HttpStatus.BAD_REQUEST};
+        }
+        catch(error){
+            return {"error": "your input is not correct", "status": HttpStatus.BAD_REQUEST};
+        }
     }
 
     async findRoleUser(senderId: number, group: string){
