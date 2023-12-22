@@ -40,6 +40,12 @@ export class ChatController {
 
     }
 
+    // about group
+    @Get("about/:convId")
+    async about(@Param() param: any){
+        console.log("about convId is : ", param.convId);
+      return  this.chatService.about(param.convId);
+    }
     // return chat history of private messages
     @Get(":id1/:id2")
     async ChatHistory(@Param() param: any): Promise<any>
@@ -49,7 +55,7 @@ export class ChatController {
         console.log("first id : ", id1, " second id: ", param.id2);
         return this.chatService.chatHistory(id1, param.id2);
     }
-
+    
     // create Group    
     @Post()
     createGroup(@Body() createGroupDto: CreateGroupDto){

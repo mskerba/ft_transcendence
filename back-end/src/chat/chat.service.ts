@@ -582,4 +582,31 @@ export class ChatService {
         }
     }
 
+    // about group
+    async about(convId: string){
+        const data = await this.prismaService.roleUser.findMany({
+            where:{
+                RoomId: convId,
+            },
+            select:{
+                RoleName: true,
+                UserId: true,
+                roleUser:{
+                    select:{
+                        avatar: true,
+                        name: true,
+                    },
+                }
+            }
+        });
+        
+        let arrData = [];
+        data.forEach(item =>{
+            const obj: object = {"Id": item.UserId, "Role": item.RoleName, "Name": item.roleUser.name, "Avatar": item.roleUser.avatar};
+            arrData.push(obj);
+        })
+        console.log(arrData);
+        return (arrData);
+    }
+
 }
