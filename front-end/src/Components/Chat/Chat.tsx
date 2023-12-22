@@ -70,7 +70,7 @@ const Chat = () => {
             }
         </div>
         <PopupCreatGroup setPopupParent={setPopupParent}  popupParent={popupParent}/>
-        <PopupGroupInf setPopupInfParent={setPopupInfParent}  popupInfParent={popupInfParent}
+        <PopupGroupInf convInf={convInf} setPopupInfParent={setPopupInfParent}  popupInfParent={popupInfParent}
           divPosition={divPosition} setDivPosition={setDivPosition}/>
     </div>
   );
