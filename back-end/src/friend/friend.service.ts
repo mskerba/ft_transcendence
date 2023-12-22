@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ForbiddenException } from '@nestjs/common';
 import { CreateFriendDto } from './dto/create-friend.dto';
 import { UpdateFriendDto } from './dto/update-friend.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -18,12 +18,42 @@ export class FriendService {
   }
 
 
-  async acceptFriendReq(requestId: string) {
-    const request = await this.deleteReq(requestId);
-    await this.addFriend(request.senderId, request.receiverId);
+  async acceptFriendReq(requestId: string, userId: number) {
+    const request = await this.prisma.friendRequest.findUnique({
+      where: {
+        requestId
+      }
+    });
+
+    if (request.receiverId !== userId) {
+      throw new ForbiddenException();
+    }
+    await this.deleteReq(requestId);
+    return await this.addFriend(request.senderId, request.receiverId);
   }
 
-  async declineFriendReq(requestId: string) {
+  async unfriend(userId: number, friendId: number) {
+    await this.prisma.friendship.deleteMany({
+      where: {
+        OR: [
+          { user1Id: userId, user2Id: friendId },
+          { user1Id: friendId, user2Id: userId },
+        ],
+      },
+    });
+  }
+
+  async declineFriendReq(requestId: string, userId: number) {
+    const request = await this.prisma.friendRequest.findUnique({
+      where: {
+        requestId
+      }
+    });
+
+    if (request.receiverId !== userId) {
+      throw new ForbiddenException();
+    }
+  
     await this.deleteReq(requestId);
   }
 

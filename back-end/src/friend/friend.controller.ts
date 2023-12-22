@@ -23,28 +23,38 @@ export class FriendController {
 
   @Get('accept-friend-request/:id')
   async acceptFriendReq(
-    @Param('id') id: string,
+    @Param('id') requestId: string,
     @Req() req,
   ) {
-    return await this.friendService.acceptFriendReq(id);
+    const user: UserEntity = req.user;
+    return await this.friendService.acceptFriendReq(requestId, user.userId);
   }
 
   @Get('decline-friend-request/:id')
   async declineFriendReq(
-    @Param('id') id: string,
+    @Param('id') requestId: string,
     @Req() req,
   ) {
-    return await this.friendService.declineFriendReq(id);
-  }
-
-  @Get('friends') // -> list of friends
-  async friends(@Req() req) {
     const user: UserEntity = req.user;
-    return await this.friendService.friends(user.userId);
+    return await this.friendService.declineFriendReq(requestId, user.userId);
+  }
+
+  @Get('unfriend/:id')
+  async unfriend(
+    @Param('id', ParseIntPipe) friendId: number,
+    @Req() req,
+  ) {
+    const user: UserEntity = req.user;
+    return await this.friendService.unfriend(user.userId, friendId);
+  }
+
+  @Get('friends/:id')
+  async friends(@Param('id', ParseIntPipe) userId: number) {
+    return await this.friendService.friends(userId);
   }
 
 
-  @Get('friend-requests') // -> list of friends requests
+  @Get('friend-requests')
   async friendReqs(@Req() req) {
     const user: UserEntity = req.user;
     return await this.friendService.friendReqs(user.userId);
