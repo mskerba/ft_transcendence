@@ -28,7 +28,6 @@ const NavBar = () => {
   const { authUser, logout } = useAuth();
 
 
-
   const handleLogout = async () => {
 
     try {

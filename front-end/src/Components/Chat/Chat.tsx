@@ -8,6 +8,12 @@ import './chat.css';
 
 const Chat = () => {
   const [chatDivShow,setShow]:any = useState(2);
+  const [convInf, setConvInf]:any = useState({
+    Avatar : "",
+    Name: "",
+    convId : "",
+    group: ""
+  })
 
   const [popupParent, setPopupParent] = useState({display:'none'});
   const [popupInfParent, setPopupInfParent] = useState({display:'none'});
@@ -54,13 +60,13 @@ const Chat = () => {
         <div className='page-chats'>
             {(chatDivShow == 2) ? 
               <>
-                <ChatList setShow={setShow} setPopupParent={setPopupParent}  />
-                <ChatContainer setShow={setShow} setPopupInfParent={setPopupInfParent} />
+                <ChatList setShow={setShow} setConvInf={setConvInf}  setPopupParent={setPopupParent}  />
+                <ChatContainer setShow={setShow} convInf={convInf} setPopupInfParent={setPopupInfParent} />
               </>
               : (chatDivShow)?
-                  <ChatList setShow={setShow} setPopupParent={setPopupParent}  />
+                  <ChatList setShow={setShow} setConvInf={setConvInf} setPopupParent={setPopupParent}  />
                   :
-                  <ChatContainer setShow={setShow} setPopupInfParent={setPopupInfParent} />
+                  <ChatContainer setShow={setShow} convInf={convInf} setPopupInfParent={setPopupInfParent} />
             }
         </div>
         <PopupCreatGroup setPopupParent={setPopupParent}  popupParent={popupParent}/>

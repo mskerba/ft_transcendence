@@ -233,8 +233,8 @@ export class ChatService {
         let i = 0;   
         var arrData  = [] ; 
         messages.forEach(item => { 
-            let obj: object = {"Unseen": item.countUnseen, "Name": item[i].name , "lastMsg": item.text , "Date": item.dateMessage, 
-                "Avatar": item[i].avatar , "convId": item.privateId, "group": false };
+            let obj: object = {"Unseen": item.countUnseen, "Name": user[i].name , "lastMsg": item.text , "Date": item.dateMessage, 
+                "Avatar": user[i].avatar , "convId": item.privateId, "group": false };
             arrData.push(obj);
             i++;
         })
