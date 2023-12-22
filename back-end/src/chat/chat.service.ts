@@ -508,8 +508,8 @@ export class ChatService {
             return {"error": "the sender who wanna delete is regular member",
             status: HttpStatus.NOT_FOUND
         };
-        if (senderId == "admin" && userId != "member")
-            return {error: "admin can't kick another admin or owner",
+        if (senderId == "admin" && userId == "owner")
+            return {error: "admin doesn't have privilege to kick owner",
             status: HttpStatus.NOT_FOUND
         };
 
@@ -616,7 +616,6 @@ export class ChatService {
         let arrData = [];
         let TypeId: string = "none";
 
-        console.log("id is : ", id);
         data.forEach(item =>{
             if (item.UserId == id)
                 TypeId = item.RoleName;
