@@ -21,10 +21,10 @@ const ChatContainer = (prop:any) => {
 
   const fetchData = async () => {
     try {
-      const res = await axiosPrivate.get(`/chat/1/${prop.convInf.convId}`);
+      const res = await axiosPrivate.get(`/chat${(prop.convInf.group)?'/group':''}/0/${prop.convInf.convId}`);
       setAllMessage([]);
       const messages = Object.values(res?.data).map((element:any) => {
-        const user = (element.Id === 1) ? 'user' : 'is-not-user';
+        const user = (element.Id === 0) ? 'user' : 'is-not-user';
         return { ...element, user };
       });
   

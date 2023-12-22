@@ -150,12 +150,12 @@ export class ChatService {
     }
 
     async lastMessageGroup(groupId: string){
-        const data = await this.prismaService.roomMessage.findMany({
+        const data = await this.prismaService.roomMessage.findFirst({
             where: {
                     RoomId: groupId,
             },
-            // orderBy:[{dateSent : "desc"},],
-            // distinct:['RoomMessageId'],
+            orderBy:[{dateSent : "desc"},],
+            distinct:['RoomMessageId'],
             select:{
                 text: true,
             }
@@ -247,14 +247,14 @@ export class ChatService {
             const lastMsg : any = await this.lastMessageGroup(item.RoomId);
             console.log(lastMsg);
             if (lastMsg)
+                console.log("lastMsg found");
                 msg = lastMsg.text;
          
-            let obj2 : object = {"Unseen": 0, "Name": item.title, 
+            let obj2 : object = {"Unseen": 4, "Name": item.title, 
             "lastMsg": msg, "Date": "", "Avatar": item.avatar, "convId": item.RoomId, "group": true };
             arrData.push(obj2);
          }
     
-        console.log(arrData);
         return arrData;
 
     }
