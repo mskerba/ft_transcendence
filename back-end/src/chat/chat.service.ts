@@ -279,7 +279,7 @@ export class ChatService {
         
         let arrData = [];
         data.forEach(item => {
-            const obj: object = {"Id": item.senderId, "Message": item.text, "Name": item.userid.name};
+            const obj: object = {"Id": item.senderId, "Message": item.text};
             arrData.push(obj);
         });
         return arrData;
@@ -434,7 +434,7 @@ export class ChatService {
             
             let arrData = [];
             for (const dt of data){
-                let obj: object = {"Id": dt.UserId, "Text": dt.text, "Name": dt.userId.name, "avatar": dt.userId.avatar};
+                let obj: object = {"Id": dt.UserId, "Text": dt.text, "Name": dt.userId.name, "Avatar": dt.userId.avatar};
                 arrData.push(obj);
             }
             return (arrData);
