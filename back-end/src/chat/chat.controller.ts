@@ -41,10 +41,12 @@ export class ChatController {
     }
 
     // about group
-    @Get("about/:convId")
+    @Get("about/:convId/:id")
     async about(@Param() param: any){
         console.log("about convId is : ", param.convId);
-      return  this.chatService.about(param.convId);
+        
+    
+      return await  this.chatService.about(param.convId, +param.id);
     }
     // return chat history of private messages
     @Get(":id1/:id2")
@@ -53,14 +55,17 @@ export class ChatController {
         const id1: number = parseInt(param.id1);
     
         console.log("first id : ", id1, " second id: ", param.id2);
-        return this.chatService.chatHistory(id1, param.id2);
+        return await this.chatService.chatHistory(id1, param.id2);
     }
     
     // create Group    
     @Post()
-    createGroup(@Body() createGroupDto: CreateGroupDto){
-        console.log("this is the data that come : ", createGroupDto);
-        return this.chatService.createGroup(createGroupDto);    
+    async createGroup(@Body() createGroupDto: CreateGroupDto){
+
+        const data = await this.chatService.createGroup(createGroupDto);    
+        if (data.error !== undefined)
+            return data;
+        return data;
     }
 
     // add user to the group

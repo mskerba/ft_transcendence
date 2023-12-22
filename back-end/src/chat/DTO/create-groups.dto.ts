@@ -1,4 +1,4 @@
-import { IsOptional, IsIn, IsNumber, IsString, IsStrongPassword, ValidateIf, IsNotEmpty, isDate, isDataURI, IsDataURI } from "class-validator";
+import { IsOptional, IsIn, IsNumber, IsString, IsStrongPassword, ValidateIf, IsNotEmpty, isDate, isDataURI, IsDataURI, MIN_LENGTH } from "class-validator";
 
 export class CreateGroupDto{
 
@@ -17,8 +17,8 @@ export class CreateGroupDto{
    
    // i will validate here 
    @IsOptional()
-   @IsStrongPassword()
    @IsNotEmpty()
+   @IsStrongPassword()
    password: string
 }
 

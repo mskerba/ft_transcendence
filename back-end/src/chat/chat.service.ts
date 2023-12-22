@@ -293,44 +293,57 @@ export class ChatService {
     // create group here
     async createGroup(createGroupDto: CreateGroupDto){
         
-        let room =  await this.prismaService.room.create({
-            data: {
-                TypeRoom: createGroupDto.TypeRoom,
-                avatar: createGroupDto.avatar,
-                title: createGroupDto.title,
-                password: createGroupDto.password
-            },
-            select:{
-                RoomId: true,
-                TypeRoom: true,
-                password: true,
-            }
-        });
-
-        if (room.TypeRoom == "protected" && room.password == null)
+        let room;
+        try{
+            room =  await this.prismaService.room.create({
+                data: {
+                    TypeRoom: createGroupDto.TypeRoom,
+                    avatar: createGroupDto.avatar,
+                    title: createGroupDto.title,
+                    password: createGroupDto.password
+                },
+                select:{
+                    RoomId: true,
+                    TypeRoom: true,
+                    password: true,
+                }
+            });
+        }
+        catch(error)
         {
-            this.prismaService.room.delete({
+            return {"error": "the data is failed to create group", "status": HttpStatus.OK};
+        }
+
+        if (room && room.TypeRoom == "protected" && room.password == null)
+        {
+             await this.prismaService.room.delete({
                 where:{
                     RoomId : room.RoomId
                 }
             })
             return ({"error": "set the password for protected group"});
-        }   
+        }
 
-        let UserGroup = await this.prismaService.roleUser.create({
-            data:{
-                
-                roleUser: {connect: {userId: createGroupDto.UserId}},
-                RoleName: "owner",
-                roomId: { connect: {RoomId: room.RoomId}}
-            },
-            select:{
-                UserId: true,
-                RoleName: true,
-                RoomId: true,
-            }
-        })
-        return UserGroup;
+        try {
+
+            let UserGroup = await this.prismaService.roleUser.create({
+                data:{
+                    
+                    roleUser: {connect: {userId: createGroupDto.UserId}},
+                    RoleName: "owner",
+                    roomId: { connect: {RoomId: room.RoomId}}
+                },
+                select:{
+                    UserId: true,
+                    RoleName: true,
+                    RoomId: true,
+                }
+            })
+            return {"success": "the group is created", "status": HttpStatus.OK};
+        }
+        catch(error){
+            return {"error": "this user can't create group", "status": HttpStatus.BAD_REQUEST}
+        }
     }
 
     // ADD User TO the group
@@ -583,7 +596,7 @@ export class ChatService {
     }
 
     // about group
-    async about(convId: string){
+    async about(convId: string, id: number){
         const data = await this.prismaService.roleUser.findMany({
             where:{
                 RoomId: convId,
@@ -601,10 +614,19 @@ export class ChatService {
         });
         
         let arrData = [];
+        let TypeId: string = "none";
+
+        console.log("id is : ", id);
         data.forEach(item =>{
-            const obj: object = {"Id": item.UserId, "Role": item.RoleName, "Name": item.roleUser.name, "Avatar": item.roleUser.avatar};
-            arrData.push(obj);
+            if (item.UserId == id)
+                TypeId = item.RoleName;
+            else
+            {
+                const obj: object = {"Id": item.UserId, "Role": item.RoleName, "Name": item.roleUser.name, "Avatar": item.roleUser.avatar};
+                arrData.push(obj);
+            }
         })
+        arrData.push({"UserRole": TypeId});
         console.log(arrData);
         return (arrData);
     }
