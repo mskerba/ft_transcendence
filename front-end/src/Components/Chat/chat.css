@@ -404,7 +404,7 @@ input {
 .name-lastime {
     height: 22px;
     display: grid;
-    grid-template-columns: 1fr 22px;
+    grid-template-columns: 1fr 56px;
     grid-template-rows: 100%;
     align-items: center;
     justify-content: space-between;
@@ -457,11 +457,12 @@ input {
 
 .name-lastime p{
     font-size: small;
-    width: 30px;
+    /* width: 30px; */
     display: flex;
-    justify-content: center;
+    justify-content: end;
     align-items: center;
 }
+/*center;*/
 
 .convesation-info p{
     color: #dfc2c2;
