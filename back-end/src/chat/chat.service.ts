@@ -417,31 +417,52 @@ export class ChatService {
 
     // histoy of group
     async historyOfGroup(group: string){
-        return await this.prismaService.roomMessage.findMany({
-            where: {
-                RoomId: group
-            },
-            select:{
-                text: true,
-                UserId: true,
+        
+        try{
+            const data =  await this.prismaService.roomMessage.findMany({
+                where: {
+                    RoomId: group
+                },
+                select:{
+                    text: true,
+                    UserId: true,
+                    userId:{
+                        select:{name: true, avatar: true},
+                    }
+                }
+            });
+            
+            let arrData = [];
+            for (const dt of data){
+                let obj: object = {"Id": dt.UserId, "Text": dt.text, "Name": dt.userId.name, "avatar": dt.userId.avatar};
+                arrData.push(obj);
             }
-        });
+            return (arrData);
+        }catch(error){
+            return {"error": "messages can't retrieved from this group", "status": HttpStatus.NOT_FOUND};
+        }
     }
     // find user if has this group
     async findUserInGroup(userId : number, roomId: string)
     {
-       const data =  await this.prismaService.roleUser.findFirst({
-            where:{
-                RoomId: roomId,
-                UserId: userId,
-            },
-            select:{
-                RoleId: true,
-            }
-        })
-        if (data)
-            return {success: true, status: HttpStatus.OK};
-        return {"error": "user not belong to this room or you are banned", status: HttpStatus.BAD_REQUEST};
+        try {
+
+            const data =  await this.prismaService.roleUser.findFirst({
+                 where:{
+                     RoomId: roomId,
+                     UserId: userId,
+                 },
+                 select:{
+                     RoleId: true,
+                 }
+             })
+             if (data)
+                 return {"success": true, status: HttpStatus.OK};
+             return {"error": "user not found in this group", "status": HttpStatus.BAD_REQUEST};
+        }
+        catch(error){
+            return {"error": "your input is not correct", "status": HttpStatus.BAD_REQUEST};
+        }
     }
 
     async findRoleUser(senderId: number, group: string){

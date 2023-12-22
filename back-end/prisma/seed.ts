@@ -2,6 +2,7 @@
 
 import { PrismaClient } from '@prisma/client';
 import { faker, tr } from '@faker-js/faker';
+import { connect } from 'http2';
 
 // initialize Prisma Client
 const prisma = new PrismaClient();
@@ -11,6 +12,7 @@ async function main() {
 // delete all users
   await prisma.directMessage.deleteMany();
   await prisma.linkDirectMessage.deleteMany();
+  await prisma.roomMessage.deleteMany();
   await prisma.roleUser.deleteMany();
   await prisma.room.deleteMany();
   await prisma.user.deleteMany();
@@ -20,7 +22,7 @@ async function main() {
 
   
   let img : String = "https://robohash.org/"; 
-  for (let i = 0; i < 10; i++)
+  for (let i = 0; i < 20; i++)
   {
     let fakeName :string = faker.person.firstName();
     userArray[i] =  await prisma.user.create({
@@ -118,42 +120,27 @@ async function main() {
     })  
   }
 
-  console.log("ROle users table");
-  console.log(RoleUser);
-  // create direct conversation between two users;
-  
  
 
+  // create messages in the first two groups
+  let UserInd = 0, RoomInd = 0;
+  let ind: number;
+  for (ind = 0; ind < 20; ind++)
+  {
+    const data = await prisma.roomMessage.create({
+      data:{
+          text: faker.lorem.text(),
+          roomId: {connect: {RoomId: Rooms[RoomInd].RoomId}},
+          userId: {connect: {userId: userArray[UserInd].userId}},
+      },
+    });
 
-// prisma.friendship.deleteMany()
-
-// let userArr = await prisma.user.findMany({});
-
-
-// let j = 0;
-// let k = 19;
-
-// for (let i = 0; i < 10; i++)
-// {
-//      let id1: number = userArr[j++].userId;
-//      let id2: number = userArr[k--].userId;
-
-//     await prisma.friendship.create({
-//       data: {
-          
-//           user1: { connect:{userId : id1}},
-//           user2: { connect: {userId: id2}},
-      
-//           },
-
-//       });
-// }
-
-
-// prisma.directMessage.deleteMany();
-// const arr = [8 ,7 , 14];
-
-
+    if (ind % 2 == 0 && ind)
+      UserInd++;
+    if (ind % 4 == 0 && ind)
+      RoomInd++;
+    console.log(data);
+  }
 
  
 

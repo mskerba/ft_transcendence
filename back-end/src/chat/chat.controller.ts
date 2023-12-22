@@ -22,11 +22,22 @@ export class ChatController {
     }
     
     // history chat of group
-    @Get('group/:id')
+    @Get("group/:userId/:groupId")
     async historyOfGroup(@Param() group: any){
-        console.log("group Id : ", group.id);
+        console.log("group Id : ", group.groupId);
         //return {"msg": "hello"};
-        return this.chatService.historyOfGroup(group.id);
+    
+
+        let id : number = parseInt(group.userId);
+        
+        const isUserInGroup = await this.chatService.findUserInGroup(id, group.groupId);
+        if (isUserInGroup.error !== undefined)
+            return isUserInGroup;
+        const historyGroup = await this.chatService.historyOfGroup(group.groupId);
+        if (historyGroup)
+            return historyGroup;
+        return {"error": "message in this group occured an error", "status": HttpStatus.NOT_ACCEPTABLE};
+
     }
 
     // return chat history of private messages
