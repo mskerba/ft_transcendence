@@ -157,6 +157,7 @@ export class ChatService {
             orderBy:[{dateSent : "desc"},],
             distinct:['RoomMessageId'],
             select:{
+                dateSent: true,
                 text: true,
             }
         });
@@ -241,17 +242,21 @@ export class ChatService {
             i++;
         })
         
-   
+
+        
         for (const item of GroupMessages) {
             let msg : string = "welcome to " + item.title;
+            let date = new Date();
             const lastMsg : any = await this.lastMessageGroup(item.RoomId);
             console.log(lastMsg);
             if (lastMsg)
+            {
                 console.log("lastMsg found");
+                date = lastMsg.dateSent;
                 msg = lastMsg.text;
-         
+            }
             let obj2 : object = {"Unseen": 4, "Name": item.title, 
-            "lastMsg": msg, "Date": "", "Avatar": item.avatar, "convId": item.RoomId, "group": true };
+            "lastMsg": msg, "Date": date, "Avatar": item.avatar, "convId": item.RoomId, "group": true };
             arrData.push(obj2);
          }
     
@@ -434,7 +439,7 @@ export class ChatService {
             
             let arrData = [];
             for (const dt of data){
-                let obj: object = {"Id": dt.UserId, "Text": dt.text, "Name": dt.userId.name, "Avatar": dt.userId.avatar};
+                let obj: object = {"Id": dt.UserId, "Message": dt.text, "Name": dt.userId.name, "Avatar": dt.userId.avatar};
                 arrData.push(obj);
             }
             return (arrData);
