@@ -21,3 +21,7 @@
 
    *** some requirement not handled  ***
 -- users can leave  groups if owner leave group he required to select user if  
+
+*** some question that came to my mind***
+-- adding user to the group that already joind am i suppose to handle this by check on each insertion on the table is this user    is already exist or just make the database fail and return that is already exists
+-- why i can't  use findUnique we know the group of  attribute is unique then using findFirst

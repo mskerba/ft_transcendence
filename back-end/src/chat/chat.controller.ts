@@ -40,6 +40,16 @@ export class ChatController {
 
     }
 
+
+    // leave group
+    @Get('leave/:convId/:id')
+    async leave(@Param() param: any){
+        const data = await this.chatService.leaveGroup(param.convId, +param.id);
+        if (data.error !== undefined)
+            throw new HttpException(data.error, HttpStatus.NOT_FOUND);
+        return data;
+    }
+
     // about group
     @Get("about/:convId/:id")
     async about(@Param() param: any){
@@ -96,8 +106,6 @@ export class ChatController {
     @Post('group/mute')
     async muteUser(@Body() muteDto: MuteDto){
         const data = await this.chatService.muteUser(muteDto);
-        if (data.error !== undefined)
-            throw new HttpException(data.error, data.status);
         return data;
     }
 
