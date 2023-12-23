@@ -9,6 +9,9 @@ export class FriendService {
   constructor(private prisma: PrismaService) { }
 
   async sendFriendReq(senderId: number, receiverId: number) {
+
+    const status = await this.friendshipStatus(senderId, receiverId);
+    if (status !== 'not-friend') return;
     return await this.prisma.friendRequest.create({
       data: {
         senderId,
@@ -25,6 +28,7 @@ export class FriendService {
       }
     });
 
+    if (!request) return ;
     if (request.receiverId !== userId) {
       throw new ForbiddenException();
     }
@@ -33,7 +37,8 @@ export class FriendService {
   }
 
   async unfriend(userId: number, friendId: number) {
-    await this.prisma.friendship.deleteMany({
+
+    const friendReqs = await this.prisma.friendship.deleteMany({
       where: {
         OR: [
           { user1Id: userId, user2Id: friendId },
@@ -41,6 +46,10 @@ export class FriendService {
         ],
       },
     });
+
+    if (!friendReqs.count) return ;
+    await this.changeFriendCount(userId, -1);
+    await this.changeFriendCount(friendId, -1);
   }
 
   async declineFriendReq(requestId: string, userId: number) {
@@ -50,6 +59,7 @@ export class FriendService {
       }
     });
 
+    if (!request) return ;
     if (request.receiverId !== userId) {
       throw new ForbiddenException();
     }
@@ -64,6 +74,7 @@ export class FriendService {
       }
     });
 
+    if (!request) return ;
     if (request.senderId !== userId) {
       throw new ForbiddenException();
     }
@@ -76,7 +87,7 @@ export class FriendService {
       where: {
         OR: [
           { senderId: user1Id, receiverId: user2Id },
-          { senderId: user2Id, receiverId: user2Id },
+          { senderId: user2Id, receiverId: user1Id },
         ],
       },
     });
@@ -164,7 +175,7 @@ export class FriendService {
       where: {
         OR: [
           { senderId: user1Id, receiverId: user2Id },
-          { senderId: user2Id, receiverId: user2Id },
+          { senderId: user2Id, receiverId: user1Id },
         ],
       },
     });
@@ -190,6 +201,21 @@ export class FriendService {
         user1Id,
         user2Id,
       }
+    });
+    await this.changeFriendCount(user1Id, 1);
+    await this.changeFriendCount(user2Id, 1);
+  }
+
+  async changeFriendCount(userId: number, amount: number) {
+    await this.prisma.user.update({
+      where: {
+        userId,
+      },
+      data: {
+        friends: {
+          increment: amount,
+        },
+      },
     });
   }
 }

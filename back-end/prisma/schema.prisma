@@ -37,6 +37,11 @@ model User {
   user1Friends Friendship[] @relation("User1Friends")
   user2Friends Friendship[] @relation("User2Friends")
 
+  blockedUsers  Block[] @relation("BlockedUsers")
+  blockingUsers Block[] @relation("BlockingUsers")
+
+  // ... other relationships ...
+
   // iharile 
 
   dmMessage1 DirectMessage[]
@@ -47,9 +52,6 @@ model User {
   roleUser RoleUser[]
 
   roomMessage RoomMessage[]
-
-  block1 BlockUser[] @relation("Blocking")
-  block2 BlockUser[] @relation("Blocked")
 
   kick KickUser[]
   bann BanUser[]
@@ -88,6 +90,19 @@ model Friendship {
   user2 User @relation("User2Friends", fields: [user2Id], references: [userId])
 
   @@unique([user1Id, user2Id])
+}
+
+model Block {
+  blockId       String @id @default(cuid())
+  userId        Int
+  blockedUserId Int
+
+  user        User @relation("BlockingUsers", fields: [userId], references: [userId])
+  blockedUser User @relation("BlockedUsers", fields: [blockedUserId], references: [userId])
+
+  blockDate DateTime @default(now())
+
+  @@unique([userId, blockedUserId])
 }
 
 // chat tables
@@ -170,17 +185,6 @@ model RoomMessage {
 
   userId User @relation(fields: [UserId], references: [userId])
   UserId Int
-}
-
-// this between two user 
-model BlockUser {
-  BlockedUserId Int @id @default(autoincrement())
-
-  block1            User @relation("Blocking", fields: [TheBlockingUserId], references: [userId])
-  TheBlockingUserId Int
-
-  block2           User @relation("Blocked", fields: [TheBlockedUserId], references: [userId])
-  TheBlockedUserId Int
 }
 
 // this happen in groups

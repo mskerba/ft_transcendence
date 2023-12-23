@@ -14,14 +14,13 @@ const DisableTwoFactorAuth = ({ onClose, onEnable }) => {
   const handleSubmit = async () => {
 
     try {
-      const res = await axiosPrivate.post('/auth/disable-2fa', { otp: token })
-      console.log(res.data);
+      const res = await axiosPrivate.post('/auth/disable-2fa', { otp: token });
       if (res?.data) {
         onClose();
         onEnable(false);
       }
 
-    } catch (error) { console.log(error); }
+    } catch (error) {  }
 
 
   };

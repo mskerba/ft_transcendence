@@ -21,14 +21,12 @@ const TwoFactorVerification = () => {
         {
             try {
                 const res = await axios.post('/auth/verify-2fa', { token: code });
-                console.log(res.data);
                 if (res?.data == true) login();
 
             } catch (error) { }
         } else {
             try {
-                const res = await axios.post('/auth/disable-2fa', { otp: code })
-                console.log(res.data);
+                const res = await axios.post('/auth/disable-2fa', { otp: code });
                 if (res?.data) {
                     login({})
                 }

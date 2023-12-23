@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import './UserProfileButtons.css'
 import useAxiosPrivate from '../../../../hooks/UseAxiosPrivate';
+import { useNavigate } from 'react-router-dom';
 
 enum Friendship {
     friend,
@@ -12,8 +13,9 @@ enum Friendship {
 const UserProfileButtons = ({ userId }: any) => {
     const [friendshipStatus, setFriendshipStatus] = useState('');
     const [requestId, setRequestId] = useState('');
-    
+
     const axiosPrivate = useAxiosPrivate();
+    const navigate = useNavigate();
 
 
 
@@ -22,7 +24,7 @@ const UserProfileButtons = ({ userId }: any) => {
         setFriendshipStatus(res.data);
         res = await axiosPrivate.get(`/friend-request-id/${userId}`);
         setRequestId(res.data);
-        
+
     }
 
     useEffect(() => {
@@ -80,23 +82,23 @@ const UserProfileButtons = ({ userId }: any) => {
             {friendshipStatus == 'request-received' &&
                 <>
                     <div className='user-profile-button'
-                    onClick={async () => {
-                        try {
-                            await axiosPrivate.get(`accept-friend-request/${requestId}`);
-                            setFriendshipStatus('friend');
-                        } catch (error) { }
-                    }}
+                        onClick={async () => {
+                            try {
+                                await axiosPrivate.get(`accept-friend-request/${requestId}`);
+                                setFriendshipStatus('friend');
+                            } catch (error) { }
+                        }}
                     >
                         <img src='/src/assets/accept-request.svg' />
                         <img src='/src/assets/accept-request-hovered.svg' className='hovered' />
                     </div>
                     <div className='user-profile-button'
-                    onClick={async () => {
-                        try {
-                            await axiosPrivate.get(`decline-friend-request/${requestId}`);
-                            setFriendshipStatus('not-friend');
-                        } catch (error) { }
-                    }}
+                        onClick={async () => {
+                            try {
+                                await axiosPrivate.get(`decline-friend-request/${requestId}`);
+                                setFriendshipStatus('not-friend');
+                            } catch (error) { }
+                        }}
                     >
                         <img src='/src/assets/decline-request.svg' />
                         <img src='/src/assets/decline-request-hovered.svg' className='hovered' />
@@ -109,7 +111,15 @@ const UserProfileButtons = ({ userId }: any) => {
                     <img src='/src/assets/message-hovered.svg' className='hovered' />
                 </div>
             }
-            <div className='user-profile-button'>
+            <div className='user-profile-button'
+                onClick={async () => {
+                    try {
+                        await axiosPrivate.get(`block/${userId}`);
+                        navigate('/');
+                        
+                    } catch (error) { }
+                }}
+            >
                 <img src='/src/assets/block.svg' />
                 <img src='/src/assets/block-hovered.svg' className='hovered' />
             </div>

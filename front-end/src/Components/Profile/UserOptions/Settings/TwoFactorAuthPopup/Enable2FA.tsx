@@ -12,17 +12,15 @@ const EnableTwoFactorAuth = ({ onClose, qrCode, onEnable }) => {
   };
 
   const handleSubmit = async () => {
-    console.log('Submitted token:', token);
 
     try {
       const res = await axiosPrivate.post('/auth/enable-2fa', { token });
-      console.log(res.data);
       if (res?.data) {
         onClose();
         onEnable(true);
       }
 
-    } catch (error) { console.log(error); }
+    } catch (error) {  }
 
 
   };

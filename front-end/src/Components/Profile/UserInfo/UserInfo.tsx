@@ -7,7 +7,7 @@ import { useAuth } from '../../../context/AuthContext';
 
 
 const UserInfo = ({ user }: any) => {
-    const { authUser } = useAuth();
+    const { authUser }: any = useAuth();
 
     return (
         <div className='user-info-container'>

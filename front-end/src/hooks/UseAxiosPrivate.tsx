@@ -13,7 +13,7 @@ const useAxiosPrivate = () => {
             async (error) => {
                 const prevRequest = error?.config;
                 if (error?.response?.status === 401 && !prevRequest?.sent) {
-                    console.log(error?.response?.data);
+
                     if (error?.response?.data.message === 'verify 2FA!') {
                         navigate("/2FA");
                     } else {

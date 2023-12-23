@@ -9,9 +9,10 @@ import { UserModule } from './user/user.module';
 import { FriendModule } from './friend/friend.module';
 import { ChatModule } from './chat/chat.module';
 import { AvatarModule } from './avatar/avatar.module';
+import { BlockModule } from './block/block.module';
 
 @Module({
-  imports: [AuthModule, PrismaModule, UserModule, FriendModule, ChatModule, AvatarModule],
+  imports: [AuthModule, PrismaModule, UserModule, FriendModule, ChatModule, AvatarModule, BlockModule],
   providers: [
     AppService,
     {

@@ -7,5 +7,6 @@ import { PrismaModule } from 'src/prisma/prisma.module';
   controllers: [FriendController],
   providers: [FriendService],
   imports: [PrismaModule],
+  exports: [FriendService],
 })
 export class FriendModule {}

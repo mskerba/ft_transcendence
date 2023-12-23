@@ -13,7 +13,7 @@ const Profile = () => {
     const [user, setUser] = useState({});
     const axiosPrivate = useAxiosPrivate();
     const  { userId }  = useParams();
-    const { authUser } = useAuth();
+    const { authUser }: any = useAuth();
 
     const handleStateChange = (option: number) => {
         setOption(option);
@@ -23,6 +23,7 @@ const Profile = () => {
         const test = async () => {
           try {
             const res = await axiosPrivate.get(`/user/${userId}`);
+            setOption(0);
             if (res.status == 200) {
                 setUser(res.data)
             }
