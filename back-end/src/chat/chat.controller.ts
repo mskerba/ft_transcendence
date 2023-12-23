@@ -1,7 +1,7 @@
 
 import { Controller, Get, Post, Body, Param, HttpStatus, Req, HttpCode, BadRequestException, NotFoundException, HttpException } from '@nestjs/common';
 import {ChatService} from './chat.service'
-import {CreateGroupDto, CreateRoleUserDto, PunishDto, MuteDto} from './DTO/create-groups.dto'
+import {CreateGroupDto, CreateRoleUserDto, PunishDto, MuteDto, UpdateGroupDto} from './DTO/create-groups.dto'
 import { STATUS_CODES } from 'http';
 import { da } from '@faker-js/faker';
 import { UserEntity } from 'src/user/entities/user.entity';
@@ -50,6 +50,12 @@ export class ChatController {
         return data;
     }
 
+    // remove group
+    @Get('remove/:convId/:id')
+    async remove(@Param() param: any){
+        const data = await this.chatService.removeGroupe(param.convId, +param.id);
+        return data;
+    }
     // about group
     @Get("about/:convId/:id")
     async about(@Param() param: any){
@@ -108,5 +114,13 @@ export class ChatController {
         const data = await this.chatService.muteUser(muteDto);
         return data;
     }
+
+    // update group
+    @Post('group/update')
+    async update(@Body() updateDto: UpdateGroupDto ){
+        const data = await this.chatService.updateGroupe(updateDto);
+        return data;
+    } 
+
 
 }

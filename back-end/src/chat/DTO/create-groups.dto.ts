@@ -24,6 +24,15 @@ export class CreateGroupDto{
    password: string
 }
 
+export class UpdateGroupDto extends CreateGroupDto{
+   
+   @IsString()
+   @IsNotEmpty()
+   RoomId: string;
+}
+
+
+
 export class CreateRoleUserDto{
 
    @IsNumber()

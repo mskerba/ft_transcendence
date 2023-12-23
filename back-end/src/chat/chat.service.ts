@@ -1,6 +1,6 @@
 import { ConsoleLogger, HttpStatus, Injectable, Param, HttpException } from '@nestjs/common';
 import {PrismaService} from '../prisma/prisma.service'
-import {CreateGroupDto, CreateRoleUserDto, PunishDto, MuteDto} from './DTO/create-groups.dto'
+import {CreateGroupDto, CreateRoleUserDto, PunishDto, MuteDto, UpdateGroupDto} from './DTO/create-groups.dto'
 import { da, faker, tr } from '@faker-js/faker';
 
 @Injectable()
@@ -673,9 +673,76 @@ export class ChatService {
                     ]
                 }
             })
-            return {"success" : "Successfully left the group.", status: HttpStatus.OK};
+            if (data)
+                return {"success" : "Successfully left the group.", status: HttpStatus.OK};
+            return {"error": "You are not in this group to leave it", status: HttpStatus.FORBIDDEN}
         }catch(error){
             return {"error": "Error: You are not a member of the group or the provided data is incorrect", status : HttpStatus.BAD_REQUEST}
         }
+    }
+
+
+    async removeGroupe(convId: string, id: number){
+
+        try{
+            const findUsrInGrp = await this.findRoleUser(id, convId);
+
+            if (!findUsrInGrp || findUsrInGrp.RoleName != "owner")
+                return {"error" : "Permission Denied: You do not have the necessary authorization to remove the group", status: HttpStatus.NOT_FOUND}
+        }catch(error){
+            return {"error": " the provided data is incorrect", status: HttpStatus.BAD_REQUEST };
+        }
+
+        // this can work withoug using try and catch
+        try{
+            const delRoomMsg = await this.prismaService.roomMessage.deleteMany({
+                where:{
+                    RoomId: convId,
+                }
+            });
+            const delRoleUser = await this.prismaService.roleUser.deleteMany({
+                where:{
+                    RoomId: convId,
+                }
+            })
+            // i don't use await to make it remove any time is engine ready to treat it
+            const delRoom = await this.prismaService.room.deleteMany({
+                where:{
+                    RoomId: convId,
+                }
+            });
+            return {"success": true, status: HttpStatus.OK}
+        }catch(error){
+            return {"error": " the provided data is incorrect", status: HttpStatus.BAD_REQUEST };
+        }
+    }
+
+    async updateGroupe( updateDto :UpdateGroupDto){
+
+        try{
+            const data= await this.findRoleUser(updateDto.UserId, updateDto.RoomId)
+            if (!data || data.RoleName != 'owner')
+                return {"error": "you are not the owner of this group to update it", status: HttpStatus.BAD_REQUEST};
+            if (updateDto.TypeRoom == "protected" && updateDto.password == undefined)
+                return {"error": "A password is mandatory for protected group creation", status: HttpStatus.BAD_REQUEST};
+        }catch(error){
+            return {"error": "the provided data is incorrect", status: HttpStatus.NON_AUTHORITATIVE_INFORMATION};
+        }
+        try{
+            const data  = await this.prismaService.room.update({
+                where:{
+                    RoomId: updateDto.RoomId,
+                },
+                data:{
+                    TypeRoom: updateDto.TypeRoom,
+                    avatar: updateDto.avatar,
+                    title: updateDto.title,
+                    password: updateDto.password,
+                }
+            });
+        }catch(error){
+            return {"error": "the group not updated ", status: HttpStatus.BAD_REQUEST};
+        }
+        return {"success": true, status: HttpStatus.OK};
     }
 }
