@@ -1,4 +1,4 @@
-import { IsOptional, IsIn, IsNumber, IsString, IsStrongPassword, ValidateIf, IsNotEmpty, isDate, isDataURI, IsDataURI, MIN_LENGTH } from "class-validator";
+import { IsOptional, IsIn, IsNumber, IsString, IsStrongPassword, ValidateIf, IsNotEmpty, isDate, isDataURI, IsDataURI, MIN_LENGTH, MinLength, MaxLength } from "class-validator";
 
 export class CreateGroupDto{
 
@@ -11,6 +11,8 @@ export class CreateGroupDto{
    @IsOptional()
    avatar?: string;
    
+   @MinLength(5)
+   @MaxLength(30)
    @IsString()
    title: string;
 

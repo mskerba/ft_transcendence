@@ -349,21 +349,44 @@ export class ChatService {
     // ADD User TO the group
     async addTogroup(createROle :CreateRoleUserDto){
         
-        const checkGroup = await this.prismaService.room.findUnique({
+        try{
+
+            const checkGroup = await this.prismaService.room.findUnique({
             where:{
                 RoomId: createROle.roomId
             },
         })
         if (!checkGroup)
-            return {"error": "group not found"};
+            return {"error": "Room Not Found: Please verify the room name and try again", status: HttpStatus.NOT_FOUND};
+        } catch(error){
+            return {"error" : "Error: Incorrect data type. Please provide the correct type of data", status :HttpStatus.BAD_REQUEST};
+        }
 
-        return await this.prismaService.roleUser.create({
-            data:{
-                roleUser: {connect: {userId: createROle.userId}},
-                RoleName: createROle.roleName,
-                roomId: {connect: {RoomId: createROle.roomId}}
-            }
-        })
+        try {
+
+            const isBanned = await this.prismaService.banUser.findFirst({
+                where:{
+                    RoomId: createROle.roomId,
+                    UserId: createROle.userId,
+
+                }
+            })
+            if (isBanned)
+                return {"error" : "User is banned and cannot be added to the group again",
+                status: HttpStatus.FORBIDDEN};
+            
+            const data = await this.prismaService.roleUser.create({
+                data:{
+                    roleUser: {connect: {userId: createROle.userId}},
+                    RoleName: createROle.roleName,
+                    roomId: {connect: {RoomId: createROle.roomId}}
+                }
+            });
+            return {"success" : true, status: HttpStatus.OK};
+        }catch(error){
+            return {"error" : "Error: Incorrect data type. Please provide the correct type of data",
+            status: HttpStatus.BAD_REQUEST};
+        }
 
     }
 
@@ -399,6 +422,10 @@ export class ChatService {
                         MuteUserId: time.MuteUserId
                     }
                 });
+                return {
+                    "error": "Attention: Please be mindful of group guidelines "+
+                    "continued violations may result in removal or suspension "
+                }
             }
             else{
                 return {
@@ -408,7 +435,7 @@ export class ChatService {
             }
         }
         return {
-            success: true,
+            "success": true,
             status: HttpStatus.OK    
         };
     }
@@ -508,8 +535,8 @@ export class ChatService {
             return {"error": "the sender who wanna delete is regular member",
             status: HttpStatus.NOT_FOUND
         };
-        if (senderId == "admin" && userId != "member")
-            return {error: "admin can't kick another admin or owner",
+        if (senderId == "admin" && userId == "owner")
+            return {error: "admin doesn't have privilege to kick owner",
             status: HttpStatus.NOT_FOUND
         };
 
@@ -518,20 +545,24 @@ export class ChatService {
     // kick user in group
     async kickUser(punishDto: PunishDto){
     
-        const data = await this.PunishCheker(punishDto);
-        if (data.error !== undefined)
+        try {
+            const data = await this.PunishCheker(punishDto);
+            if (data.error !== undefined)
+                return data;
+    
+            await this.prismaService.roleUser.deleteMany({
+                where:{
+                    AND:[
+    
+                       { UserId: punishDto.userId },
+                       { RoomId: punishDto.roomId },
+                    ]
+                }
+            })
             return data;
-
-        await this.prismaService.roleUser.deleteMany({
-            where:{
-                AND:[
-
-                   { UserId: punishDto.userId },
-                   { RoomId: punishDto.roomId },
-                ]
-            }
-        })
-        return data;
+        }catch(error){
+            return {"error": "this user can't be kicked "}
+        }
     }
 
     // ban user in group
@@ -616,7 +647,6 @@ export class ChatService {
         let arrData = [];
         let TypeId: string = "none";
 
-        console.log("id is : ", id);
         data.forEach(item =>{
             if (item.UserId == id)
                 TypeId = item.RoleName;
@@ -631,4 +661,21 @@ export class ChatService {
         return (arrData);
     }
 
+    async leaveGroup(convId: string, id: number){
+
+        try{
+          const data = await this.prismaService.roleUser.deleteMany({
+                where:{
+                    AND:[
+    
+                       { UserId: id },
+                       { RoomId: convId},
+                    ]
+                }
+            })
+            return {"success" : "Successfully left the group.", status: HttpStatus.OK};
+        }catch(error){
+            return {"error": "Error: You are not a member of the group or the provided data is incorrect", status : HttpStatus.BAD_REQUEST}
+        }
+    }
 }
