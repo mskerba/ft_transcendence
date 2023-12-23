@@ -69,9 +69,15 @@ const Chat = () => {
                   <ChatContainer setShow={setShow} convInf={convInf} setPopupInfParent={setPopupInfParent} />
             }
         </div>
-        <PopupCreatGroup setPopupParent={setPopupParent}  popupParent={popupParent}/>
-        <PopupGroupInf setPopupInfParent={setPopupInfParent}  popupInfParent={popupInfParent}
-          divPosition={divPosition} setDivPosition={setDivPosition}/>
+        <PopupCreatGroup 
+          setPopupParent={setPopupParent}  
+          popupParent={popupParent}/>
+
+        <PopupGroupInf 
+            convInf={convInf} 
+            setPopupInfParent={setPopupInfParent}  
+            popupInfParent={popupInfParent}
+            divPosition={divPosition} setDivPosition={setDivPosition}/>
     </div>
   );
 };

@@ -36,7 +36,6 @@ const ChatContainer = (prop:any) => {
   
   useEffect(() => {
     fetchData();
-    console.log(allMessage)
   }, [prop]);
   
 
