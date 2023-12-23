@@ -11,7 +11,7 @@ export class FriendController {
 
 
 
-  @Post('send-friend-request')
+  @Get('send-friend-request/:id')
   async sendFriendReq(
     @Param('id', ParseIntPipe) id: number,
     @Req() req,
@@ -39,6 +39,25 @@ export class FriendController {
     return await this.friendService.declineFriendReq(requestId, user.userId);
   }
 
+  @Get('cancel-friend-request/:id')
+  async cancelFriendReq(
+    @Param('id') requestId: string,
+    @Req() req,
+  ) {
+    const user: UserEntity = req.user;
+    return await this.friendService.cancelFriendReq(requestId, user.userId);
+  }
+
+  @Get('friend-request-id/:id')
+  async FriendReqId(
+    @Param('id', ParseIntPipe) userId: number,
+    @Req() req,
+  ) {
+    const user: UserEntity = req.user;
+    return await this.friendService.FriendReqId(user.userId, userId);
+  }
+
+
   @Get('unfriend/:id')
   async unfriend(
     @Param('id', ParseIntPipe) friendId: number,
@@ -63,11 +82,11 @@ export class FriendController {
 
   @Get('friendship-status/:id')  // friend  | request-sent | request-received | not-friend
   async friendshipStatus(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) user2Id: number,
     @Req() req,
   ) {
     const user: UserEntity = req.user;
-    return await this.friendService.friendshipStatus(id);
+    return await this.friendService.friendshipStatus(user.userId, user2Id);
   }
 
 }

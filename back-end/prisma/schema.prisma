@@ -21,7 +21,7 @@ model User {
   games            Int      @default(0)
   wins             Int      @default(0)
   losses           Int      @default(0)
-  Friends          Int      @default(0)
+  friends          Int      @default(0)
   hashedRt         String?
   twoFA_Enabled    Boolean  @default(false)
   twoFA_Verified   Boolean  @default(false)

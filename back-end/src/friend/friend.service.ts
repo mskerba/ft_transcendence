@@ -9,7 +9,7 @@ export class FriendService {
   constructor(private prisma: PrismaService) { }
 
   async sendFriendReq(senderId: number, receiverId: number) {
-    await this.prisma.friendRequest.create({
+    return await this.prisma.friendRequest.create({
       data: {
         senderId,
         receiverId,
@@ -53,8 +53,35 @@ export class FriendService {
     if (request.receiverId !== userId) {
       throw new ForbiddenException();
     }
-  
+
     await this.deleteReq(requestId);
+  }
+
+  async cancelFriendReq(requestId: string, userId: number) {
+    const request = await this.prisma.friendRequest.findUnique({
+      where: {
+        requestId
+      }
+    });
+
+    if (request.senderId !== userId) {
+      throw new ForbiddenException();
+    }
+
+    await this.deleteReq(requestId);
+  }
+
+  async FriendReqId(user1Id: number, user2Id: number) {
+    const friendReq = await this.prisma.friendRequest.findFirst({
+      where: {
+        OR: [
+          { senderId: user1Id, receiverId: user2Id },
+          { senderId: user2Id, receiverId: user2Id },
+        ],
+      },
+    });
+
+    return (friendReq ) ? friendReq.requestId : '';
   }
 
   async friends(userId: number) {
@@ -65,21 +92,40 @@ export class FriendService {
       select: {
         user1Friends: {
           select: {
-            user2: true,
+            user2: {
+              select: {
+                userId: true,
+                name: true,
+                avatar: true,
+              }
+            },
           },
         },
         user2Friends: {
           select: {
-            user1: true,
+            user1: {
+              select: {
+                userId: true,
+                name: true,
+                avatar: true,
+              }
+            },
           },
         },
       },
     });
+
+    const allFriends = [
+      ...(userFriends?.user1Friends?.map((friendship) => friendship.user2) || []),
+      ...(userFriends?.user2Friends?.map((friendship) => friendship.user1) || []),
+    ];
+
+    return allFriends;
   }
 
 
   async friendReqs(userId: number) {
-    const userFriends = await this.prisma.user.findUnique({
+    return await this.prisma.user.findUnique({
       where: {
         userId: userId,
       },
@@ -91,9 +137,9 @@ export class FriendService {
               select: {
                 userId: true,
                 name: true,
+                avatar: true,
               },
             },
-            requestDate: true,
           },
         },
       },
@@ -102,7 +148,32 @@ export class FriendService {
 
 
   // friend  | request-sent | request-received | not-friend
-  friendshipStatus(id: number) {
+  async friendshipStatus(user1Id: number, user2Id: number) {
+    const friendship = await this.prisma.friendship.findFirst({
+      where: {
+        OR: [
+          { user1Id, user2Id },
+          { user1Id: user2Id, user2Id: user1Id },
+        ],
+      },
+    });
+
+    if (friendship) return 'friend';
+
+    const friendReq = await this.prisma.friendRequest.findFirst({
+      where: {
+        OR: [
+          { senderId: user1Id, receiverId: user2Id },
+          { senderId: user2Id, receiverId: user2Id },
+        ],
+      },
+    });
+
+    if (friendReq) {
+      return (friendReq.senderId === user1Id) ? 'request-sent' : 'request-received';
+    }
+
+    return 'not-friend';
   }
 
   async deleteReq(requestId: string) {
@@ -113,8 +184,7 @@ export class FriendService {
     });
   }
 
-  async addFriend(user1Id: number, user2Id: number)
-  {
+  async addFriend(user1Id: number, user2Id: number) {
     await this.prisma.friendship.create({
       data: {
         user1Id,

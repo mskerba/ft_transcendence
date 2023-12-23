@@ -17,7 +17,7 @@ const UserStats = ({ user }: any) => {
             </div>
             <div className='user-stats'>
                 <span className='user-stats-label'>Friends</span>
-                <span className='user-stats-value'>{user.Friends.length}</span>
+                <span className='user-stats-value'>{user.friends}</span>
             </div>
         </div>
     );

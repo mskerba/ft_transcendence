@@ -13,7 +13,7 @@ const UserInfo = ({ user }: any) => {
         <div className='user-info-container'>
             <UserAvatar avatar={user.avatar} />
             <UserProfile username={user.name} level={user.level} />
-            {authUser.userId !== user.userId && <UserProfileButtons /> }
+            {authUser.userId !== user.userId && <UserProfileButtons userId={user.userId} /> }
             <UserStats user={user}/>
         </div>
     );
