@@ -349,6 +349,7 @@ export class ChatService {
     // ADD User TO the group
     async addTogroup(createROle :CreateRoleUserDto){
         
+       
         let userId;
         try{
 
@@ -362,7 +363,7 @@ export class ChatService {
             userId = await this.findUserByname(createROle.userName);
             if (!userId)
                 return {"error" : "user not found", status: HttpStatus.NOT_FOUND};
-        
+            console.log("userId is : " , userId.userId);
         } catch(error){
             return {"error" : "Error: Incorrect data type. Please provide the correct type of data", status :HttpStatus.BAD_REQUEST};
         }
@@ -372,7 +373,7 @@ export class ChatService {
             const isBanned = await this.prismaService.banUser.findFirst({
                 where:{
                     RoomId: createROle.roomId,
-                    UserId: userId,
+                    UserId: userId.userId,
 
                 }
             })
@@ -380,9 +381,10 @@ export class ChatService {
                 return {"error" : "User is banned and cannot be added to the group again",
                 status: HttpStatus.FORBIDDEN};
             
+            console.log("user is : ", userId);
             const data = await this.prismaService.roleUser.create({
                 data:{
-                    roleUser: {connect: {userId: userId}},
+                    roleUser: {connect: {userId: userId.userId}},
                     RoleName: createROle.roleName,
                     roomId: {connect: {RoomId: createROle.roomId}}
                 }

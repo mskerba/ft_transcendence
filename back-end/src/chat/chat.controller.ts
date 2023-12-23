@@ -86,8 +86,8 @@ export class ChatController {
 
     // add user to the group
     @Post('group/add')
-    addToGroup(@Body() creatRole: CreateRoleUserDto){
-        return this.chatService.addTogroup(creatRole);
+    async addToGroup(@Body() creatRole: CreateRoleUserDto){
+        return  await this.chatService.addTogroup(creatRole);
     }
 
     // kick user from group
