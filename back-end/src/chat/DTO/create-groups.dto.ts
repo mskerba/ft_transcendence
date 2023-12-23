@@ -35,8 +35,9 @@ export class UpdateGroupDto extends CreateGroupDto{
 
 export class CreateRoleUserDto{
 
-   @IsNumber()
-   userId: number;
+   @IsString()
+   @IsNotEmpty()
+   userName: string;
 
    @IsString()
    @IsNotEmpty()

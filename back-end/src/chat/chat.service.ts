@@ -349,15 +349,20 @@ export class ChatService {
     // ADD User TO the group
     async addTogroup(createROle :CreateRoleUserDto){
         
+        let userId;
         try{
 
             const checkGroup = await this.prismaService.room.findUnique({
             where:{
                 RoomId: createROle.roomId
             },
-        })
-        if (!checkGroup)
-            return {"error": "Room Not Found: Please verify the room name and try again", status: HttpStatus.NOT_FOUND};
+            })
+            if (!checkGroup)
+                return {"error": "Room Not Found: Please verify the room name and try again", status: HttpStatus.NOT_FOUND};
+            userId = await this.findUserByname(createROle.userName);
+            if (!userId)
+                return {"error" : "user not found", status: HttpStatus.NOT_FOUND};
+        
         } catch(error){
             return {"error" : "Error: Incorrect data type. Please provide the correct type of data", status :HttpStatus.BAD_REQUEST};
         }
@@ -367,7 +372,7 @@ export class ChatService {
             const isBanned = await this.prismaService.banUser.findFirst({
                 where:{
                     RoomId: createROle.roomId,
-                    UserId: createROle.userId,
+                    UserId: userId,
 
                 }
             })
@@ -377,7 +382,7 @@ export class ChatService {
             
             const data = await this.prismaService.roleUser.create({
                 data:{
-                    roleUser: {connect: {userId: createROle.userId}},
+                    roleUser: {connect: {userId: userId}},
                     RoleName: createROle.roleName,
                     roomId: {connect: {RoomId: createROle.roomId}}
                 }
@@ -724,7 +729,7 @@ export class ChatService {
             if (!data || data.RoleName != 'owner')
                 return {"error": "you are not the owner of this group to update it", status: HttpStatus.BAD_REQUEST};
             if (updateDto.TypeRoom == "protected" && updateDto.password == undefined)
-                return {"error": "A password is mandatory for protected group creation", status: HttpStatus.BAD_REQUEST};
+                return {"error": "A password is mandatory for protected group creation", status: HttpStatus.BAD_REQUEST}
         }catch(error){
             return {"error": "the provided data is incorrect", status: HttpStatus.NON_AUTHORITATIVE_INFORMATION};
         }
