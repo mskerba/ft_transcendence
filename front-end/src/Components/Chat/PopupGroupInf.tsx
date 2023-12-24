@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import  useAxiosPrivate  from '../../hooks/UseAxiosPrivate';
+import PopupCreatGroup from './PopupCreatGroup';
 import Modal from 'react-modal';
 import './chat.css';
 
@@ -45,13 +46,16 @@ const PopupGroupInf = (prop:any) => {
   const [mutePopUp, setMutePopUp] :any = useState(false);
   const [allMember, setAllMember] = useState([]);
   const [muteTime, setMuteTime] = useState('1');
-  const [updateGroup, setUpdateGroup] = useState(false)
+  const [updateGroup, setUpdateGroup] = useState(false);
+  const [addUsernameGroup, setAddUsernameGroup] = useState('');
+  const [addRoleNewUser, setAddRoleNewUser] = useState('member');
 
   const axiosPrivate = useAxiosPrivate();
   const handleCloseClick = () => {
     prop.setPopupInfParent((prev:any)=> {
       return ({...prev,display:'none'})
     });
+    prop.setRoomID(prop.convInf.convId);
   };
 
 
@@ -119,12 +123,22 @@ const PopupGroupInf = (prop:any) => {
     handleMoreInfClick();
   }
 
-  function handleAddMemberClick (){
+  async function handleUpdateGroupClick (){
     console.log('add');
+    handleCloseClick();
+
+    prop.setPopupParent((prev:any) => {
+      return ({
+        ...prev,
+        display:'flex',
+      })
+    });
   }
 
-  function handleRemoveGroupClick (){
-
+  async function handleRemoveGroupClick (){
+    const res = await axiosPrivate.get(`/chat/remove/${prop.convInf.convId}/0`);
+    console.log("testestestes", res)
+    handleCloseClick();
   }
 
   const closeMute = () => setMutePopUp(false)
@@ -157,23 +171,33 @@ const PopupGroupInf = (prop:any) => {
     setMuteTime(event.target.value);
   }
 
-  function handleUpdateGroupClick() {
+  function handleAddMemberClick() {
     handleCloseClick();
     setUpdateGroup(true);
   }
 
   async function sendUpdateGroup() {
-    
+
+    closeupdate();
+    let post = {
+      roomId: prop.convInf.convId,
+      userName: addUsernameGroup,
+      roleName: addRoleNewUser
+    };
+    console.log(post)
+    const res = await axiosPrivate.post(`/chat/group/add`, post);
+    console.log(res);
+    setAddUsernameGroup('');
   }
 
+  const handleAddUsernameChange = (event:any) => setAddUsernameGroup(event.target.value);
+  const handleChannelMemberRole = (event:any) => setAddRoleNewUser(event.target.value)
   return (
     <>
       <Modal
         isOpen={mutePopUp}
         className='pupup-mute'
         onRequestClose={closeMute}
-        shouldCloseOnOverlayClick={true}
-        overlayClassName="popup-overlay"
         >
         <h4>Mute User</h4>
         <div className='color-text-mute-popup'>
@@ -235,14 +259,43 @@ const PopupGroupInf = (prop:any) => {
       <Modal
         isOpen={updateGroup}
         className='update-group-popup'
-        onRequestClose={closeupdate} // This callback function is invoked when the overlay is clicked.
-        shouldCloseOnOverlayClick={true} // Allows the modal to close when the overlay is clicked.
-        overlayClassName="popup-overlay"
+        onRequestClose={closeupdate} 
       >
         <h4>username:</h4>
-        <div></div>
+        <input
+          type='text'
+          placeholder='add Username'
+          className='update-group-input'
+          value={addUsernameGroup}
+          onChange={handleAddUsernameChange}
+        />
+        <div className='role-new-user'>
+        <label>
+            <input
+              type="radio"
+              value="member"
+              name="rool"
+              checked={addRoleNewUser === 'member'}
+              onChange={handleChannelMemberRole}
+            />
+            Member
+          </label>
+
+          <label>
+            <input
+              type="radio"
+              value="admin"
+              name="rool"
+              checked={addRoleNewUser === 'admin'}
+              onChange={handleChannelMemberRole}
+            />
+            Admin
+          </label>
+        </div>
         <input type='submit' className='submit-add-group' onClick={sendUpdateGroup}/>
       </Modal>
+
+      
 
       <div className='drop-down-menu'
           style={{ left: prop.divPosition.x, top: prop.divPosition.y, display: prop.divPosition.display}}>

@@ -17,7 +17,15 @@ const PopupCreatGroup = (prop:any) => {
         title: nameOfGroup, 
       };
       (channelType == 'protected') ? postGroup.password = channelPassword : '';
-      const res = await axiosPrivate.post("/chat", postGroup);
+      let res;
+      if (prop.RoomId === '')
+      res = await axiosPrivate.post("/chat", postGroup);
+      else
+      {
+        postGroup.RoomId = prop.RoomId; 
+        res = await axiosPrivate.post("chat/group/update", postGroup);
+        prop.setRoomID('');
+      }
       console.log(res);
     }
     catch (error) { console.log("error-->", error)}

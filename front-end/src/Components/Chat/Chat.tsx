@@ -8,6 +8,7 @@ import './chat.css';
 
 const Chat = () => {
   const [chatDivShow,setShow]:any = useState(2);
+  const [RoomId, setRoomID] = useState('')
   const [convInf, setConvInf]:any = useState({
     Avatar : "",
     Name: "",
@@ -71,13 +72,18 @@ const Chat = () => {
         </div>
         <PopupCreatGroup 
           setPopupParent={setPopupParent}  
-          popupParent={popupParent}/>
+          popupParent={popupParent}
+          RoomId={RoomId}
+          setRoomID={setRoomID}
+          />
 
         <PopupGroupInf 
             convInf={convInf} 
+            setPopupParent={setPopupParent}
             setPopupInfParent={setPopupInfParent}  
             popupInfParent={popupInfParent}
-            divPosition={divPosition} setDivPosition={setDivPosition}/>
+            divPosition={divPosition} setDivPosition={setDivPosition}
+            setRoomID={setRoomID} />
     </div>
   );
 };
