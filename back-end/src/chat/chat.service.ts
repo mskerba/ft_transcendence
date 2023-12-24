@@ -7,7 +7,8 @@ import { da, faker, tr } from '@faker-js/faker';
 export class ChatService {
     constructor(private readonly prismaService: PrismaService) {}
 
-   async findUserById(userid: number): Promise<any> {
+   async findUserById(userid: number)//: Promise<any> 
+   {
         return  await this.prismaService.user.findFirst({
            where: {userId: userid},
            select: {
@@ -17,11 +18,13 @@ export class ChatService {
        });
    }
 
-   async findUserByname(username : string): Promise<object>{
+   async findUserByname(username : string)//: Promise<any>
+   {
     return  await this.prismaService.user.findFirst({
         where: {name: username},
         select: {
-         userId : true,
+         sockId: true,
+         userId: true,
         },
     });
    }
@@ -35,9 +38,10 @@ export class ChatService {
     });
    }
 
-    async SockToClient(socketId: string, id: number): Promise<void>{
+    async SockToClient(socketId: string, id: number){
         
         // const data = await this.findUserByname(username);
+        console.log("SockToclient() socId : ", socketId, " userId : ", id);
         try{
             await this.prismaService.user.update({
                 where : {userId: id},
@@ -48,6 +52,7 @@ export class ChatService {
         }
         catch(error){
             console.log("error happen");
+            console.log(error);
         }
     }
 

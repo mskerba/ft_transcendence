@@ -15,52 +15,16 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   constructor (private readonly chatService: ChatService){}
 
+  // mp first string have sockId;
+  // mp second name 
+  
+  
   afterInit(server: Server) {
     // WebSocket server is ready
     console.log('WebSocket server initialized');
   }
+  mp = new Map<string, number>();
 
-
-  mp = new Map<string, number>;
-
-  @SubscribeMessage('DirectMessage')
-  async Message(client: Socket, data : {to: number, msg: string, Unseen: number})
-  {
-    console.log("id of sender : ", client.id);
-    
-
-    const {userId} = await this.chatService.findUserBySockid(client.id);
-    const obj = await this.chatService.findUserById(data.to);
-
-  
-    if (obj.sockId)
-    {
-      console.log("msg sent to the socket :");
-      console.log(data);
-      client.to(obj.sockId).emit("FrontDirectMessage", this.mp[client.id] ,data.msg, data.Unseen);
-    }
-
-    const obj2 = await this.chatService.addDirectMessage(userId, data.to, data.msg, 3);
-
-  }
-  
-
-  @SubscribeMessage('inGame')
-  async ShareStatus(client: Socket){
-
-    const friends = await this.chatService.FriendStatus(this.mp[client.id]);
-    
-    friends.forEach(item => {
-      if (item.user1.sockId == client.id)
-        client.to(item.user2.sockId).emit("status", this.mp[client.id], "in game");
-      else
-        client.to(item.user1.sockId).emit("status", this.mp[client.id], "in game");
-
-    })
-
-  }
-
-  
   async handleConnection(client: Socket) {
     console.log("client connected : id: ", client.id);
     // friends that have socketId in that database
@@ -94,16 +58,77 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     //  }
   
   }
-
-  @SubscribeMessage("UserID")
-  async setUser(client: Socket, data  : {userId: number}){
+  async handleDisconnect(client: Socket) {
+    console.log("disconnected client : ", client.id , " from : ", this.mp.get(client.id));
     
-    await this.chatService.SockToClient(client.id , data.userId);
-    console.log("user give me his id is : ", data.userId);
+
+    try{
+      await this.chatService.SockToClient(null, this.mp.get(client.id));
+      this.mp.delete(client.id);
+      return {msg : "client disconnected from socket"}  
+    }catch(error){
+      console.log("error: client can't disconnect");
+    }
+}
+
+@SubscribeMessage("UserID")
+async setUser(client: Socket, data  : {userId: number}){
+  
+  await this.chatService.SockToClient(client.id , data.userId);
+  this.mp.set(client.id, data.userId);
+  console.log("user give me his id is : ", this.mp.get(client.id) , "and connected to ",  client.id);
+}
+
+  
+  @SubscribeMessage('DirectMessage')
+  async Message(client: Socket, data : {to: string, msg: string, Unseen: number})
+  {
+    console.log("id of sender : ", client.id);
+    console.log("data is : ", data);
+
+    try {
+      const user = await this.chatService.findUserBySockid(client.id);
+      const obj  = await this.chatService.findUserByname(data.to);
+      
+
+        if (obj.sockId)
+        {  
+          console.log("msg sent to the socket :");
+          console.log(data);
+          console.log("i will send data to the sockId : ", obj.sockId, " uesr id is : ", obj.userId);
+          client.to(obj.sockId).emit("FrontDirectMessage", { "Message": data.msg, "Unseen": data.Unseen});
+        }
+        const obj2 = await this.chatService.addDirectMessage(user.userId, obj.userId , data.msg, 3);
+    }catch(error)
+    {
+      console.log("error on sockId or name");
+    }
+
   }
   
+
+  @SubscribeMessage('inGame')
+  async ShareStatus(client: Socket){
+
+    const friends = await this.chatService.FriendStatus(this.mp[client.id]);
+    
+    friends.forEach(item => {
+      if (item.user1.sockId == client.id)
+        client.to(item.user2.sockId).emit("status", this.mp[client.id], "in game");
+      else
+        client.to(item.user1.sockId).emit("status", this.mp[client.id], "in game");
+
+    })
+
+  }
+
+  
+ 
+
+
+  
   //join group when you click on group
-  @SubscribeMessage("joinGroup")
+  @SubscribeMessage("joinGroup")  
   joinGroup(client: Socket, data :{group: string}){
     console.log("clientId: ", client.id, " join group ", data.group);
     client.join(data.group);
@@ -124,15 +149,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     this.chatService.addMessageToRoom(data.group, data.message, userId);
   }
   
-  handleDisconnect(client: Socket) {
-      console.log("disconnected client : ", client.id);
-      
-
-      // this.mp.delete(client.id);
-      // console.log("disconnected name is : ", client.handshake.headers.origin);
-      // this.chatService.SockToClient(null, client.handshake.headers.origin);
-      return {msg : "client disconnected from socketa"}  
-      
-  }
+  
 
 }
