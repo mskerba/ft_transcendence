@@ -15,7 +15,8 @@
     4. leave and delete group problems
         -- just owner can delete the group 
         -- deleted group lead to delete users in ROleUser , RoomMessage and Room .
-        -- 
+        -- owner leave group two cases (empty group will be deleted) , is it full with admin and member i will give to old admin   or member 
+
     
  
   *** postmen data ***
