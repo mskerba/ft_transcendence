@@ -47,8 +47,9 @@ const ChatContainer = (prop:any) => {
   const handleSendMessage = () => {
     if (message == '')
       return;
-    prop.socket.current.emit('DirectMessage', {to: 1, msg:message,Unseen: 3}); 
-    const newMessage = { name: 'New User', Message : message, user: 'user' };
+    prop.socket.current.emit('DirectMessage', {to: prop.convInf.Name, msg:message,Unseen: 3});
+    console.log(prop.convInf.Name) 
+    const newMessage = { name: 'New User', Message: message, user: 'user' };
     setAllMessage([ newMessage, ...allMessage]);
     setMessage('');
   };

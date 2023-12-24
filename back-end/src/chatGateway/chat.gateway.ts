@@ -25,50 +25,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
   mp = new Map<string, number>();
 
-<<<<<<< HEAD
-
-  mp = new Map<string, number>;
-
-  @SubscribeMessage('DirectMessage')
-  async Message(client: Socket, data : {to: number, msg: string, Unseen: number})
-  {
-    console.log("id of sender : ", client.id);
-    
-
-    const {userId} = await this.chatService.findUserBySockid(client.id);
-    const obj = await this.chatService.findUserById(data.to);
-
-  
-    if (obj.sockId)
-    {
-      console.log("msg sent to the socket");
-      console.log(obj.sockId)
-      client.to(obj.sockId).emit("FrontDirectMessage", this.mp[client.id] ,data.msg, data.Unseen);
-    }
-
-    const obj2 = await this.chatService.addDirectMessage(userId, data.to, data.msg, 3);
-
-  }
-  
-
-  @SubscribeMessage('inGame')
-  async ShareStatus(client: Socket){
-
-    const friends = await this.chatService.FriendStatus(this.mp[client.id]);
-    
-    friends.forEach(item => {
-      if (item.user1.sockId == client.id)
-        client.to(item.user2.sockId).emit("status", this.mp[client.id], "in game");
-      else
-        client.to(item.user1.sockId).emit("status", this.mp[client.id], "in game");
-
-    })
-
-  }
-
-  
-=======
->>>>>>> d8affff4e74be4f0509addb2cd20bd92a74c41cb
   async handleConnection(client: Socket) {
     console.log("client connected : id: ", client.id);
     // friends that have socketId in that database
@@ -105,10 +61,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   async handleDisconnect(client: Socket) {
     console.log("disconnected client : ", client.id , " from : ", this.mp.get(client.id));
     
-<<<<<<< HEAD
-    await this.chatService.SockToClient(client.id , data.userId);
-    console.log("user give me his name");
-=======
 
     try{
       await this.chatService.SockToClient(null, this.mp.get(client.id));
@@ -134,6 +86,7 @@ async setUser(client: Socket, data  : {userId: number}){
     console.log("id of sender : ", client.id);
     console.log("data is : ", data);
 
+
     try {
       const user = await this.chatService.findUserBySockid(client.id);
       const obj  = await this.chatService.findUserByname(data.to);
@@ -152,7 +105,6 @@ async setUser(client: Socket, data  : {userId: number}){
       console.log("error on sockId or name");
     }
 
->>>>>>> d8affff4e74be4f0509addb2cd20bd92a74c41cb
   }
   
 
