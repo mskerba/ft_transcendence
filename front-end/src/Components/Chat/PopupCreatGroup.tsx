@@ -39,6 +39,7 @@ const PopupCreatGroup = (prop:any) => {
   };
   const handleChannelTypeChange = (event:any) => {
     setChannelType(event.target.value);
+    setChannelPassword('')
   };
 
   const handlePasswordChange = (event:any) => {
@@ -49,6 +50,9 @@ const PopupCreatGroup = (prop:any) => {
     prop.setPopupParent((prev:any)=> {
       return ({...prev,display:'none'})
     });
+    setChannelType('public');
+    setChannelPassword('');
+    setNameOfGroup('');
   }
 
   return (
