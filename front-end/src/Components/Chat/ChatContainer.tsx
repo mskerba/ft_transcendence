@@ -29,8 +29,12 @@ const ChatContainer = (prop:any) => {
       });
   
       setAllMessage((prev) => [...prev, ...messages]);
-    } catch (error) {
-      console.error("Error fetching data:", error);
+
+    } catch (error) { 
+      prop.setShowDropdown(true);
+      setTimeout(()=>prop.setShowDropdown(false), 3000);
+      prop.setNotifAlert(()=>{return ({error:'error',msg:error.response.data.message[0]})})
+    
     }
   };
   
@@ -43,6 +47,7 @@ const ChatContainer = (prop:any) => {
   const handleSendMessage = () => {
     if (message == '')
       return;
+    prop.socket.current.emit('DirectMessage', {to: 1, msg:message,Unseen: 3}); 
     const newMessage = { name: 'New User', Message : message, user: 'user' };
     setAllMessage([ newMessage, ...allMessage]);
     setMessage('');
@@ -56,7 +61,7 @@ const ChatContainer = (prop:any) => {
 
         <div className='chat-conversation'>
           <div className='child-chat-conversation'>
-            {allMessage.map((element, index) => (
+            {allMessage.reverse().map((element, index) => (
               <Message key={index} {...element} group={prop.convInf.group}/>
             ))}
           </div>

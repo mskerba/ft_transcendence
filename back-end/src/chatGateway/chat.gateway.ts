@@ -25,7 +25,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
   mp = new Map<string, number>();
 
-  // check this
   async handleConnection(client: Socket) {
     console.log("client connected : id: ", client.id);
     // friends that have socketId in that database

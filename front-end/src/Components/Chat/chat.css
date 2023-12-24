@@ -385,10 +385,6 @@ input {
     background-color: #02735E;
 }
 
-.convesation-container:active {
-    background-color: #038C3E;
-}
-
 .conversation-avatar {
     width: 54px;
     height: 54px;
@@ -960,6 +956,7 @@ input[type="radio"]:checked {
     .page-chats{
         grid-template-columns: 1fr;
     }
+    
     .chat-container {
         grid-area: 1/1/2/2;
     }

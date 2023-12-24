@@ -8,13 +8,23 @@ const ChatList = (prop:any) => {
   const [allConversation, setAllConversation] = useState([]);
   const axiosPrivate = useAxiosPrivate();
   // const {authUser} = useAuth();
+  const [selectedId, setSelectedId] = useState(null);
+
+  const handleConversationClick = (id:any) => {
+    setSelectedId(id);
+  };
+
 
   const fetch = async () => {
     try {
       const res = await axiosPrivate.get('/chat/0');
       setAllConversation(Object.values(res?.data));
     }
-    catch (error) { console.log("error-->", error)}
+    catch (error) {
+      prop.setShowDropdown(true);
+      setTimeout(()=>prop.setShowDropdown(false), 3000);
+      prop.setNotifAlert(()=>{return ({error:'error',msg:error.response.data.message[0]})})
+    }
   }
   useEffect(() => {
     fetch();
@@ -45,9 +55,10 @@ const ChatList = (prop:any) => {
         </div>
         <div className='conversations-content'>
           <>
-            {allConversation.map((element, index) => (
-              <Conversation key={index} setConvInf={prop.setConvInf} {...element} setShow={prop.setShow} />
-            ))}
+          {allConversation.map((element, index) => (
+              <Conversation key={index} index={index}
+              setSelectedId={setSelectedId} selectedId={selectedId} setConvInf={prop.setConvInf} {...element} setShow={prop.setShow} />
+          ))}
           </>
         </div>
     </div>
