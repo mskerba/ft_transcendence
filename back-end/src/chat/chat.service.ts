@@ -35,20 +35,20 @@ export class ChatService {
     });
    }
 
-    async SockToClient(socketId: string, username: string): Promise<void>{
+    async SockToClient(socketId: string, id: number): Promise<void>{
         
-        const data = await this.findUserByname(username);
-        if (data)
-        {
+        // const data = await this.findUserByname(username);
+        try{
             await this.prismaService.user.update({
-                where : {name: username},
+                where : {userId: id},
                 data:{
                     sockId: socketId,
                 },
             })
         }
-        else
-            console.log("this client not found");
+        catch(error){
+            console.log("error happen");
+        }
     }
 
     async  findLinkMessage(user1: number, user2: number): Promise<any>{
