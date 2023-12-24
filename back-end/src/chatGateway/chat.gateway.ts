@@ -95,7 +95,9 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   @SubscribeMessage("socketIdwithUser")
-  setUser(client: Socket, @MessageBody() userName : string){
+  async setUser(client: Socket, @MessageBody() userName : string){
+    
+    await this.chatService.SockToClient(client.id , userName);
     console.log("user give me his name");
   }
   
