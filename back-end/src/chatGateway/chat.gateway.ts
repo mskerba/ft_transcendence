@@ -35,7 +35,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   
     if (obj.sockId)
     {
-      console.log("msg sent to the socket");
+      console.log("msg sent to the socket :");
+      console.log(data);
       client.to(obj.sockId).emit("FrontDirectMessage", this.mp[client.id] ,data.msg, data.Unseen);
     }
 
@@ -98,7 +99,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   async setUser(client: Socket, data  : {userId: number}){
     
     await this.chatService.SockToClient(client.id , data.userId);
-    console.log("user give me his name");
+    console.log("user give me his id is : ", data.userId);
   }
   
   //join group when you click on group
