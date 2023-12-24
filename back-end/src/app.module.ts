@@ -8,6 +8,9 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { UserModule } from './user/user.module';
 import { FriendModule } from './friend/friend.module';
 import { ChatModule } from './chat/chat.module';
+import { ChatGateway } from './chatGateway/chat.gateway';
+import { ChatService } from './chat/chat.service';
+
 
 @Module({
   imports: [AuthModule, PrismaModule, UserModule, FriendModule, ChatModule],
@@ -17,6 +20,8 @@ import { ChatModule } from './chat/chat.module';
     //   provide: APP_GUARD,
     //   useClass: JwtAuthGuard,
     // },
+    ChatGateway,
+    ChatService,
 
   ],
 })
