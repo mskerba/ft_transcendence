@@ -19,7 +19,7 @@ const PopupCreatGroup = (prop:any) => {
       (channelType == 'protected') ? postGroup.password = channelPassword : '';
       let res;
       if (prop.RoomId === '')
-      res = await axiosPrivate.post("/chat", postGroup);
+        res = await axiosPrivate.post("/chat", postGroup);
       else
       {
         postGroup.RoomId = prop.RoomId; 
@@ -27,9 +27,16 @@ const PopupCreatGroup = (prop:any) => {
         prop.setRoomID('');
       }
       prop.setRefresh(1);
-      console.log(res);
+      
+      prop.setShowDropdown(true);
+      setTimeout(()=>prop.setShowDropdown(false), 3000);
+      prop.setNotifAlert(()=>{return ({error:'success',msg:res.data.success})})
     }
-    catch (error) { console.log("error-->", error)}
+    catch (error) { 
+      prop.setShowDropdown(true);
+      setTimeout(()=>prop.setShowDropdown(false), 3000);
+      prop.setNotifAlert(()=>{return ({error:'error',msg:error.response.data.message[0]})})
+    }
 
     handleCloseClick();
   }

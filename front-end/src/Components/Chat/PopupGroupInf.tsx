@@ -70,13 +70,16 @@ const PopupGroupInf = (prop:any) => {
         setRole(userRole.UserRole);
         setAllMember(listeOfData);
       }
-      catch (error) { console.log("error-->", error)}
+      catch (error) {
+        prop.setShowDropdown(true);
+        setTimeout(()=>prop.setShowDropdown(false), 3000);
+        prop.setNotifAlert(()=>{return ({error:'error',msg:error.response.data.message[0]})})
+      }
     }
     if(prop.convInf.convId !== '')
       fetch();
     prop.setRefresh(0);
   }, [prop.convInf.convId,prop.refresh]);
-
 
 
   function handleMoreInfClick() {
@@ -113,6 +116,10 @@ const PopupGroupInf = (prop:any) => {
 
     });
    
+    prop.setRefresh(1);
+    prop.setShowDropdown(true);
+    setTimeout(()=>prop.setShowDropdown(false), 3000);
+    prop.setNotifAlert(()=>{return ({error:'info',msg:res.data.success})})
     handleMoreInfClick();
   }
     
@@ -123,13 +130,15 @@ const PopupGroupInf = (prop:any) => {
       userId: memberSelected,
 
     });
+    prop.setRefresh(1);
+    prop.setShowDropdown(true);
+    setTimeout(()=>prop.setShowDropdown(false), 3000);
+    prop.setNotifAlert(()=>{return ({error:'info',msg:res.data.success})})
     handleMoreInfClick();
   }
 
   async function handleUpdateGroupClick (){
-    console.log('add');
     handleCloseClick();
-
     prop.setPopupParent((prev:any) => {
       return ({
         ...prev,
@@ -148,6 +157,9 @@ const PopupGroupInf = (prop:any) => {
       convId : "",
       group: ""
     });
+    prop.setShowDropdown(true);
+    setTimeout(()=>prop.setShowDropdown(false), 3000);
+    prop.setNotifAlert(()=>{return ({error:'warning',msg:res.data.success})})
   }
 
   const closeMute = () => setMutePopUp(false)
@@ -161,13 +173,24 @@ const PopupGroupInf = (prop:any) => {
     setMutePopUp(false)
     if (muteTime != 'none')
     {
+      try {
 
-      const res = await axiosPrivate.post("/chat/group/mute", {
-        roomId: prop.convInf.convId,
-        senderId: 0,
-        userId: parseInt(memberSelected),
-        numberHour: parseInt(muteTime)
-      });
+        const res = await axiosPrivate.post("/chat/group/mute", {
+          roomId: prop.convInf.convId,
+          senderId: 0,
+          userId: parseInt(memberSelected),
+          numberHour: parseInt(muteTime)
+        });
+        
+        prop.setShowDropdown(true);
+        setTimeout(()=>prop.setShowDropdown(false), 3000);
+        prop.setNotifAlert(()=>{return ({error:'warning',msg:res.data.success})})
+      } catch(error)
+      {
+        prop.setShowDropdown(true);
+        setTimeout(()=>prop.setShowDropdown(false), 3000);
+        prop.setNotifAlert(()=>{return ({error:'error',msg:error.response.data.message[0]})})
+      }
     }
   }
 
@@ -182,6 +205,10 @@ const PopupGroupInf = (prop:any) => {
       convId : "",
       group: ""
     });
+
+    prop.setShowDropdown(true);
+    setTimeout(()=>prop.setShowDropdown(false), 3000);
+    prop.setNotifAlert(()=>{return ({error:'warning',msg:res.data.success})})
   }
 
   function handleMuteTimeChange(event:any) {
@@ -202,8 +229,19 @@ const PopupGroupInf = (prop:any) => {
       roleName: addRoleNewUser
     };
     console.log(post)
-    const res = await axiosPrivate.post(`/chat/group/add`, post);
-    console.log(res);
+    try {
+
+      const res = await axiosPrivate.post(`/chat/group/add`, post);
+
+    prop.setShowDropdown(true);
+    setTimeout(()=>prop.setShowDropdown(false), 3000);
+    prop.setNotifAlert(()=>{return ({error:'success',msg:res.data.success})})
+    }
+    catch {
+      prop.setShowDropdown(true);
+      setTimeout(()=>prop.setShowDropdown(false), 3000);
+      prop.setNotifAlert(()=>{return ({error:'error',msg:error.response.data.message[0]})})
+    }
     setAddUsernameGroup('');
     prop.setRefresh(1);
   }

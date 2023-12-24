@@ -41,6 +41,9 @@ const timeOfLastMessage = (date:any) => {
 const Conversation = (prop:any) => {
 
   const date = timeOfLastMessage(prop.Date);
+  const style = {
+    background:'green',
+  }
   function handleClick() {
     prop.setConvInf((prev:any) => {
       return {
@@ -53,20 +56,24 @@ const Conversation = (prop:any) => {
     })
     if (innerWidth <925)
       prop.setShow(0);
+
+    prop.setSelectedId(prop.index)
   }
   return (
-    <div className='convesation-container' onClick={handleClick}>
-        <img src={prop.Avatar} className='conversation-avatar'/>
-        <div className='convesation-info'>
-          <div className='name-lastime'>
-            <h5>{prop.Name}</h5>
-            <p>{date}</p>
-          </div>
-          <div className='last-message'>
-            <p>{prop.lastMsg}</p>
-            { (prop.Unseen) ? <div className='number-of-message'>{prop.Unseen}</div> : <></>}
-          </div>
+      <div className='convesation-container' onClick={handleClick}style={{
+      backgroundColor: (prop.selectedId == prop.index) ? '#038C3E' : '',}}
+>
+      <img src={prop.Avatar} className='conversation-avatar'/>
+      <div className='convesation-info'>
+        <div className='name-lastime'>
+          <h5>{prop.Name}</h5>
+          <p>{date}</p>
         </div>
+        <div className='last-message'>
+          <p>{prop.lastMsg}</p>
+          { (prop.Unseen) ? <div className='number-of-message'>{prop.Unseen}</div> : <></>}
+        </div>
+      </div>
     </div>
   );
 };
