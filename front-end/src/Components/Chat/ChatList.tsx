@@ -1,9 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Conversation from './Convesation';
+import  useAxiosPrivate  from '../../hooks/UseAxiosPrivate';
 import './chat.css';
-
+import { useAuth } from '../../context/AuthContext';
 
 const ChatList = (prop:any) => {
+  const [allConversation, setAllConversation] = useState([]);
+  const axiosPrivate = useAxiosPrivate();
+  // const {authUser} = useAuth();
+
+  const fetch = async () => {
+    try {
+      const res = await axiosPrivate.get('/chat/0');
+      setAllConversation(Object.values(res?.data));
+    }
+    catch (error) { console.log("error-->", error)}
+  }
+  useEffect(() => {
+    fetch();
+    prop.setRefresh(0);
+  }, [prop.refresh]);
+
+
+
   function handleClick() {
     prop.setPopupParent((prev:any) => {
       return ({
@@ -12,6 +31,7 @@ const ChatList = (prop:any) => {
       })
     });
   }
+
   return (
     <div className='chatlist-container'>
         <div className='chatlist-header'>
@@ -24,42 +44,11 @@ const ChatList = (prop:any) => {
             </div>
         </div>
         <div className='conversations-content'>
-          <Conversation name={'abdelmounim skerbaabdelmounim sk'} setShow={prop.setShow}/>
-          <Conversation name={'2Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'3Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'4Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'5Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'6Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'7Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'8Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'9Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'1Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'2Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'3Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'4Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'5Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'6Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'7Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'8Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'hassan sa7rawi'}  setShow={prop.setShow}/>
-          <Conversation name={'1Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'2Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'3Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'4Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'5Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'6Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'7Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'8Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'9Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'1Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'2Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'3Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'4Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'5Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'6Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'7Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'8Lorem Ipsum'}  setShow={prop.setShow}/>
-          <Conversation name={'hassan sa7rawi'}  setShow={prop.setShow}/>
+          <>
+            {allConversation.map((element, index) => (
+              <Conversation key={index} setConvInf={prop.setConvInf} {...element} setShow={prop.setShow} />
+            ))}
+          </>
         </div>
     </div>
   );

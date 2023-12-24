@@ -1,4 +1,4 @@
-import { IsOptional, IsIn, IsNumber, IsString, IsStrongPassword, ValidateIf, IsNotEmpty, isDate, isDataURI, IsDataURI } from "class-validator";
+import { IsOptional, IsIn, IsNumber, IsString, IsStrongPassword, ValidateIf, IsNotEmpty, isDate, isDataURI, IsDataURI, MIN_LENGTH, MinLength, MaxLength } from "class-validator";
 
 export class CreateGroupDto{
 
@@ -11,21 +11,33 @@ export class CreateGroupDto{
    @IsOptional()
    avatar?: string;
    
+   @MinLength(5)
+   @MaxLength(30)
    @IsString()
    title: string;
 
    
    // i will validate here 
    @IsOptional()
-   @IsStrongPassword()
    @IsNotEmpty()
+   @IsStrongPassword()
    password: string
 }
 
+export class UpdateGroupDto extends CreateGroupDto{
+   
+   @IsString()
+   @IsNotEmpty()
+   RoomId: string;
+}
+
+
+
 export class CreateRoleUserDto{
 
-   @IsNumber()
-   userId: number;
+   @IsString()
+   @IsNotEmpty()
+   userName: string;
 
    @IsString()
    @IsNotEmpty()

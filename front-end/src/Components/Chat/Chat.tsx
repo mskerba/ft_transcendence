@@ -8,6 +8,14 @@ import './chat.css';
 
 const Chat = () => {
   const [chatDivShow,setShow]:any = useState(2);
+  const [RoomId, setRoomID] = useState('')
+  const [refresh,setRefresh] = useState(0);
+  const [convInf, setConvInf]:any = useState({
+    Avatar : "",
+    Name: "",
+    convId : "",
+    group: ""
+  })
 
   const [popupParent, setPopupParent] = useState({display:'none'});
   const [popupInfParent, setPopupInfParent] = useState({display:'none'});
@@ -54,18 +62,33 @@ const Chat = () => {
         <div className='page-chats'>
             {(chatDivShow == 2) ? 
               <>
-                <ChatList setShow={setShow} setPopupParent={setPopupParent}  />
-                <ChatContainer setShow={setShow} setPopupInfParent={setPopupInfParent} />
+                <ChatList setShow={setShow} setConvInf={setConvInf} refresh={refresh} setRefresh={setRefresh}  setPopupParent={setPopupParent}  />
+                <ChatContainer setShow={setShow} refresh={refresh} setRefresh={setRefresh} convInf={convInf} setPopupInfParent={setPopupInfParent} />
               </>
               : (chatDivShow)?
-                  <ChatList setShow={setShow} setPopupParent={setPopupParent}  />
+                  <ChatList setShow={setShow} setConvInf={setConvInf} refresh={refresh} setRefresh={setRefresh} setPopupParent={setPopupParent}  />
                   :
-                  <ChatContainer setShow={setShow} setPopupInfParent={setPopupInfParent} />
+                  <ChatContainer setShow={setShow} refresh={refresh} setRefresh={setRefresh} convInf={convInf} setPopupInfParent={setPopupInfParent} />
             }
         </div>
-        <PopupCreatGroup setPopupParent={setPopupParent}  popupParent={popupParent}/>
-        <PopupGroupInf setPopupInfParent={setPopupInfParent}  popupInfParent={popupInfParent}
-          divPosition={divPosition} setDivPosition={setDivPosition}/>
+        <PopupCreatGroup 
+          setPopupParent={setPopupParent}  
+          popupParent={popupParent}
+          RoomId={RoomId}
+          setRoomID={setRoomID}
+          setRefresh={setRefresh}
+          />
+
+        <PopupGroupInf
+          setRefresh={setRefresh}
+          refresh={refresh}
+          convInf={convInf} 
+          setConvInf={setConvInf}
+          setPopupParent={setPopupParent}
+          setPopupInfParent={setPopupInfParent}  
+          popupInfParent={popupInfParent}
+          divPosition={divPosition} setDivPosition={setDivPosition}
+          setRoomID={setRoomID} />
     </div>
   );
 };
