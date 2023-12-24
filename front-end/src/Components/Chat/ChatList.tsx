@@ -46,7 +46,7 @@ const ChatList = (prop:any) => {
         <div className='conversations-content'>
           <>
             {allConversation.map((element, index) => (
-              <Conversation key={index} setConvInf={prop.setConvInf} {...element} />
+              <Conversation key={index} setConvInf={prop.setConvInf} {...element} setShow={prop.setShow} />
             ))}
           </>
         </div>
