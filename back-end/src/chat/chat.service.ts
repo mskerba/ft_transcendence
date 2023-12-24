@@ -38,7 +38,6 @@ export class ChatService {
     async SockToClient(socketId: string, username: string): Promise<void>{
         
         const data = await this.findUserByname(username);
-        console.log(data);
         if (data)
         {
             await this.prismaService.user.update({
@@ -81,14 +80,14 @@ export class ChatService {
 
     async addDirectMessage(sender: number, receiver: number, msg: string, Unseen: number): Promise<object>{
         
-        console.log("the param is : ", sender, " : ", receiver, " : ", msg);
+        //console.log("the param is : ", sender, " : ", receiver, " : ", msg);
         
         let str = await this.findLinkMessage(sender, receiver);
         
         if (!str)
             str = await this.LinkDirectMessage(sender, receiver);
         
-        console.log("this is str: ", str);
+        //console.log("this is str: ", str);
         const data =  await this.prismaService.directMessage.create({
             data: {
                 text: msg,
@@ -191,7 +190,7 @@ export class ChatService {
         });
 
         let ids = DirectMessages.map((client) => client.conversationId);
-        console.log("this is private ids of Direct Messages : ", ids);
+        //console.log("this is private ids of Direct Messages : ", ids);
 
         const messages = await this.prismaService.directMessage.findMany({
             where: {
@@ -214,7 +213,7 @@ export class ChatService {
 
 
         const GroupIds = (await this.findGroupByUser(user1)).map(id => id.RoomId);
-        console.log("groups ids is : ", GroupIds);
+        //console.log("groups ids is : ", GroupIds);
         const GroupMessages = await this.prismaService.room.findMany({
             where: {
                 RoomId: {
@@ -230,7 +229,7 @@ export class ChatService {
         });
     
 
-        console.log("this is messages with the given conversation ids: ", messages);
+        //console.log("this is messages with the given conversation ids: ", messages);
 
 
         let i = 0;   
@@ -248,10 +247,10 @@ export class ChatService {
             let msg : string = "welcome to " + item.title;
             let date = new Date();
             const lastMsg : any = await this.lastMessageGroup(item.RoomId);
-            console.log(lastMsg);
+            //console.log(lastMsg);
             if (lastMsg)
             {
-                console.log("lastMsg found");
+                //console.log("lastMsg found");
                 date = lastMsg.dateSent;
                 msg = lastMsg.text;
             }
@@ -363,7 +362,7 @@ export class ChatService {
             userId = await this.findUserByname(createROle.userName);
             if (!userId)
                 return {"error" : "user not found", status: HttpStatus.NOT_FOUND};
-            console.log("userId is : " , userId.userId);
+            //console.log("userId is : " , userId.userId);
         } catch(error){
             return {"error" : "Error: Incorrect data type. Please provide the correct type of data", status :HttpStatus.BAD_REQUEST};
         }
@@ -381,7 +380,7 @@ export class ChatService {
                 return {"error" : "User is banned and cannot be added to the group again",
                 status: HttpStatus.FORBIDDEN};
             
-            console.log("user is : ", userId);
+            //console.log("user is : ", userId);
             const data = await this.prismaService.roleUser.create({
                 data:{
                     roleUser: {connect: {userId: userId.userId}},
@@ -664,7 +663,7 @@ export class ChatService {
             }
         })
         arrData.push({"UserRole": TypeId});
-        console.log(arrData);
+        //console.log(arrData);
         return (arrData);
     }
 
