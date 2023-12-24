@@ -63,12 +63,12 @@ const Chat = () => {
             {(chatDivShow == 2) ? 
               <>
                 <ChatList setShow={setShow} setConvInf={setConvInf} refresh={refresh} setRefresh={setRefresh}  setPopupParent={setPopupParent}  />
-                <ChatContainer setShow={setShow} convInf={convInf} setPopupInfParent={setPopupInfParent} />
+                <ChatContainer setShow={setShow} refresh={refresh} setRefresh={setRefresh} convInf={convInf} setPopupInfParent={setPopupInfParent} />
               </>
               : (chatDivShow)?
                   <ChatList setShow={setShow} setConvInf={setConvInf} refresh={refresh} setRefresh={setRefresh} setPopupParent={setPopupParent}  />
                   :
-                  <ChatContainer setShow={setShow} convInf={convInf} setPopupInfParent={setPopupInfParent} />
+                  <ChatContainer setShow={setShow} refresh={refresh} setRefresh={setRefresh} convInf={convInf} setPopupInfParent={setPopupInfParent} />
             }
         </div>
         <PopupCreatGroup 
@@ -83,6 +83,7 @@ const Chat = () => {
           setRefresh={setRefresh}
           refresh={refresh}
           convInf={convInf} 
+          setConvInf={setConvInf}
           setPopupParent={setPopupParent}
           setPopupInfParent={setPopupInfParent}  
           popupInfParent={popupInfParent}

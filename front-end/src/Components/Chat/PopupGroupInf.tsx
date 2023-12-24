@@ -20,6 +20,7 @@ const Member = (prop:any) => {
                                     i:1
                                   }
                           });
+    prop.setRefresh(2);
   }
 
 
@@ -141,6 +142,12 @@ const PopupGroupInf = (prop:any) => {
     const res = await axiosPrivate.get(`/chat/remove/${prop.convInf.convId}/0`);
     prop.setRefresh(1);
     handleCloseClick();
+    prop.setConvInf({
+      Avatar : "",
+      Name: "",
+      convId : "",
+      group: ""
+    });
   }
 
   const closeMute = () => setMutePopUp(false)
@@ -169,6 +176,12 @@ const PopupGroupInf = (prop:any) => {
     const res = await axiosPrivate.get(`/chat/leave/${prop.convInf.convId}/0`);
 
     prop.setRefresh(1);
+    prop.setConvInf({
+      Avatar : "",
+      Name: "",
+      convId : "",
+      group: ""
+    });
   }
 
   function handleMuteTimeChange(event:any) {
@@ -302,7 +315,6 @@ const PopupGroupInf = (prop:any) => {
       </Modal>
 
       
-
       <div className='drop-down-menu'
           style={{ left: prop.divPosition.x, top: prop.divPosition.y, display: prop.divPosition.display}}>
             <ul>
@@ -343,7 +355,7 @@ const PopupGroupInf = (prop:any) => {
           <div className='group-members-inf'>
           <>
             {allMember.map((element:any, index:number) => (
-              <Member key={index} setDivPosition={prop.setDivPosition} setMemberSelected={setMemberSelected} {...element} userRole={Role} setUserSelectedRole={setUserSelectedRole}/>
+              <Member key={index} setRefresh={prop.setRefresh}  setDivPosition={prop.setDivPosition} setMemberSelected={setMemberSelected} {...element} userRole={Role} setUserSelectedRole={setUserSelectedRole}/>
             ))}
           </>
           </div>

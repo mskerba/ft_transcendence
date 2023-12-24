@@ -26,7 +26,7 @@ const ChatHeader = (prop:any) => {
             <img src={prop.convInf.Avatar} className='conversation-avatar'/>
             <div className='content'>
                 <h5>{prop.convInf.Name}</h5>
-                <p>online</p>
+                {!group && <p>online</p>}
             </div>
           </div>
           {group && <div  className='info-group-button' onClick={handelClickInf} ><img src='/src/assets/info-group.svg'/></div>}

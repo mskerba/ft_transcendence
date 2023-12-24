@@ -36,7 +36,8 @@ const ChatContainer = (prop:any) => {
   
   useEffect(() => {
     fetchData();
-  }, [prop]);
+    prop.setRefresh(0);
+  }, [prop, prop.refresh]);
   
 
   const handleSendMessage = () => {
