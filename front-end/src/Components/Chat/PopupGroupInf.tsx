@@ -49,8 +49,9 @@ const PopupGroupInf = (prop:any) => {
   const [updateGroup, setUpdateGroup] = useState(false);
   const [addUsernameGroup, setAddUsernameGroup] = useState('');
   const [addRoleNewUser, setAddRoleNewUser] = useState('member');
-
   const axiosPrivate = useAxiosPrivate();
+
+
   const handleCloseClick = () => {
     prop.setPopupInfParent((prev:any)=> {
       return ({...prev,display:'none'})
@@ -72,7 +73,8 @@ const PopupGroupInf = (prop:any) => {
     }
     if(prop.convInf.convId !== '')
       fetch();
-  }, [prop.convInf.convId]);
+    prop.setRefresh(0);
+  }, [prop.convInf.convId,prop.refresh]);
 
 
 
@@ -137,7 +139,7 @@ const PopupGroupInf = (prop:any) => {
 
   async function handleRemoveGroupClick (){
     const res = await axiosPrivate.get(`/chat/remove/${prop.convInf.convId}/0`);
-    console.log("testestestes", res)
+    prop.setRefresh(1);
     handleCloseClick();
   }
 
@@ -165,6 +167,8 @@ const PopupGroupInf = (prop:any) => {
   async function handleLeaveGroupClick() {
     handleCloseClick();
     const res = await axiosPrivate.get(`/chat/leave/${prop.convInf.convId}/0`);
+
+    prop.setRefresh(1);
   }
 
   function handleMuteTimeChange(event:any) {
@@ -188,10 +192,12 @@ const PopupGroupInf = (prop:any) => {
     const res = await axiosPrivate.post(`/chat/group/add`, post);
     console.log(res);
     setAddUsernameGroup('');
+    prop.setRefresh(1);
   }
 
   const handleAddUsernameChange = (event:any) => setAddUsernameGroup(event.target.value);
-  const handleChannelMemberRole = (event:any) => setAddRoleNewUser(event.target.value)
+  const handleChannelMemberRole = (event:any) => setAddRoleNewUser(event.target.value);
+
   return (
     <>
       <Modal
@@ -312,6 +318,7 @@ const PopupGroupInf = (prop:any) => {
               }
             </ul>
       </div>
+
       <div className='popup-inf' style={prop.popupInfParent} onClick={handleMoreInfClick}>
         <div className='popup-group-inf'>
 

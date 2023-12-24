@@ -9,6 +9,7 @@ import './chat.css';
 const Chat = () => {
   const [chatDivShow,setShow]:any = useState(2);
   const [RoomId, setRoomID] = useState('')
+  const [refresh,setRefresh] = useState(0);
   const [convInf, setConvInf]:any = useState({
     Avatar : "",
     Name: "",
@@ -61,11 +62,11 @@ const Chat = () => {
         <div className='page-chats'>
             {(chatDivShow == 2) ? 
               <>
-                <ChatList setShow={setShow} setConvInf={setConvInf}  setPopupParent={setPopupParent}  />
+                <ChatList setShow={setShow} setConvInf={setConvInf} refresh={refresh} setRefresh={setRefresh}  setPopupParent={setPopupParent}  />
                 <ChatContainer setShow={setShow} convInf={convInf} setPopupInfParent={setPopupInfParent} />
               </>
               : (chatDivShow)?
-                  <ChatList setShow={setShow} setConvInf={setConvInf} setPopupParent={setPopupParent}  />
+                  <ChatList setShow={setShow} setConvInf={setConvInf} refresh={refresh} setRefresh={setRefresh} setPopupParent={setPopupParent}  />
                   :
                   <ChatContainer setShow={setShow} convInf={convInf} setPopupInfParent={setPopupInfParent} />
             }
@@ -75,15 +76,18 @@ const Chat = () => {
           popupParent={popupParent}
           RoomId={RoomId}
           setRoomID={setRoomID}
+          setRefresh={setRefresh}
           />
 
-        <PopupGroupInf 
-            convInf={convInf} 
-            setPopupParent={setPopupParent}
-            setPopupInfParent={setPopupInfParent}  
-            popupInfParent={popupInfParent}
-            divPosition={divPosition} setDivPosition={setDivPosition}
-            setRoomID={setRoomID} />
+        <PopupGroupInf
+          setRefresh={setRefresh}
+          refresh={refresh}
+          convInf={convInf} 
+          setPopupParent={setPopupParent}
+          setPopupInfParent={setPopupInfParent}  
+          popupInfParent={popupInfParent}
+          divPosition={divPosition} setDivPosition={setDivPosition}
+          setRoomID={setRoomID} />
     </div>
   );
 };

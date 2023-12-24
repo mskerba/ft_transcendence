@@ -9,16 +9,17 @@ const ChatList = (prop:any) => {
   const axiosPrivate = useAxiosPrivate();
   // const {authUser} = useAuth();
 
-  useEffect(() => {
-    const fetch = async () => {
-      try {
-        const res = await axiosPrivate.get('/chat/0');
-        setAllConversation(Object.values(res?.data));
-      }
-      catch (error) { console.log("error-->", error)}
+  const fetch = async () => {
+    try {
+      const res = await axiosPrivate.get('/chat/0');
+      setAllConversation(Object.values(res?.data));
     }
+    catch (error) { console.log("error-->", error)}
+  }
+  useEffect(() => {
     fetch();
-  }, []);
+    prop.setRefresh(0);
+  }, [prop.refresh]);
 
 
 

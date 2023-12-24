@@ -26,6 +26,7 @@ const PopupCreatGroup = (prop:any) => {
         res = await axiosPrivate.post("chat/group/update", postGroup);
         prop.setRoomID('');
       }
+      prop.setRefresh(1);
       console.log(res);
     }
     catch (error) { console.log("error-->", error)}
