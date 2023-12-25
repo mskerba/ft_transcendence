@@ -6,13 +6,14 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { UserModule } from './user/user.module';
+import { GameModule } from './gameGateway/game.module';
 import { FriendModule } from './friend/friend.module';
 import { ChatModule } from './chat/chat.module';
 import { AvatarModule } from './avatar/avatar.module';
 import { BlockModule } from './block/block.module';
 
 @Module({
-  imports: [AuthModule, PrismaModule, UserModule, FriendModule, ChatModule, AvatarModule, BlockModule],
+  imports: [AuthModule, PrismaModule, UserModule, FriendModule, ChatModule, AvatarModule, BlockModule, GameModule],
   providers: [
     AppService,
     {

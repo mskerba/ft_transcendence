@@ -1,10 +1,12 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import { useEffect, useState }  from 'react';
 import ScoreBoard from "./score-board/ScoreBoard";
 import Canva from "./canva/Canva";
 // import './Game.css'
+import io from 'socket.io-client';
 
 function Game() {
+  const socketRef = useRef(null);
   const test:String='canva';
 
   let [canvaStyle,setCanvaStyle]: any = useState({
@@ -26,6 +28,32 @@ function Game() {
     100,
   ];
   
+
+  useEffect(() => {
+    // Only create the socket once
+    if (socketRef.current === null) {
+      socketRef.current = io('http://localhost:3000/game', {
+        transports: ["websocket"],
+        withCredentials: true,
+      });
+
+
+      socketRef.current.emit('UserID', {userId: 0}); 
+    
+      socketRef.current.on('FrontDirectMessage', (data:any) => {
+        console.log("DFSDF",data)
+      })
+
+    }
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+    };
+  }, []); 
+
   useEffect(
     () =>{
     function handleResize(){
