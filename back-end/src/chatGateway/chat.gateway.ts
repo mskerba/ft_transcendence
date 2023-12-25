@@ -71,7 +71,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
 }
 
-@SubscribeMessage("UserID")
+@SubscribeMessage("UserID")  
 async setUser(client: Socket, data  : {userId: number}){
   
   await this.chatService.SockToClient(client.id , data.userId);
@@ -90,15 +90,13 @@ async setUser(client: Socket, data  : {userId: number}){
     try {
       const user = await this.chatService.findUserBySockid(client.id);
       const obj  = await this.chatService.findUserByname(data.to);
-      
-
-        if (obj.sockId)
-        {  
-          console.log("msg sent to the socket :");
-          console.log(data);
-          console.log("i will send data to the sockId : ", obj.sockId, " uesr id is : ", obj.userId);
-          client.to(obj.sockId).emit("FrontDirectMessage", { "Message": data.msg, "Unseen": data.Unseen});
-        }
+      if (obj.sockId)
+      {  
+        console.log("msg sent to the socket :");
+        console.log(data);
+        console.log("i will send data to the sockId : ", obj.sockId, " uesr id is : ", obj.userId);
+        client.to(obj.sockId).emit("FrontDirectMessage", { "Message": data.msg, "Unseen": data.Unseen});
+      }
         const obj2 = await this.chatService.addDirectMessage(user.userId, obj.userId , data.msg, 3);
     }catch(error)
     {
@@ -147,7 +145,7 @@ async setUser(client: Socket, data  : {userId: number}){
     
     const {userId} = await this.chatService.findUserBySockid(client.id);
     
-    this.chatService.addMessageToRoom(data.group, data.message, userId);
+    await this.chatService.addMessageToRoom(data.group, data.message, userId);
   }
   
   

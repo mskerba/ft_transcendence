@@ -100,7 +100,7 @@ model LinkDirectMessage {
   UserId2   Int
   dmMessage DirectMessage[]
 
-  @@unique([UserId1, UserId2])
+  @@unique([UserId1, UserId2]) 
 }
 
 model DirectMessage {

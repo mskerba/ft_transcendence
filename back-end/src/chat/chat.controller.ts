@@ -18,7 +18,7 @@ export class ChatController {
         //const user: UserEntity = req.user;
         
         const id: number = parseInt(param.ide);
-        return await this.chatService.MyFriends(id); 
+        return await this.chatService.allContact(id); 
     }
     
     // history chat of group

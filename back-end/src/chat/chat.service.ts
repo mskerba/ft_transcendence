@@ -2,6 +2,9 @@ import { ConsoleLogger, HttpStatus, Injectable, Param, HttpException } from '@ne
 import {PrismaService} from '../prisma/prisma.service'
 import {CreateGroupDto, CreateRoleUserDto, PunishDto, MuteDto, UpdateGroupDto} from './DTO/create-groups.dto'
 import { da, faker, tr } from '@faker-js/faker';
+import { DirectMessage } from '@prisma/client';
+import { JsonArray } from '@prisma/client/runtime/library';
+import { Dirent } from 'fs';
 
 @Injectable()
 export class ChatService {
@@ -85,7 +88,7 @@ export class ChatService {
 
     async addDirectMessage(sender: number, receiver: number, msg: string, Unseen: number): Promise<object>{
         
-        //console.log("the param is : ", sender, " : ", receiver, " : ", msg);
+        console.log("the param is : ", sender, " : ", receiver, " : ", msg);
         
         let str = await this.findLinkMessage(sender, receiver);
         
@@ -142,15 +145,25 @@ export class ChatService {
 
     async findGroupByUser(userId : number){
         
-        const GroupId = await this.prismaService.roleUser.findMany({
-            where:{
-                UserId: userId
-            },
-            select:{
-                RoomId: true,
-            },
-        });
-        return GroupId;
+        try {
+            const GroupId = await this.prismaService.roleUser.findMany({
+                where:{
+                    UserId: userId
+                },
+                select:{
+                    RoomId: true,
+                    roomId:{
+                        select:{
+                            title: true,
+                            avatar: true,
+                        }
+                    }
+                },
+            });
+            return GroupId;
+        }catch(error){
+            console.log("error in findGroupByuser")
+        }
     }
 
     async lastMessageGroup(groupId: string){
@@ -159,7 +172,7 @@ export class ChatService {
                     RoomId: groupId,
             },
             orderBy:[{dateSent : "desc"},],
-            distinct:['RoomMessageId'],
+            distinct:['RoomId'],
             select:{
                 dateSent: true,
                 text: true,
@@ -167,102 +180,116 @@ export class ChatService {
         });
         return data;
     }
+ 
 
-    async MyFriends(user1: number){
+    async allGroupLastMessages(user1: number){
+        let arrData = [] ;
+        try{
 
-    //    let mp = new Map<number, object>();
-        
-        const DirectMessages = await this.prismaService.linkDirectMessage.findMany({
-            where:{
-                OR: [
-                        {UserId1:  user1},
-                        {UserId2:  user1},
-                    ],
-            },
-            select:{
-                user1: { select: {userId: true, name : true, avatar: true}},
-                user2: { select: {userId: true, name: true, avatar: true}},
-                conversationId: true,
-                          
-            },
-    
-        });
-        
-        let user = DirectMessages.map((id) => {
-            if (id.user1.userId != user1)
-                return id.user1;
-            return id.user2;
-        });
+            const room =  await this.findGroupByUser(user1);
+            for (const item in room){
 
-        let ids = DirectMessages.map((client) => client.conversationId);
-        //console.log("this is private ids of Direct Messages : ", ids);
-
-        const messages = await this.prismaService.directMessage.findMany({
-            where: {
-                privateId:{
-                    in: ids
+                let data = (await this.lastMessageGroup(room[item].RoomId));
+                let lastMsg : string = "welcome to "+ room[item].roomId.title;
+                let date = new Date();
+                if (data)
+                {
+                    lastMsg = data.text;
+                    date = data.dateSent;
                 }
-            },
-            orderBy:[{
-                dateMessage: 'desc',
-                },
-            ],
-            distinct: ['privateId'],
-            select:{
-                privateId: true,
-                countUnseen: true,
-                text: true,
-                dateMessage: true,
+               
+                const obj: object =  {"Unseen": 4, "Name": room[item].roomId.title, 
+                "lastMsg": lastMsg, "Date": date, "Avatar": room[item].roomId.avatar, "convId": room[item].RoomId, "group": true };  
+                arrData.push(obj);
             }
-        });
+            return arrData;
 
+        }catch(error){
+            console.log("error in allGroupLastMessages");
+        }
+    }
 
-        const GroupIds = (await this.findGroupByUser(user1)).map(id => id.RoomId);
-        //console.log("groups ids is : ", GroupIds);
-        const GroupMessages = await this.prismaService.room.findMany({
-            where: {
-                RoomId: {
-                    in: GroupIds,
+    async allDirectLastMessages(user1: number){
+        let arrData = [];
+        let mp = new Map();
+        let convId = [];
+        try{
+            const data = await this.prismaService.linkDirectMessage.findMany({
+                where:{
+                    OR:[
+                        {UserId1 : user1},
+                        {UserId2: user1},
+                        ]
                 },
-            },
-            select:{
-                RoomId: true,
-                avatar: true,
-                title: true,
-            }
+                distinct:['conversationId'],
+                select:{
+                    conversationId: true,
+                    user1: {select : {userId: true, name: true, avatar : true}},
+                    user2: {select : {userId: true, name: true, avatar : true}},
+                }
+            })
+            let obj : object;
             
-        });
-    
+            data.forEach(id => {
+                if (id.user1.userId != user1)
+                    obj = {"id": id.user1.userId, "name": id.user1.name, "avatar": id.user1.avatar};
+                else
+                    obj = {"id": id.user2.userId, "name": id.user2.name, "avatar": id.user2.avatar};
+                mp.set(id.conversationId, obj);
+               convId.push(id.conversationId); 
+            });
+        }catch(error){
+            console.log("error linkDirectMessage");
+        }
 
-        //console.log("this is messages with the given conversation ids: ", messages);
+        try{
+            const data = await this.prismaService.directMessage.findMany({
+                where:{
+                    privateId: {
+                        in: convId
+                    },
+                },
+                orderBy: [{dateMessage: 'desc'}],
+                distinct: ['privateId'],
+                select:{
+                    text : true,
+                    dateMessage: true,
+                    privateId: true,
+                }
+            });
+            
+            data.forEach(item => {
+                const obj: object = {"Unseen": 2, "Name": mp.get(item.privateId).name , "lastMsg": item.text , "Date": item.dateMessage, 
+                "Avatar": mp.get(item.privateId).avatar , "convId": item.privateId, "group": false };
+                arrData.push(obj);
+            })
+            return arrData;
+        }catch(error){
+            console.log("error in DirectMessage");
+            return ;
+        }
+    }
+
+    async allContact(user1: number){
+
+        let arrData = [];
 
 
-        let i = 0;   
-        let arrData  = [] ; 
-        messages.forEach(item => { 
-            let obj: object = {"Unseen": item.countUnseen, "Name": user[i].name , "lastMsg": item.text , "Date": item.dateMessage, 
-                "Avatar": user[i].avatar , "convId": item.privateId, "group": false };
-            arrData.push(obj);
-            i++;
+        // retrieve last message from direct messages
+        const Direct =  await this.allDirectLastMessages(user1);
+        Direct.forEach(element =>{
+            arrData.push(element);
         })
-        
+        // retrieve last message from groups
+        const group =  await this.allGroupLastMessages(user1);
+  
+        group.forEach( element => {
+           arrData.push(element);
+        });
 
-        
-        for (const item of GroupMessages) {
-            let msg : string = "welcome to " + item.title;
-            let date = new Date();
-            const lastMsg : any = await this.lastMessageGroup(item.RoomId);
-            //console.log(lastMsg);
-            if (lastMsg)
-            {
-                //console.log("lastMsg found");
-                date = lastMsg.dateSent;
-                msg = lastMsg.text;
-            }
-            let obj2 : object = {"Unseen": 4, "Name": item.title, 
-            "lastMsg": msg, "Date": date, "Avatar": item.avatar, "convId": item.RoomId, "group": true };
-            arrData.push(obj2);
-         }
+        console.log("finish here");
+
+
     
         return arrData;
 

@@ -44,6 +44,7 @@ const Conversation = (prop:any) => {
   const style = {
     background:'green',
   }
+  console.log("=========>>",prop.Name, prop.convId)
   function handleClick() {
     prop.setConvInf((prev:any) => {
       return {
