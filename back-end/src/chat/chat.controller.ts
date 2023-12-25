@@ -1,7 +1,7 @@
 
 import { Controller, Get, Post, Body, Param, HttpStatus, Req, HttpCode, BadRequestException, NotFoundException, HttpException } from '@nestjs/common';
 import {ChatService} from './chat.service'
-import {CreateGroupDto, CreateRoleUserDto, PunishDto, MuteDto} from './DTO/create-groups.dto'
+import {CreateGroupDto, CreateRoleUserDto, PunishDto, MuteDto, UpdateGroupDto} from './DTO/create-groups.dto'
 import { STATUS_CODES } from 'http';
 import { da } from '@faker-js/faker';
 import { UserEntity } from 'src/user/entities/user.entity';
@@ -14,42 +14,80 @@ export class ChatController {
     
     //return all conversation
     @Get(':ide')
-    async MyFriends(@Req() req: any) : Promise<any>{
-        const user: UserEntity = req.user;
-
-        return await this.chatService.MyFriends(user.userId); 
+    async MyFriends(@Param() param: any) : Promise<any>{
+        //const user: UserEntity = req.user;
+        
+        const id: number = parseInt(param.ide);
+        return await this.chatService.MyFriends(id); 
     }
     
     // history chat of group
-    @Get('group/:id')
+    @Get("group/:userId/:groupId")
     async historyOfGroup(@Param() group: any){
-        console.log("group Id : ", group.id);
+        console.log("group Id : ", group.groupId);
         //return {"msg": "hello"};
-        return this.chatService.historyOfGroup(group.id);
+    
+
+        let id : number = parseInt(group.userId);
+        
+        const isUserInGroup = await this.chatService.findUserInGroup(id, group.groupId);
+        if (isUserInGroup.error !== undefined)
+            return isUserInGroup;
+        const historyGroup = await this.chatService.historyOfGroup(group.groupId);
+        if (historyGroup)
+            return historyGroup;
+        return {"error": "message in this group occured an error", "status": HttpStatus.NOT_ACCEPTABLE};
+
     }
 
+
+    // leave group
+    @Get('leave/:convId/:id')
+    async leave(@Param() param: any){
+        const data = await this.chatService.leaveGroup(param.convId, +param.id);
+        if (data.error !== undefined)
+            throw new HttpException(data.error, HttpStatus.NOT_FOUND);
+        return data;
+    }
+
+    // remove group
+    @Get('remove/:convId/:id')
+    async remove(@Param() param: any){
+        const data = await this.chatService.removeGroupe(param.convId, +param.id);
+        return data;
+    }
+    // about group
+    @Get("about/:convId/:id")
+    async about(@Param() param: any){
+        console.log("about convId is : ", param.convId);
+        
+    
+      return await  this.chatService.about(param.convId, +param.id);
+    }
     // return chat history of private messages
     @Get(":id1/:id2")
     async ChatHistory(@Param() param: any): Promise<any>
     {
         const id1: number = parseInt(param.id1);
-        const id2: number = parseInt(param.id2);
-
-        console.log("first id : ", id1, " second id: ", id2);
-        return this.chatService.chatHistory(id1, id2);
+    
+        console.log("first id : ", id1, " second id: ", param.id2);
+        return await this.chatService.chatHistory(id1, param.id2);
     }
-
+    
     // create Group    
     @Post()
-    createGroup(@Body() createGroupDto: CreateGroupDto){
-        console.log("this is the data that come : ", createGroupDto);
-        return this.chatService.createGroup(createGroupDto);    
+    async createGroup(@Body() createGroupDto: CreateGroupDto){
+
+        const data = await this.chatService.createGroup(createGroupDto);    
+        if (data.error !== undefined)
+            return data;
+        return data;
     }
 
     // add user to the group
     @Post('group/add')
-    addToGroup(@Body() creatRole: CreateRoleUserDto){
-        return this.chatService.addTogroup(creatRole);
+    async addToGroup(@Body() creatRole: CreateRoleUserDto){
+        return  await this.chatService.addTogroup(creatRole);
     }
 
     // kick user from group
@@ -74,9 +112,15 @@ export class ChatController {
     @Post('group/mute')
     async muteUser(@Body() muteDto: MuteDto){
         const data = await this.chatService.muteUser(muteDto);
-        if (data.error !== undefined)
-            throw new HttpException(data.error, data.status);
         return data;
     }
+
+    // update group
+    @Post('group/update')
+    async update(@Body() updateDto: UpdateGroupDto ){
+        const data = await this.chatService.updateGroupe(updateDto);
+        return data;
+    } 
+
 
 }

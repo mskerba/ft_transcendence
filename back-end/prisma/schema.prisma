@@ -1,6 +1,8 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+
+// for local url = "postgresql://myuser:postgres@localhost:5432/mydb?schema=public"
 generator client {
   provider = "prisma-client-js"
 }
@@ -185,6 +187,8 @@ model RoomMessage {
 
   userId User @relation(fields: [UserId], references: [userId])
   UserId Int
+
+  dateSent DateTime @default(now())
 }
 
 // this happen in groups

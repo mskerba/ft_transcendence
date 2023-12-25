@@ -1,71 +1,81 @@
 import React, { useEffect, useState } from 'react';
 import ChatHeader from './ChatHeader';
+import Message from './Message';
+import { useAuth } from '../../context/AuthContext';
+import  useAxiosPrivate  from '../../hooks/UseAxiosPrivate';
 import io from 'socket.io-client';
 import './chat.css';
 
-function Message(props:any) {
-  const { user, name, message } = props;
-  const channel = true;
+const ChatContainer = (prop:any) => {
 
-  return (
-    <div className='chat-messages'>
-      <div className={user}>
-        {channel && user !== 'user' && <img src='https://placekitten.com/50/50' alt='User avatar' />}
-        <div className={`color-${user}`}>
-          {channel && user !== 'user' && <h4>{name}</h4>}
-          <p>{message}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const ChatContainer = (props:any) => {
+  const axiosPrivate = useAxiosPrivate();
   const [message, setMessage] = useState('');
 
   const [allMessage, setAllMessage] = useState([
-    { name: 'abdelmounaim Skerba', message: "sbab3 kaysefet message", user: 'is-not-user' },
-    { name: 'taha meaizi', message: "sf stafit jaya", user: 'is-not-user' },
-    { name: 'imad harile', message: "taha ghadi imout", user: 'user' },
   ]);
 
   const handleMessageChange = (event:any) => {
     setMessage(event.target.value);
   };
 
+
+  const fetchData = async () => {
+    try {
+      const res = await axiosPrivate.get(`/chat${(prop.convInf.group)?'/group':''}/0/${prop.convInf.convId}`);
+      setAllMessage([]);
+      const messages = Object.values(res?.data).map((element:any) => {
+        const user = (element.Id === 0) ? 'user' : 'is-not-user';
+        return { ...element, user };
+      });
+  
+      setAllMessage((prev) => [...prev, ...messages]);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  
+  useEffect(() => {
+    fetchData();
+    prop.setRefresh(0);
+  }, [prop, prop.refresh]);
+  
+
   const handleSendMessage = () => {
     if (message == '')
       return;
-    const newMessage = { name: 'New User', message, user: 'user' };
+    const newMessage = { name: 'New User', Message : message, user: 'user' };
     setAllMessage([ newMessage, ...allMessage]);
     setMessage('');
   };
 
   return (
     <div className='chat-container'>
-      <ChatHeader setShow={props.setShow} setPopupInfParent={props.setPopupInfParent} />
+      { (prop.convInf.convId !== "") && <>
 
-      <div className='chat-conversation'>
-        <div className='child-chat-conversation'>
-          {allMessage.map((element, index) => (
-            <Message key={index} {...element} />
-          ))}
-        </div>
-      </div>
+        <ChatHeader setShow={prop.setShow} convInf={prop.convInf} setPopupInfParent={prop.setPopupInfParent} />
 
-      <div className='chat-input'>
-        <div className='input-content'>
-          <textarea
-            placeholder='Message'
-            className='input-message'
-            value={message}
-            onChange={handleMessageChange}
-          ></textarea>
-          <div className='message-send'>
-            <img src="/src/assets/send.svg" onClick={handleSendMessage}/>
+        <div className='chat-conversation'>
+          <div className='child-chat-conversation'>
+            {allMessage.map((element, index) => (
+              <Message key={index} {...element} group={prop.convInf.group}/>
+            ))}
           </div>
         </div>
-      </div>
+
+        <div className='chat-input'>
+          <div className='input-content'>
+            <textarea
+              placeholder='Message'
+              className='input-message'
+              value={message}
+              onChange={handleMessageChange}
+            ></textarea>
+            <div className='message-send'>
+              <img src="/src/assets/send.svg" onClick={handleSendMessage}/>
+            </div>
+          </div>
+        </div>
+      </>}
     </div>
   );
 };

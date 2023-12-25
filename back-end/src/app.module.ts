@@ -15,10 +15,10 @@ import { BlockModule } from './block/block.module';
   imports: [AuthModule, PrismaModule, UserModule, FriendModule, ChatModule, AvatarModule, BlockModule],
   providers: [
     AppService,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard,
+    // },
 
   ],
 })

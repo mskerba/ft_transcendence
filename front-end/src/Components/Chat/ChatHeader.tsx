@@ -3,7 +3,7 @@ import './chat.css';
 
 
 const ChatHeader = (prop:any) => {
-  const group:Boolean = true;
+  const group:Boolean = prop.convInf.group;
 
   function handelClick() {
     if (innerWidth <925)
@@ -23,10 +23,10 @@ const ChatHeader = (prop:any) => {
         </div>
         <div className='right-part-header'>
           <div className='chat-info'>
-            <img src='https://thispersondoesnotexist.com/' className='conversation-avatar'/>
+            <img src={prop.convInf.Avatar} className='conversation-avatar'/>
             <div className='content'>
-                <h5>abdelmounim skerbaabdelmounim sk</h5>
-                <p>online</p>
+                <h5>{prop.convInf.Name}</h5>
+                {!group && <p>online</p>}
             </div>
           </div>
           {group && <div  className='info-group-button' onClick={handelClickInf} ><img src='/src/assets/info-group.svg'/></div>}

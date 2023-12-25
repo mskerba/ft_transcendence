@@ -1,15 +1,45 @@
-import React, { useState, useRef } from 'react';
-
+import React, { useState, useRef, useEffect } from 'react';
+import  useAxiosPrivate  from '../../hooks/UseAxiosPrivate';
 import './chat.css';
 
 const PopupCreatGroup = (prop:any) => {
-  const [channelType, setChannelType] = useState('Public');
+  const [channelType, setChannelType] = useState('public');
   const [channelPassword, setChannelPassword] = useState('');
+  const [nameOfGroup, setNameOfGroup] = useState('');
+  const axiosPrivate = useAxiosPrivate();
 
+  const fetch = async () => {
+    try {
+      const postGroup:any = {
+        UserId: 0,//number
+        TypeRoom: channelType, // protected , public, private
+        // avarar: '',//link
+        title: nameOfGroup, 
+      };
+      (channelType == 'protected') ? postGroup.password = channelPassword : '';
+      let res;
+      if (prop.RoomId === '')
+      res = await axiosPrivate.post("/chat", postGroup);
+      else
+      {
+        postGroup.RoomId = prop.RoomId; 
+        res = await axiosPrivate.post("chat/group/update", postGroup);
+        prop.setRoomID('');
+      }
+      prop.setRefresh(1);
+      console.log(res);
+    }
+    catch (error) { console.log("error-->", error)}
 
+    handleCloseClick();
+  }
 
+  const handleInputChange = (event:any) => {
+    setNameOfGroup(event.target.value);
+  };
   const handleChannelTypeChange = (event:any) => {
     setChannelType(event.target.value);
+    setChannelPassword('')
   };
 
   const handlePasswordChange = (event:any) => {
@@ -20,6 +50,9 @@ const PopupCreatGroup = (prop:any) => {
     prop.setPopupParent((prev:any)=> {
       return ({...prev,display:'none'})
     });
+    setChannelType('public');
+    setChannelPassword('');
+    setNameOfGroup('');
   }
 
   return (
@@ -29,15 +62,15 @@ const PopupCreatGroup = (prop:any) => {
         <div className='add-group-avatar'>
           <img src='/src/assets/group-defaul-image.png'/>
         </div>
-        <input type="text" placeholder='Group name' className='add-group-name' />
+        <input type="text" placeholder='Group name' className='add-group-name' value={nameOfGroup} onChange={handleInputChange} />
         <h2>Channel Type:</h2>
         <div className='channel-types'>
           <label>
             <input
               type="radio"
-              value="Public"
+              value="public"
               name="channel-type"
-              checked={channelType === 'Public'}
+              checked={channelType === 'public'}
               onChange={handleChannelTypeChange}
             />
             Public
@@ -46,9 +79,9 @@ const PopupCreatGroup = (prop:any) => {
           <label>
             <input
               type="radio"
-              value="Private"
+              value="private"
               name="channel-type"
-              checked={channelType === 'Private'}
+              checked={channelType === 'private'}
               onChange={handleChannelTypeChange}
             />
             Private
@@ -57,15 +90,15 @@ const PopupCreatGroup = (prop:any) => {
           <label>
             <input
               type="radio"
-              value="Protected"
+              value="protected"
               name="channel-type"
-              checked={channelType === 'Protected'}
+              checked={channelType === 'protected'}
               onChange={handleChannelTypeChange}
             />
             Protected
           </label>
         </div>
-        {(channelType == 'Protected') &&
+        {(channelType == 'protected') &&
             <input
             type='password'
             placeholder='Password'
@@ -73,7 +106,7 @@ const PopupCreatGroup = (prop:any) => {
             value={channelPassword}
             onChange={handlePasswordChange}
             />}
-        <input type='submit' className='submit'/>
+        <input type='submit' className='submit'  onClick={fetch}/>
       </div>
     </div>
   );

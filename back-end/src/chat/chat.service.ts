@@ -1,7 +1,7 @@
 import { ConsoleLogger, HttpStatus, Injectable, Param, HttpException } from '@nestjs/common';
 import {PrismaService} from '../prisma/prisma.service'
-import {CreateGroupDto, CreateRoleUserDto, PunishDto, MuteDto} from './DTO/create-groups.dto'
-import { faker, tr } from '@faker-js/faker';
+import {CreateGroupDto, CreateRoleUserDto, PunishDto, MuteDto, UpdateGroupDto} from './DTO/create-groups.dto'
+import { da, faker, tr } from '@faker-js/faker';
 
 @Injectable()
 export class ChatService {
@@ -136,13 +136,39 @@ export class ChatService {
     }
 
 
+    async findGroupByUser(userId : number){
+        
+        const GroupId = await this.prismaService.roleUser.findMany({
+            where:{
+                UserId: userId
+            },
+            select:{
+                RoomId: true,
+            },
+        });
+        return GroupId;
+    }
+
+    async lastMessageGroup(groupId: string){
+        const data = await this.prismaService.roomMessage.findFirst({
+            where: {
+                    RoomId: groupId,
+            },
+            orderBy:[{dateSent : "desc"},],
+            distinct:['RoomMessageId'],
+            select:{
+                dateSent: true,
+                text: true,
+            }
+        });
+        return data;
+    }
+
     async MyFriends(user1: number){
 
+    //    let mp = new Map<number, object>();
         
-
-       let mp = new Map<number, object>();
-        
-        const data = await this.prismaService.linkDirectMessage.findMany({
+        const DirectMessages = await this.prismaService.linkDirectMessage.findMany({
             where:{
                 OR: [
                         {UserId1:  user1},
@@ -150,22 +176,22 @@ export class ChatService {
                     ],
             },
             select:{
-                user1: { select: {userId: true, name : true}},
-                user2: { select: {userId: true, name: true}},
-                conversationId: true,              
+                user1: { select: {userId: true, name : true, avatar: true}},
+                user2: { select: {userId: true, name: true, avatar: true}},
+                conversationId: true,
+                          
             },
     
-        })
+        });
         
-        let user = data.map((id) => {
+        let user = DirectMessages.map((id) => {
             if (id.user1.userId != user1)
                 return id.user1;
             return id.user2;
         });
 
-        console.log ("this is user Id : ", user );
-        let ids = data.map((client) => client.conversationId);
-        console.log("this is ids: ", ids);
+        let ids = DirectMessages.map((client) => client.conversationId);
+        console.log("this is private ids of Direct Messages : ", ids);
 
         const messages = await this.prismaService.directMessage.findMany({
             where: {
@@ -182,111 +208,192 @@ export class ChatService {
                 privateId: true,
                 countUnseen: true,
                 text: true,
-                
+                dateMessage: true,
             }
         });
 
-        console.log("this is messages with given conversation ids: ", messages);
+
+        const GroupIds = (await this.findGroupByUser(user1)).map(id => id.RoomId);
+        console.log("groups ids is : ", GroupIds);
+        const GroupMessages = await this.prismaService.room.findMany({
+            where: {
+                RoomId: {
+                    in: GroupIds,
+                },
+            },
+            select:{
+                RoomId: true,
+                avatar: true,
+                title: true,
+            }
+            
+        });
+    
+
+        console.log("this is messages with the given conversation ids: ", messages);
 
 
-        let i = 0;        
+        let i = 0;   
+        let arrData  = [] ; 
         messages.forEach(item => { 
-            let obj: object = {"Unseen": item.countUnseen, "name": user[i].name , lastMsg: item.text }
-            mp.set(user[i].userId, obj);
+            let obj: object = {"Unseen": item.countUnseen, "Name": user[i].name , "lastMsg": item.text , "Date": item.dateMessage, 
+                "Avatar": user[i].avatar , "convId": item.privateId, "group": false };
+            arrData.push(obj);
             i++;
         })
         
-        return mp;
+
+        
+        for (const item of GroupMessages) {
+            let msg : string = "welcome to " + item.title;
+            let date = new Date();
+            const lastMsg : any = await this.lastMessageGroup(item.RoomId);
+            console.log(lastMsg);
+            if (lastMsg)
+            {
+                console.log("lastMsg found");
+                date = lastMsg.dateSent;
+                msg = lastMsg.text;
+            }
+            let obj2 : object = {"Unseen": 4, "Name": item.title, 
+            "lastMsg": msg, "Date": date, "Avatar": item.avatar, "convId": item.RoomId, "group": true };
+            arrData.push(obj2);
+         }
+    
+        return arrData;
 
     }
 
     // retrive messages between two users
-    async   chatHistory(id1: number, id2: number){
+    async   chatHistory(id1: number, convId: string){
         
-        const getLink = await this.prismaService.linkDirectMessage.findFirst({
-            where: {
-                OR: [
-                    {AND: [{UserId1: id1}, {UserId2: id2}]},
-                    {AND: [{UserId1: id2}, {UserId2: id1}]},
-                ]
-            },
-            select:{
-                conversationId: true,
-            }
-        });
-
-        return await this.prismaService.directMessage.findMany({
+        const data = await this.prismaService.directMessage.findMany({
             where :{
-                privateId: getLink.conversationId,
+                privateId: convId,
             },
             select:{
                 text: true,
                 senderId: true,
+                userid:{
+                    select:{
+                        name: true,
+                    }
+                }
             },
-        })
+        });
+        
+        let arrData = [];
+        data.forEach(item => {
+            const obj: object = {"Id": item.senderId, "Message": item.text};
+            arrData.push(obj);
+        });
+        return arrData;
     }    
 
     // create group here
     async createGroup(createGroupDto: CreateGroupDto){
         
-        let room =  await this.prismaService.room.create({
-            data: {
-                TypeRoom: createGroupDto.TypeRoom,
-                avatar: createGroupDto.avatar,
-                title: createGroupDto.title,
-                password: createGroupDto.password
-            },
-            select:{
-                RoomId: true,
-                TypeRoom: true,
-                password: true,
-            }
-        });
-
-        if (room.TypeRoom == "protected" && room.password == null)
+        let room;
+        try{
+            room =  await this.prismaService.room.create({
+                data: {
+                    TypeRoom: createGroupDto.TypeRoom,
+                    avatar: createGroupDto.avatar,
+                    title: createGroupDto.title,
+                    password: createGroupDto.password
+                },
+                select:{
+                    RoomId: true,
+                    TypeRoom: true,
+                    password: true,
+                }
+            });
+        }
+        catch(error)
         {
-            this.prismaService.room.delete({
+            return {"error": "the data is failed to create group", "status": HttpStatus.OK};
+        }
+
+        if (room && room.TypeRoom == "protected" && room.password == null)
+        {
+             await this.prismaService.room.delete({
                 where:{
                     RoomId : room.RoomId
                 }
             })
             return ({"error": "set the password for protected group"});
-        }   
+        }
 
-        let UserGroup = await this.prismaService.roleUser.create({
-            data:{
-                
-                roleUser: {connect: {userId: createGroupDto.UserId}},
-                RoleName: "owner",
-                roomId: { connect: {RoomId: room.RoomId}}
-            },
-            select:{
-                UserId: true,
-                RoleName: true,
-                RoomId: true,
-            }
-        })
-        return UserGroup;
+        try {
+
+            let UserGroup = await this.prismaService.roleUser.create({
+                data:{
+                    
+                    roleUser: {connect: {userId: createGroupDto.UserId}},
+                    RoleName: "owner",
+                    roomId: { connect: {RoomId: room.RoomId}}
+                },
+                select:{
+                    UserId: true,
+                    RoleName: true,
+                    RoomId: true,
+                }
+            })
+            return {"success": "the group is created", "status": HttpStatus.OK};
+        }
+        catch(error){
+            return {"error": "this user can't create group", "status": HttpStatus.BAD_REQUEST}
+        }
     }
 
     // ADD User TO the group
     async addTogroup(createROle :CreateRoleUserDto){
         
-        const checkGroup = await this.prismaService.room.findUnique({
+       
+        let userId;
+        try{
+
+            const checkGroup = await this.prismaService.room.findUnique({
             where:{
                 RoomId: createROle.roomId
             },
-        })
-        if (!checkGroup)
-            return {"error": "group not found"};
+            })
+            if (!checkGroup)
+                return {"error": "Room Not Found: Please verify the room name and try again", status: HttpStatus.NOT_FOUND};
+            userId = await this.findUserByname(createROle.userName);
+            if (!userId)
+                return {"error" : "user not found", status: HttpStatus.NOT_FOUND};
+            console.log("userId is : " , userId.userId);
+        } catch(error){
+            return {"error" : "Error: Incorrect data type. Please provide the correct type of data", status :HttpStatus.BAD_REQUEST};
+        }
 
-        return await this.prismaService.roleUser.create({
-            data:{
-                roleUser: {connect: {userId: createROle.userId}},
-                RoleName: createROle.roleName,
-                roomId: {connect: {RoomId: createROle.roomId}}
-            }
-        })
+        try {
+
+            const isBanned = await this.prismaService.banUser.findFirst({
+                where:{
+                    RoomId: createROle.roomId,
+                    UserId: userId.userId,
+
+                }
+            })
+            if (isBanned)
+                return {"error" : "User is banned and cannot be added to the group again",
+                status: HttpStatus.FORBIDDEN};
+            
+            console.log("user is : ", userId);
+            const data = await this.prismaService.roleUser.create({
+                data:{
+                    roleUser: {connect: {userId: userId.userId}},
+                    RoleName: createROle.roleName,
+                    roomId: {connect: {RoomId: createROle.roomId}}
+                }
+            });
+            return {"success" : true, status: HttpStatus.OK};
+        }catch(error){
+            return {"error" : "Error: Incorrect data type. Please provide the correct type of data",
+            status: HttpStatus.BAD_REQUEST};
+        }
 
     }
 
@@ -322,6 +429,10 @@ export class ChatService {
                         MuteUserId: time.MuteUserId
                     }
                 });
+                return {
+                    "error": "Attention: Please be mindful of group guidelines "+
+                    "continued violations may result in removal or suspension "
+                }
             }
             else{
                 return {
@@ -331,7 +442,7 @@ export class ChatService {
             }
         }
         return {
-            success: true,
+            "success": true,
             status: HttpStatus.OK    
         };
     }
@@ -358,31 +469,52 @@ export class ChatService {
 
     // histoy of group
     async historyOfGroup(group: string){
-        return await this.prismaService.roomMessage.findMany({
-            where: {
-                RoomId: group
-            },
-            select:{
-                text: true,
-                UserId: true,
+        
+        try{
+            const data =  await this.prismaService.roomMessage.findMany({
+                where: {
+                    RoomId: group
+                },
+                select:{
+                    text: true,
+                    UserId: true,
+                    userId:{
+                        select:{name: true, avatar: true},
+                    }
+                }
+            });
+            
+            let arrData = [];
+            for (const dt of data){
+                let obj: object = {"Id": dt.UserId, "Message": dt.text, "Name": dt.userId.name, "Avatar": dt.userId.avatar};
+                arrData.push(obj);
             }
-        });
+            return (arrData);
+        }catch(error){
+            return {"error": "messages can't retrieved from this group", "status": HttpStatus.NOT_FOUND};
+        }
     }
     // find user if has this group
     async findUserInGroup(userId : number, roomId: string)
     {
-       const data =  await this.prismaService.roleUser.findFirst({
-            where:{
-                RoomId: roomId,
-                UserId: userId,
-            },
-            select:{
-                RoleId: true,
-            }
-        })
-        if (data)
-            return {success: true, status: HttpStatus.OK};
-        return {"error": "user not belong to this room or you are banned", status: HttpStatus.BAD_REQUEST};
+        try {
+
+            const data =  await this.prismaService.roleUser.findFirst({
+                 where:{
+                     RoomId: roomId,
+                     UserId: userId,
+                 },
+                 select:{
+                     RoleId: true,
+                 }
+             })
+             if (data)
+                 return {"success": true, status: HttpStatus.OK};
+             return {"error": "user not found in this group", "status": HttpStatus.BAD_REQUEST};
+        }
+        catch(error){
+            return {"error": "your input is not correct", "status": HttpStatus.BAD_REQUEST};
+        }
     }
 
     async findRoleUser(senderId: number, group: string){
@@ -410,8 +542,8 @@ export class ChatService {
             return {"error": "the sender who wanna delete is regular member",
             status: HttpStatus.NOT_FOUND
         };
-        if (senderId == "admin" && userId != "member")
-            return {error: "admin can't kick another admin or owner",
+        if (senderId == "admin" && userId == "owner")
+            return {error: "admin doesn't have privilege to kick owner",
             status: HttpStatus.NOT_FOUND
         };
 
@@ -420,20 +552,24 @@ export class ChatService {
     // kick user in group
     async kickUser(punishDto: PunishDto){
     
-        const data = await this.PunishCheker(punishDto);
-        if (data.error !== undefined)
+        try {
+            const data = await this.PunishCheker(punishDto);
+            if (data.error !== undefined)
+                return data;
+    
+            await this.prismaService.roleUser.deleteMany({
+                where:{
+                    AND:[
+    
+                       { UserId: punishDto.userId },
+                       { RoomId: punishDto.roomId },
+                    ]
+                }
+            })
             return data;
-
-        await this.prismaService.roleUser.deleteMany({
-            where:{
-                AND:[
-
-                   { UserId: punishDto.userId },
-                   { RoomId: punishDto.roomId },
-                ]
-            }
-        })
-        return data;
+        }catch(error){
+            return {"error": "this user can't be kicked "}
+        }
     }
 
     // ban user in group
@@ -497,4 +633,123 @@ export class ChatService {
         }
     }
 
+    // about group
+    async about(convId: string, id: number){
+        const data = await this.prismaService.roleUser.findMany({
+            where:{
+                RoomId: convId,
+            },
+            select:{
+                RoleName: true,
+                UserId: true,
+                roleUser:{
+                    select:{
+                        avatar: true,
+                        name: true,
+                    },
+                }
+            }
+        });
+        
+        let arrData = [];
+        let TypeId: string = "none";
+
+        data.forEach(item =>{
+            if (item.UserId == id)
+                TypeId = item.RoleName;
+            else
+            {
+                const obj: object = {"Id": item.UserId, "Role": item.RoleName, "Name": item.roleUser.name, "Avatar": item.roleUser.avatar};
+                arrData.push(obj);
+            }
+        })
+        arrData.push({"UserRole": TypeId});
+        console.log(arrData);
+        return (arrData);
+    }
+
+    async leaveGroup(convId: string, id: number){
+
+        try{
+          const data = await this.prismaService.roleUser.deleteMany({
+                where:{
+                    AND:[
+    
+                       { UserId: id },
+                       { RoomId: convId},
+                    ]
+                }
+            })
+            if (data)
+                return {"success" : "Successfully left the group.", status: HttpStatus.OK};
+            return {"error": "You are not in this group to leave it", status: HttpStatus.FORBIDDEN}
+        }catch(error){
+            return {"error": "Error: You are not a member of the group or the provided data is incorrect", status : HttpStatus.BAD_REQUEST}
+        }
+    }
+
+
+    async removeGroupe(convId: string, id: number){
+
+        try{
+            const findUsrInGrp = await this.findRoleUser(id, convId);
+
+            if (!findUsrInGrp || findUsrInGrp.RoleName != "owner")
+                return {"error" : "Permission Denied: You do not have the necessary authorization to remove the group", status: HttpStatus.NOT_FOUND}
+        }catch(error){
+            return {"error": " the provided data is incorrect", status: HttpStatus.BAD_REQUEST };
+        }
+
+        // this can work withoug using try and catch
+        try{
+            const delRoomMsg = await this.prismaService.roomMessage.deleteMany({
+                where:{
+                    RoomId: convId,
+                }
+            });
+            const delRoleUser = await this.prismaService.roleUser.deleteMany({
+                where:{
+                    RoomId: convId,
+                }
+            })
+            // i don't use await to make it remove any time is engine ready to treat it
+            const delRoom = await this.prismaService.room.deleteMany({
+                where:{
+                    RoomId: convId,
+                }
+            });
+            return {"success": true, status: HttpStatus.OK}
+        }catch(error){
+            return {"error": " the provided data is incorrect", status: HttpStatus.BAD_REQUEST };
+        }
+    }
+
+    async updateGroupe( updateDto :UpdateGroupDto){
+
+        try{
+            const data= await this.findRoleUser(updateDto.UserId, updateDto.RoomId)
+            if (!data || data.RoleName != 'owner')
+                return {"error": "you are not the owner of this group to update it", status: HttpStatus.BAD_REQUEST};
+            if (updateDto.TypeRoom == "protected" && updateDto.password == undefined)
+                return {"error": "A password is mandatory for protected group creation", status: HttpStatus.BAD_REQUEST}
+        }catch(error){
+            return {"error": "the provided data is incorrect", status: HttpStatus.NON_AUTHORITATIVE_INFORMATION};
+        }
+        try{
+            const data  = await this.prismaService.room.update({
+                where:{
+                    RoomId: updateDto.RoomId,
+                },
+                data:{
+                    TypeRoom: updateDto.TypeRoom,
+                    avatar: updateDto.avatar,
+                    title: updateDto.title,
+                    password: updateDto.password,
+                }
+            });
+        }catch(error){
+            return {"error": "the group not updated ", status: HttpStatus.BAD_REQUEST};
+        }
+        return {"success": true, status: HttpStatus.OK};
+    }
 }
