@@ -21,7 +21,7 @@ const Blocked = () => {
             {blockedUsers.length > 0 && blockedUsers.map((blocked) => (
                 <div key={blocked.blockId} className='blocked'>
                     <div className='user-avatar-name'>
-                        <img src={`http://10.14.4.10:3000/avatar/${blocked.avatar}`} className='avatar' />
+                        <img src={`http://localhost:3000/avatar/${blocked.avatar}`} className='avatar' />
                         <h4>{blocked.name}</h4>
                     </div>
                     <div className='blocked-buttons'

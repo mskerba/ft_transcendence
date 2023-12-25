@@ -13,6 +13,7 @@ import  useAxiosPrivate  from './hooks/UseAxiosPrivate';
 import { Navigate, useNavigate } from 'react-router-dom';
 import TwoFactorVerification from './Components/TwoFactorAuth/TwoFactorAuth';
 import Home from './Components/Home/Home';
+import NotFound from './Components/NotFound/NotFound';
 
 
 
@@ -53,6 +54,7 @@ const App = () => {
 
           <Route path="/login" element={ <Login /> } />
           <Route path="/2FA" element={ <TwoFactorVerification /> } />
+          <Route path="/*" element={ <NotFound /> } />
 
         </Routes>
     }

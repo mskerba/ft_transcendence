@@ -43,11 +43,14 @@ export class AuthService {
     }
 
     async signUp(user: CreateUserDto) {
-        const newUser = await this.userService.create(user);
+        try {
+            const newUser = await this.userService.create(user);
 
-        const tokens = await this.generateTokens(newUser.userId, newUser.email);
-        await this.updateRtHash(newUser.userId, tokens.refresh_token);
-        return {... newUser , ... tokens};
+            const tokens = await this.generateTokens(newUser.userId, newUser.email);
+            await this.updateRtHash(newUser.userId, tokens.refresh_token);
+            return {... newUser , ... tokens};
+        } catch (error) { console.error(error); }
+
     }
 
     async logout(userId: number) {

@@ -5,7 +5,7 @@ import useAxiosPrivate from '../../../../../hooks/UseAxiosPrivate';
 import { useAuth } from '../../../../../context/AuthContext';
 
 const ChangeAvatar = ({ user, onStateChange }: any) => {
-  const [imagePreview, setImagePreview] = useState(`http://10.14.4.10:3000/avatar/${user.avatar}`);
+  const [imagePreview, setImagePreview] = useState(`http://localhost:3000/avatar/${user.avatar}`);
   const [selectedImage, setSelectedImage] = useState(null);
   const { setAuthUser } = useAuth();
   const fileInputRef = useRef(null);

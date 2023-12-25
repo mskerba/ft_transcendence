@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import './navBar.css';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import axios from '../../api/axios';
+import useAxiosPrivate from '../../hooks/UseAxiosPrivate';
 
 
 const NavBar = () => {
@@ -26,12 +26,13 @@ const NavBar = () => {
   }
 
   const { authUser, logout } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
 
 
   const handleLogout = async () => {
 
     try {
-      await axios.get('auth/logout');
+      await axiosPrivate.get('auth/logout');
       logout();
     } catch (errot) { }
 
@@ -94,7 +95,7 @@ const NavBar = () => {
           <div className='profile-exit'>
             <li>
               <Link to={`/user/${authUser.userId}`} className="link">
-                <img src={`http://10.14.4.10:3000/avatar/${authUser.avatar}`} className='profile-button-navbar'/>
+                <img src={`http://localhost:3000/avatar/${authUser.avatar}`} className='profile-button-navbar'/>
               </Link>
             </li>
             <li onClick={handleLogout}><img src='/src/assets/exit.svg' className='exit-svg'/></li>
