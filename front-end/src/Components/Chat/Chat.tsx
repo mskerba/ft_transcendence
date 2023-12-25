@@ -81,6 +81,8 @@ const Chat = () => {
     function handleResize(){
       if (innerWidth >=925)
         setShow(2);
+      else
+        setShow(1)
     }
 
     window.addEventListener('load', handleResize);
@@ -120,7 +122,8 @@ const Chat = () => {
         <PopupGroupInf
           setRefresh={setRefresh}
           refresh={refresh}
-          convInf={convInf} 
+          convInf={convInf}
+          setShow={setShow}
           setConvInf={setConvInf}
           setPopupParent={setPopupParent}
           setPopupInfParent={setPopupInfParent}  

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import './navBar.css';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -6,6 +6,7 @@ import axios from '../../api/axios';
 
 
 const NavBar = () => {
+  const { authUser, logout } = useAuth();
 
   const [divPosition, setDivPosition]: any = useState({
     x: 0,
@@ -25,7 +26,25 @@ const NavBar = () => {
     });
   }
 
-  const { authUser, logout } = useAuth();
+  useEffect(()=>{
+    
+    function handleResize(){
+      if (innerWidth >=925)
+      {
+        setDivPosition((prev: any) => {
+          return {
+            x: 0,
+            y: 0,
+            display: 'none',
+          }
+        });
+      }
+    }
+
+    window.addEventListener('load', handleResize);
+    window.addEventListener("resize",handleResize);
+  },[window, divPosition.display]);
+  
 
 
   const handleLogout = async () => {
