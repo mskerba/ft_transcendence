@@ -160,6 +160,8 @@ const PopupGroupInf = (prop:any) => {
     prop.setShowDropdown(true);
     setTimeout(()=>prop.setShowDropdown(false), 3000);
     prop.setNotifAlert(()=>{return ({error:'warning',msg:res.data.success})})
+    if (innerWidth <=925)
+      prop.setShow(1);
   }
 
   const closeMute = () => setMutePopUp(false)
@@ -209,6 +211,8 @@ const PopupGroupInf = (prop:any) => {
     prop.setShowDropdown(true);
     setTimeout(()=>prop.setShowDropdown(false), 3000);
     prop.setNotifAlert(()=>{return ({error:'warning',msg:res.data.success})})
+    if (innerWidth <=925)
+      prop.setShow(1);
   }
 
   function handleMuteTimeChange(event:any) {
@@ -380,14 +384,14 @@ const PopupGroupInf = (prop:any) => {
             <img src={prop.convInf.Avatar} />
           </div>
 
-          <div className="goup-remove-add"  >
+          <div className="group-remove-add"  >
             {(Role !== 'member')&&
             <>
-              <img src='src/assets/add-user-group.svg' className='add-member-group' onClick={handleAddMemberClick}/>
-              <img src='src/assets/update-group.svg' className='update-group' onClick={handleUpdateGroupClick}/>
+              <div className='div-add-member-group'><img src='src/assets/add-user-group.svg' className='add-member-group' onClick={handleAddMemberClick}/></div>
+              <div className='div-update-group'><img src='src/assets/update-group.svg' className='update-group' onClick={handleUpdateGroupClick}/></div>
             </>}
-            {(Role == 'owner')&&<img src='src/assets/remove-group.svg' className='remove-group' onClick={handleRemoveGroupClick}/>}
-            <img src='src/assets/leave-group.svg' className='leave-group' onClick={handleLeaveGroupClick}/>
+            {(Role == 'owner')&&<div className='div-remove-group'><img src='src/assets/remove-group.svg' className='remove-group' onClick={handleRemoveGroupClick}/></div>}
+            <div className='div-leave-group'><img src='src/assets/leave-group.svg' className='leave-group' onClick={handleLeaveGroupClick}/></div>
           </div>
           
           <div className='group-members-inf'>

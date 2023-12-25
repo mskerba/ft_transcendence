@@ -47,7 +47,7 @@ const App = () => {
           <Route element={ <RequireAuth /> }>
             <Route path="user/:userId" element={ <><NavBar /><Profile /></> } />
             <Route path="/" element={ <> <NavBar /> <Home /> </> } />
-            <Route path="/game" element={ <> <NavBar /> <Game /> </> } />
+            <Route path="/game" element={ <><Game /> </> } />
             <Route path="/chat" element={ <> <NavBar /> <Chat /> </> } />
           </Route>
 
