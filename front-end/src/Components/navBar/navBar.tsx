@@ -95,7 +95,7 @@ const NavBar = () => {
           <div className='profile-exit'>
             <li>
               <Link to={`/user/${authUser.userId}`} className="link">
-                <img src={`http://10.14.4.8:3000/avatar/${authUser.avatar}`} className='profile-button-navbar'/>
+                <img src={`http://10.14.4.10:3000/avatar/${authUser.avatar}`} className='profile-button-navbar'/>
               </Link>
             </li>
             <li onClick={handleLogout}><img src='/src/assets/exit.svg' className='exit-svg'/></li>

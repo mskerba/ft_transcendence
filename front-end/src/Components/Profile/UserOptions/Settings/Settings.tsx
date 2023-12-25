@@ -52,8 +52,7 @@ const Settings = ({ user, onStateChange }: any) => {
             onStateChange(res.data);
             setAuthUser(res.data);
         } catch (error) {
-            setError(`the name \`${username}\` already exists!`);
-
+            setError(error?.response?.data?.message);
         }
     }
 

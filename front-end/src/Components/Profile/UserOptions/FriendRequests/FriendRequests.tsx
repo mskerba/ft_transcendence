@@ -35,7 +35,7 @@ const FriendRequest = () => {
       {friendReqs.length > 0 && friendReqs.map((friendRequest) => (
         <Link to={`/user/${friendRequest.sender.userId}`} key={friendRequest.requestId} className='friend-request'>
           <div className='user-avatar-name'>
-            <img src={`http://10.14.4.8:3000/avatar/${friendRequest.sender.avatar}`} className='avatar' alt={`Avatar for ${friendRequest.sender.name}`} />
+            <img src={`http://10.14.4.10:3000/avatar/${friendRequest.sender.avatar}`} className='avatar' alt={`Avatar for ${friendRequest.sender.name}`} />
             <h4>{friendRequest.sender.name}</h4>
           </div>
           <div className='friend-request-buttons'>

@@ -20,7 +20,7 @@ export class AvatarService {
 
     } catch (error) {}
     
-    const filename = `${user.userId}${path.extname(file.originalname)}`;
+    const filename = `${user.userId}_${Date.now()}${path.extname(file.originalname)}`;
     const filePath = path.join(this.storagePath, filename);
 
     fs.writeFileSync(filePath, file.buffer);

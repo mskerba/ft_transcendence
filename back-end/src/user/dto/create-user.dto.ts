@@ -10,7 +10,7 @@ import {
 export class CreateUserDto {
     @IsString()
     @IsNotEmpty()
-    @Length(1, 30)
+    @Length(1, 32)
     name: string;
 
 

@@ -1,4 +1,4 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -13,7 +13,7 @@ export class UserService {
       return await this.prisma.user.create({ data: createUserDto });
     } catch (e) {
       if (e.code === 'P2002' && e.meta?.target?.includes('name')) {
-        throw new ConflictException('Unique constraint violation: Duplicate value for the unique field.');
+        throw new BadRequestException("this name already exists");
       }
 
       throw e;
@@ -47,7 +47,7 @@ export class UserService {
       });
     } catch (e) {
       if (e.code === 'P2002' && e.meta?.target?.includes('name')) {
-        throw new ConflictException('Unique constraint violation: Duplicate value for the unique field.');
+        throw new BadRequestException("this name already exists");
       }
 
       throw e;

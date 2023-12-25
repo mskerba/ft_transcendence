@@ -5,7 +5,7 @@ import useAxiosPrivate from '../../../../../hooks/UseAxiosPrivate';
 import { useAuth } from '../../../../../context/AuthContext';
 
 const ChangeAvatar = ({ user, onStateChange }: any) => {
-  const [imagePreview, setImagePreview] = useState(`http://10.14.4.8:3000/avatar/${user.avatar}`);
+  const [imagePreview, setImagePreview] = useState(`http://10.14.4.10:3000/avatar/${user.avatar}`);
   const [selectedImage, setSelectedImage] = useState(null);
   const { setAuthUser } = useAuth();
   const fileInputRef = useRef(null);
@@ -46,9 +46,14 @@ const ChangeAvatar = ({ user, onStateChange }: any) => {
         },
       });
   
+      console.log("AVATAAAAAR!", response.data)
+      console.log(Date.now())
+
+
       onStateChange(response.data);
       setAuthUser(response.data);
-
+      setSelectedImage(null);
+    
     } catch (error) {
       console.error('Error uploading image:', error.message);
     }
