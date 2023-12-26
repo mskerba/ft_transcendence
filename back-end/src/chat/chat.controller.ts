@@ -5,6 +5,7 @@ import {CreateGroupDto, CreateRoleUserDto, PunishDto, MuteDto, UpdateGroupDto} f
 import { STATUS_CODES } from 'http';
 import { da } from '@faker-js/faker';
 import { UserEntity } from 'src/user/entities/user.entity';
+import { GetCurrentUserId } from 'src/common/decorators';
 
 @Controller('chat')
 export class ChatController {

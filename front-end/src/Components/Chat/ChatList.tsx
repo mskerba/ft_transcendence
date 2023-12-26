@@ -19,6 +19,13 @@ const ChatList = (prop:any) => {
     try {
       const res = await axiosPrivate.get('/chat/0');
       setAllConversation(Object.values(res?.data));
+      // console.log(res.data)
+      allConversation.forEach((element) => {
+        console.log(element.group, element.convId)
+        // if (element.group)
+        //   prop.socket.current.emit('joinGroup', {group:element.convId});
+      });
+
     }
     catch (error) {
       prop.setShowDropdown(true);

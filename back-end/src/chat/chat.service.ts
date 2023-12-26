@@ -481,21 +481,26 @@ export class ChatService {
     // add message to the group
     async addMessageToRoom(roomId: string, message: string, uId: number){
         
-        const userInGroup = await this.findUserInGroup(uId, roomId);
-        if (userInGroup.error != undefined)
-            return userInGroup;
-        const isMuted = await this.checkIsMuted(roomId, message, uId);
-        if (isMuted.error != undefined)
-            return isMuted 
-        
-        await this.prismaService.roomMessage.create({
-            data: {
-                text: message,
-                roomId: {connect : { RoomId: roomId}},
-                userId: {connect: {userId: uId}}
-            }
-        })
-        return {success: true, status: HttpStatus.OK};
+        try{
+            console.log("roomId : ", roomId, " message ", message, " userId ", uId);
+            // const userInGroup = await this.findUserInGroup(uId, roomId);
+            // if (userInGroup.error != undefined)
+            //     return userInGroup;
+            // const isMuted = await this.checkIsMuted(roomId, message, uId);
+            // if (isMuted.error != undefined)
+            //     return isMuted 
+            console.log("it's not muted");
+            await this.prismaService.roomMessage.create({
+                data: {
+                    text: message,
+                    roomId: {connect : { RoomId: roomId}},
+                    userId: {connect: {userId: uId}}
+                }
+            })
+            return {success: true, status: HttpStatus.OK};
+        }catch(error){
+            console.log("error happen in addMessageToRoom");
+        }
     }
 
     // histoy of group

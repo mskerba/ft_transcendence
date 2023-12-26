@@ -1,7 +1,7 @@
 
 
 
-*** don't forget to handle this ***
+*** don't forget to handle this http method ***
 
     1. is implemented
     -- CountUnseen not working in directMessage,
@@ -17,7 +17,8 @@
         -- deleted group lead to delete users in ROleUser , RoomMessage and Room .
         -- owner leave group two cases (empty group will be deleted) , is it full with admin and member i will give to old admin   or member 
 
-    
+ *** handle socket ***
+    * send message to the group and you are (muted, banned, kicked) must not be send   
  
   *** postmen data ***
  -- i wanna handle when send to me data not in the database {messages, listContact, listGroups}
@@ -29,3 +30,6 @@
 *** some question that come to my mind***
 -- adding user to the group that already joind am i suppose to handle this by check on each insertion on the table is this user    is already exist or just make the database fail and return that is already exists
 -- why i can't  use findUnique we know the group of  attribute is unique then using findFirst
+
+
+@GetCurrentUserId() userId: number

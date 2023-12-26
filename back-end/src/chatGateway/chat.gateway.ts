@@ -61,7 +61,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   async handleDisconnect(client: Socket) {
     console.log("disconnected client : ", client.id , " from : ", this.mp.get(client.id));
     
-
     try{
       await this.chatService.SockToClient(null, this.mp.get(client.id));
       this.mp.delete(client.id);
@@ -71,12 +70,17 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
 }
 
-@SubscribeMessage("UserID")  
+@SubscribeMessage("UserID")    
 async setUser(client: Socket, data  : {userId: number}){
   
-  await this.chatService.SockToClient(client.id , data.userId);
-  this.mp.set(client.id, data.userId);
-  console.log("user give me his id is : ", this.mp.get(client.id) , "and connected to ",  client.id);
+  try{
+
+    await this.chatService.SockToClient(client.id , data.userId);
+    this.mp.set(client.id, data.userId);
+    console.log("user give me his id is : ", this.mp.get(client.id) , "and connected to ",  client.id);
+  }catch(error){
+    console.log("error in setUser");
+  }
 }
 
   
@@ -84,7 +88,7 @@ async setUser(client: Socket, data  : {userId: number}){
   async Message(client: Socket, data : {to: string, msg: string, Unseen: number})
   {
     console.log("id of sender : ", client.id);
-    console.log("data is : ", data);
+    console.log("data is : ", data); 
 
 
     try {
@@ -129,7 +133,7 @@ async setUser(client: Socket, data  : {userId: number}){
   //join group when you click on group
   @SubscribeMessage("joinGroup")  
   joinGroup(client: Socket, data :{group: string}){
-    console.log("clientId: ", client.id, " join group ", data.group);
+    console.log("====>>clientId: ", client.id, " join group ", data.group);
     client.join(data.group);
   }
 
@@ -143,9 +147,16 @@ async setUser(client: Socket, data  : {userId: number}){
     
     this.server.to(data.group).emit("BunchOfpeople", data.message);
     
-    const {userId} = await this.chatService.findUserBySockid(client.id);
-    
-    await this.chatService.addMessageToRoom(data.group, data.message, userId);
+    const userId = await this.chatService.findUserBySockid(client.id);
+    if (!userId)
+    {
+      console.log("user not found");
+      return ;
+    }
+
+
+    console.log("id : ", userId, "data " , data);
+    await this.chatService.addMessageToRoom(data.group, data.message, userId.userId);
   }
   
   

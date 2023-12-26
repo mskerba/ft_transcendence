@@ -47,8 +47,12 @@ const ChatContainer = (prop:any) => {
   const handleSendMessage = () => {
     if (message == '')
       return;
-    prop.socket.current.emit('DirectMessage', {to: prop.convInf.Name, msg:message,Unseen: 3});
+    if (prop.convInf.group)
+      prop.socket.current.emit('messageTogroup', {group: prop.convInf.convId, message:message});
+    else
+      prop.socket.current.emit('DirectMessage', {to: prop.convInf.Name, msg:message,Unseen: 3});
     console.log(prop.convInf.Name) 
+    prop.setRefresh(2);
     const newMessage = { name: 'New User', Message: message, user: 'user' };
     setAllMessage([ newMessage, ...allMessage]);
     setMessage('');
