@@ -24,9 +24,8 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-
-    text-decoration: none;
-
+    
+    
 }
 
 
@@ -36,7 +35,8 @@
     flex-direction: row;
     align-items: center;
     gap: 5px;
-
+    text-decoration: none;
+    
     width: 100%;
     grid-area: 1 / 1 / 2 / 2;
     grid-template-columns: 45px 1fr;

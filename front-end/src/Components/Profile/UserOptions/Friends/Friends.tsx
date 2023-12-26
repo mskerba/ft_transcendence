@@ -21,18 +21,18 @@ const Friend = ({ userId }: any) => {
     return (
         <div>
             {friends.length > 0 && friends.map((friend) => (
-                <Link to={`/user/${friend.userId}`} key={friend.userId} className='friend'>
-                    <div className='user-avatar-name'>
+                <div key={friend.userId} className='friend'>
+                    <Link to={`/user/${friend.userId}`} className='user-avatar-name'>
                         <img src={`http://localhost:3000/avatar/${friend.avatar}`} className='avatar' />
                         <h4>{friend.name}</h4>
-                    </div>
+                    </Link>
                     { userId === authUser.userId && 
                         <div className='friend-buttons'>
                             <div className='friend-play-button'><img src='/src/assets/play.svg' /></div>
                             <div className='friend-message-button'><img src='/src/assets/message.svg' /></div>
                         </div>
                     }
-                </Link>
+                </div>
             ))}
         </div>
     );

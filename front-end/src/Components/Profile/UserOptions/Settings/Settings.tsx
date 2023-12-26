@@ -66,8 +66,7 @@ const Settings = ({ user, onStateChange }: any) => {
                     value={username}
                     onChange={handleInputChange}
                 />
-                <button onClick={changeUsername}>save</button>
-                {errormsg && <p>{errormsg}</p>}
+                <button className='save-username-button' onClick={changeUsername}><img src='/src/assets/save.svg' /></button>
             </div>
             <div className='twoFA'>
                 <p>Two-factor authentication (2fa)</p>

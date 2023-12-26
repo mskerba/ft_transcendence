@@ -13,6 +13,7 @@
     grid-column-gap: 0px;
     grid-row-gap: 0px;
     align-items: center;
+    text-decoration: none;
 }
 
 .friend-request-buttons {
@@ -24,6 +25,11 @@
     text-align: center;
 
     grid-area: 1 / 2 / 2 / 3;
+}
+
+.friend-request-buttons img {
+    width: 30px;
+    height: 30px;
 }
 
 .friend-request-confirm-button ,

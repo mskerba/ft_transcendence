@@ -33,16 +33,16 @@ const FriendRequest = () => {
   return (
     <div>
       {friendReqs.length > 0 && friendReqs.map((friendRequest) => (
-        <Link to={`/user/${friendRequest.sender.userId}`} key={friendRequest.requestId} className='friend-request'>
-          <div className='user-avatar-name'>
+        <div key={friendRequest.requestId} className='friend-request'>
+          <Link to={`/user/${friendRequest.sender.userId}`} className='user-avatar-name'>
             <img src={`http://localhost:3000/avatar/${friendRequest.sender.avatar}`} className='avatar' alt={`Avatar for ${friendRequest.sender.name}`} />
             <h4>{friendRequest.sender.name}</h4>
-          </div>
+          </Link>
           <div className='friend-request-buttons'>
-            <div onClick={async () => accpetFriendReq(friendRequest.requestId)} className='friend-request-confirm-button'>c</div>
-            <div onClick={async () => declineFriendReq(friendRequest.requestId)} className='friend-request-delete-button'>d</div>
+            <div onClick={async () => accpetFriendReq(friendRequest.requestId)} className='friend-request-confirm-button'><img src='/src/assets/accept-request-hovered.svg' /></div>
+            <div onClick={async () => declineFriendReq(friendRequest.requestId)} className='friend-request-delete-button'><img src='/src/assets/decline-request.svg' /></div>
           </div>
-        </Link>
+        </div>
       ))}
     </div>
 

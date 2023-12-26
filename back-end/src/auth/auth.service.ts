@@ -25,7 +25,7 @@ export class AuthService {
         private prisma: PrismaService,
         private jwtService: JwtService,
         private emailService: EmailService,
-    ) {}
+    ) { }
 
     async signIn(user: CreateUserDto) {
         if (!user) {
@@ -39,16 +39,17 @@ export class AuthService {
 
         const tokens = await this.generateTokens(userExists.userId, userExists.email);
         await this.updateRtHash(userExists.userId, tokens.refresh_token);
-        return {... userExists , ... tokens};
+        return { ...userExists, ...tokens };
     }
 
     async signUp(user: CreateUserDto) {
         try {
-            const newUser = await this.userService.create(user);
+            const newUser = await this.generateUniqueNameAndSave(user);
+            // const newUser = await this.userService.create(user);
 
             const tokens = await this.generateTokens(newUser.userId, newUser.email);
             await this.updateRtHash(newUser.userId, tokens.refresh_token);
-            return {... newUser , ... tokens};
+            return { ...newUser, ...tokens };
         } catch (error) { console.error(error); }
 
     }
@@ -65,10 +66,55 @@ export class AuthService {
         });
     }
 
+    async generateUniqueNameAndSave(user: CreateUserDto): Promise<UserEntity | null> {
+        const generateUniqueName = (): string => {
+            const prefix = 'user_';
+            const timestamp = Date.now().toString();
+            const randomPart = Math.random().toString(36).substring(2, 8); // Adjust the length as needed
+            const generatedName = `${prefix}${timestamp}_${randomPart}`;
+
+            // Ensure the total length does not exceed 32 characters
+            if (generatedName.length <= 32) {
+                return generatedName;
+            } else {
+                // If the generated name exceeds 32 characters, truncate it
+                return generatedName.substring(0, 32);
+            }
+        };
+
+        const trySaveUser = async (name: string): Promise<UserEntity | null> => {
+            try {
+                const savedUser = await this.prisma.user.create({
+                    data: {
+                        name,
+                        ...user,
+                    },
+                });
+                return savedUser;
+            } catch (error) {
+                return null;
+            }
+        };
+
+        const maxAttempts = 5;
+
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            const newName = generateUniqueName();
+
+            const savedUser = await trySaveUser(newName);
+
+            if (savedUser) {
+                return savedUser;
+            }
+        }
+
+        return null;
+    }
+
     async updateRtHash(userId: number, rt: string) {
         const hash = await bcrypt.hash(rt, 10);
 
-        await this.userService.update(userId, {hashedRt: hash});
+        await this.userService.update(userId, { hashedRt: hash });
     }
 
     async refreshTokens(userId: number, rt: string) {
@@ -130,7 +176,7 @@ export class AuthService {
         const secret = authenticator.generateSecret();
         const otpAuth = authenticator.keyuri(user.email, 'PongGreen', secret);
         const qrCode = await qrcode.toDataURL(otpAuth);
-  
+
 
         await this.userService.update(user.userId, {
             twoFA_SecretKey: secret,
@@ -170,10 +216,10 @@ export class AuthService {
             },
         });
 
-        
+
         if (!user.twoFA_Enabled) throw new ForbiddenException("the 2FA is already disabled");
         if (!user.otpVerification) throw new ForbiddenException("Send the OTP code to email!");
-        
+
         const otpVerif: OtpVerification = user.otpVerification;
 
         if (otpVerif.expiresAt < new Date()) throw new ForbiddenException("the OTP code has expired!");
@@ -190,7 +236,7 @@ export class AuthService {
         else {
             throw new ForbiddenException("invalid OTP!");
         }
-        return true; 
+        return true;
     }
 
     async verifyTwoFactorAuth(user: UserEntity, token: string): Promise<boolean> {
@@ -198,12 +244,12 @@ export class AuthService {
         if (!user.twoFA_Enabled) throw new ForbiddenException('the Two Factor authentificator is not enabled');
         if (user.twoFA_Verified) throw new ForbiddenException('the Two Factor authentificator is already verified');
 
-    
+
         const secretKey = user.twoFA_SecretKey;
         if (!secretKey) {
-          return false;
+            return false;
         }
-    
+
         const verified = authenticator.check(token, secretKey);
 
         if (verified) {
@@ -211,7 +257,7 @@ export class AuthService {
                 twoFA_Verified: true,
             });
         }
-    
+
         return verified;
     }
 
@@ -221,7 +267,7 @@ export class AuthService {
         try {
             const otp: string = `${Math.floor(1000 + Math.random() * 9000)}`;
 
-            
+
             const hashed_otp = await bcrypt.hash(otp, 10);
 
 
@@ -235,7 +281,7 @@ export class AuthService {
                 }
             });
 
-            
+
             await this.emailService.sendMail(
                 user.email,
                 "Verification code to disable the two factor authentificator",

@@ -60,7 +60,7 @@ const ChangeAvatar = ({ user, onStateChange }: any) => {
   };
 
   return (
-    <div>
+    <div className='change-avatar-container'>
       <input
         type="file"
         accept="image/*"
@@ -69,12 +69,13 @@ const ChangeAvatar = ({ user, onStateChange }: any) => {
         ref={fileInputRef}
       />
       <img
+        className='selected-avatar'
         src={imagePreview || 'default-image.jpg'}
         alt="Preview"
         style={{ cursor: 'pointer', maxWidth: '100%', maxHeight: '200px' }}
         onClick={handleImageClick}
       />
-      <button onClick={handleUpload}>Upload Image</button>
+      <button onClick={handleUpload} className='upload-avatar-button'><img src='/src/assets/upload.svg' /></button>
     </div>
   );
 };
