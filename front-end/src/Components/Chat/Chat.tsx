@@ -6,6 +6,7 @@ import PopupGroupInf from './PopupGroupInf';
 import io from 'socket.io-client';
 import { Alert, AlertTitle } from '@mui/material';
 import './chat.css';
+import { useAuth } from '../../context/AuthContext';
 
 
 const Chat = () => {
@@ -16,6 +17,7 @@ const Chat = () => {
   const [refresh,setRefresh] = useState(0);
   const [showDropdown, setShowDropdown] = useState(false);
   const [notifAlert, setNotifAlert] = useState({error:'',msg:'' });
+  const [newMessage, setNewMessage] = useState({});
   const [convInf, setConvInf]:any = useState({
     Avatar : "",
     Name: "",
@@ -26,6 +28,9 @@ const Chat = () => {
   const [popupParent, setPopupParent] = useState({display:'none'});
   const [popupInfParent, setPopupInfParent] = useState({display:'none'});
   const [divPosition, setDivPosition] = useState({ x: 0, y: 0, display: 'none', i: 0});
+
+  const { authUser }: any = useAuth();
+
 
 
   const escFunction = useCallback((event:any) => {
@@ -59,13 +64,11 @@ const Chat = () => {
         transports: ["websocket"],
         withCredentials: true,
       });
-
-
-      socketRef.current.emit('UserID', {userId: 0}); 
-    
       socketRef.current.on('FrontDirectMessage', (data:any) => {
-        console.log("DFSDF",data)
+        setNewMessage({ name: 'New User', Message: data.msg, user: 'is-not-user' });
       })
+
+      socketRef.current.emit('UserID', {userId: authUser.userId}); 
 
     }
 
@@ -101,12 +104,12 @@ const Chat = () => {
             {(chatDivShow == 2) ? 
               <>
                 <ChatList setShowDropdown={setShowDropdown} setNotifAlert={setNotifAlert} setShow={setShow} socket={socketRef} setConvInf={setConvInf} refresh={refresh} setRefresh={setRefresh}  setPopupParent={setPopupParent}  />
-                <ChatContainer setShowDropdown={setShowDropdown} setNotifAlert={setNotifAlert} setShow={setShow} socket={socketRef} refresh={refresh} setRefresh={setRefresh} convInf={convInf} setPopupInfParent={setPopupInfParent} />
+                <ChatContainer newMessage={newMessage} setShowDropdown={setShowDropdown} setNotifAlert={setNotifAlert} setShow={setShow} socket={socketRef} refresh={refresh} setRefresh={setRefresh} convInf={convInf} setPopupInfParent={setPopupInfParent} />
               </>
               : (chatDivShow)?
                   <ChatList setShowDropdown={setShowDropdown} setNotifAlert={setNotifAlert} setShow={setShow} socket={socketRef} setConvInf={setConvInf} refresh={refresh} setRefresh={setRefresh} setPopupParent={setPopupParent}  />
                   :
-                  <ChatContainer setShowDropdown={setShowDropdown} setNotifAlert={setNotifAlert} setShow={setShow} socket={socketRef} refresh={refresh} setRefresh={setRefresh} convInf={convInf} setPopupInfParent={setPopupInfParent} />
+                  <ChatContainer newMessage={newMessage} setShowDropdown={setShowDropdown} setNotifAlert={setNotifAlert} setShow={setShow} socket={socketRef} refresh={refresh} setRefresh={setRefresh} convInf={convInf} setPopupInfParent={setPopupInfParent} />
             }
         </div>
         <PopupCreatGroup 

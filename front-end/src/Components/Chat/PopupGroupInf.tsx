@@ -64,7 +64,7 @@ const PopupGroupInf = (prop:any) => {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const res = await axiosPrivate.get(`/chat/about/${prop.convInf.convId}/0`);
+        const res = await axiosPrivate.get(`/chat/about/${prop.convInf.convId}`);
         const listeOfData:any = Object.values(res?.data);
         const userRole = listeOfData.pop();
         setRole(userRole.UserRole);
@@ -148,7 +148,7 @@ const PopupGroupInf = (prop:any) => {
   }
 
   async function handleRemoveGroupClick (){
-    const res = await axiosPrivate.get(`/chat/remove/${prop.convInf.convId}/0`);
+    const res = await axiosPrivate.get(`/chat/remove/${prop.convInf.convId}`);
     prop.setRefresh(1);
     handleCloseClick();
     prop.setConvInf({
@@ -198,7 +198,7 @@ const PopupGroupInf = (prop:any) => {
 
   async function handleLeaveGroupClick() {
     handleCloseClick();
-    const res = await axiosPrivate.get(`/chat/leave/${prop.convInf.convId}/0`);
+    const res = await axiosPrivate.get(`/chat/leave/${prop.convInf.convId}`);
 
     prop.setRefresh(1);
     prop.setConvInf({

@@ -62,8 +62,11 @@ export class ChatService {
     async  findLinkMessage(user1: number, user2: number): Promise<any>{
         const data = await this.prismaService.linkDirectMessage.findFirst({
             where :{
-                UserId1 : user1,
-                UserId2: user2,
+                OR:[
+
+                    {UserId1 : user1, UserId2: user2},
+                    {UserId2: user1, UserId1: user2},
+                ]
             },
             select: {
                 conversationId: true,

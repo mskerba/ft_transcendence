@@ -14,24 +14,24 @@ export class ChatController {
     
     
     //return all conversation
-    @Get(':ide')
-    async MyFriends(@Param() param: any) : Promise<any>{
-        //const user: UserEntity = req.user;
-        
-        const id: number = parseInt(param.ide);
-        return await this.chatService.allContact(id); 
+    @Get()
+    async MyFriends(@Req() req: any) : Promise<any>{
+        const user: UserEntity = req.user;
+        console.log("user id is : ", user);
+        return await this.chatService.allContact(user.userId); 
     }
     
     // history chat of group
-    @Get("group/:userId/:groupId")
-    async historyOfGroup(@Param() group: any){
+    @Get("group/:groupId")
+    async historyOfGroup(@Req() req: any, @Param() group: any){
+        const user: UserEntity = req.user
         console.log("group Id : ", group.groupId);
         //return {"msg": "hello"};
     
 
         let id : number = parseInt(group.userId);
         
-        const isUserInGroup = await this.chatService.findUserInGroup(id, group.groupId);
+        const isUserInGroup = await this.chatService.findUserInGroup(user.userId, group.groupId);
         if (isUserInGroup.error !== undefined)
             return isUserInGroup;
         const historyGroup = await this.chatService.historyOfGroup(group.groupId);
@@ -43,36 +43,39 @@ export class ChatController {
 
 
     // leave group
-    @Get('leave/:convId/:id')
-    async leave(@Param() param: any){
-        const data = await this.chatService.leaveGroup(param.convId, +param.id);
+    @Get('leave/:convId')
+    async leave(@Req() req: any, @Param() param: any){
+        const user: UserEntity = req.user;
+        const data = await this.chatService.leaveGroup(param.convId, user.userId);
         if (data.error !== undefined)
             throw new HttpException(data.error, HttpStatus.NOT_FOUND);
         return data;
     }
 
     // remove group
-    @Get('remove/:convId/:id')
-    async remove(@Param() param: any){
-        const data = await this.chatService.removeGroupe(param.convId, +param.id);
+    @Get('remove/:convId')
+    async remove(@Req() req: any, @Param() param: any){
+        const user: UserEntity = req.user;
+        const data = await this.chatService.removeGroupe(param.convId, user.userId);
         return data;
     }
     // about group
-    @Get("about/:convId/:id")
-    async about(@Param() param: any){
+    @Get("about/:convId")
+    async about(@Req() req: any, @Param() param: any){
+        const user: UserEntity = req.user;
         console.log("about convId is : ", param.convId);
-        
-    
-      return await  this.chatService.about(param.convId, +param.id);
+
+      return await  this.chatService.about(param.convId, user.userId);
     }
     // return chat history of private messages
-    @Get(":id1/:id2")
-    async ChatHistory(@Param() param: any): Promise<any>
+    @Get(":convId")
+    async ChatHistory(@Req() req: any, @Param() param: any): Promise<any>
     {
-        const id1: number = parseInt(param.id1);
+        const user: UserEntity = req.user;
+
     
-        console.log("first id : ", id1, " second id: ", param.id2);
-        return await this.chatService.chatHistory(id1, param.id2);
+        console.log("first id : ", user.userId, " second id: ", param.convId);
+        return await this.chatService.chatHistory(user.userId, param.convId);
     }
     
     // create Group    

@@ -17,7 +17,7 @@ const ChatList = (prop:any) => {
 
   const fetch = async () => {
     try {
-      const res = await axiosPrivate.get('/chat/0');
+      const res = await axiosPrivate.get('/chat');
       let conv = Object.values(res?.data);
       if (!allConversation.length)
       {

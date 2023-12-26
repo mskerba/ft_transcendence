@@ -8,7 +8,7 @@ import { subscribe } from 'diagnostics_channel';
 @WebSocketGateway({cors: true})
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect{
   
-
+  
   
   @WebSocketServer()
   server : Server;
@@ -25,7 +25,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
   mp = new Map<string, number>();
 
-  async handleConnection(client: Socket) {
+  async handleConnection(client: Socket, ...args: any[]) {
+    console.log('!!!!!!!!!!', args);
     console.log("client connected : id: ", client.id);
     // friends that have socketId in that database
     // i will broadcast to them that im connected

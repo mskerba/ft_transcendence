@@ -8,6 +8,7 @@ import './chat.css';
 
 const ChatContainer = (prop:any) => {
 
+  const { authUser }: any = useAuth();
   const axiosPrivate = useAxiosPrivate();
   const [message, setMessage] = useState('');
 
@@ -21,10 +22,10 @@ const ChatContainer = (prop:any) => {
 
   const fetchData = async () => {
     try {
-      const res = await axiosPrivate.get(`/chat${(prop.convInf.group)?'/group':''}/0/${prop.convInf.convId}`);
+      const res = await axiosPrivate.get(`/chat${(prop.convInf.group)?'/group':''}/${prop.convInf.convId}`);
       setAllMessage([]);
       const messages = Object.values(res?.data).map((element:any) => {
-        const user = (element.Id === 0) ? 'user' : 'is-not-user';
+        const user = (element.Id === authUser.userId) ? 'user' : 'is-not-user';
         return { ...element, user };
       });
   
@@ -43,6 +44,9 @@ const ChatContainer = (prop:any) => {
     prop.setRefresh(0);
   }, [prop, prop.refresh]);
   
+  useEffect(()=>{
+      setAllMessage([ prop.newMessage, ...allMessage]);
+  },[prop.newMessage])
 
   const handleSendMessage = () => {
     if (message == '')

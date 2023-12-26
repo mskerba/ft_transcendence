@@ -28,7 +28,6 @@ async function main() {
     userArray[i] =  await prisma.user.create({
       data:
       {
-        userId: i,
         name: fakeName,
         email: faker.internet.email(),
         avatar: img + fakeName + ".png",
