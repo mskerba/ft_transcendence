@@ -1,5 +1,6 @@
 .user-options-container {
-    width: 500px;
+    max-width: 500px;
+    width: 100%;
     padding: 10px;
     background-color: #025951;
     border-radius: 2%;

@@ -1,50 +1,54 @@
 .friend {
     height: 50px;
-    justify-items: center;
-    align-items: center;
-    justify-content: space-between;
     background-color: #038C3E;
     box-shadow: 0 0 5px #000000;
     border-radius: 3px;
-    padding: 0 ;
-    margin: 0px;
-    text-decoration: none;
+    padding: 0 10px;
+    margin: 10px 0;
 
-
+    width: 100%;
     display: grid;
-    grid-template-columns: 1fr 100px;
+    grid-template-columns:  1fr 100px;
     grid-template-rows: 1fr;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
-
+    align-items: center;
 }
 
-.friend h4 {
-    color: #FFFFFF;
-    font-size: 1.2rem;
 
-    white-space: nowrap; 
+
+
+.user-avatar-name h4 {
+    color: white;
+    font-size: large;
+    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; 
+    text-overflow: ellipsis;
+
+    text-decoration: none;
+
 }
+
 
 .user-avatar-name {
-    grid-template-columns: ;
-    display: flex;
+    
+    display: grid;
     flex-direction: row;
     align-items: center;
     gap: 5px;
-    width: 70%;
+
+    width: 100%;
     grid-area: 1 / 1 / 2 / 2;
+    grid-template-columns: 45px 1fr;
 }
 
 .user-avatar-name .avatar {
+    grid-area: 1 /1 /2 /2;
     width: 45px;
     height: 45px;
     object-fit: cover;
     border: 2px solid #0CF25D;
     border-radius: 50%;
-    margin-left: 0;
 }
 
 .friend-buttons {
@@ -52,15 +56,16 @@
     justify-content: space-around;
     justify-items: center;
     align-items: center;
-    gap: 10px;
     height: 75%;
     text-align: center;
+
     grid-area: 1 / 2 / 2 / 3;
 }
 
 .friend-play-button ,
 .friend-message-button {
-    width: 45px;
+    width: 40px;
+    border-radius: 4px;
     height: 100%;
     border-radius: 4px;
     cursor: pointer;
@@ -70,7 +75,6 @@
 }
 
 .friend-buttons img {
-    border-radius: 50%;
     width: 30px;
     height: 30px;
 }
@@ -106,4 +110,3 @@
     }
 
 }
-

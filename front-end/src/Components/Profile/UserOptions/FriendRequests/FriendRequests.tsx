@@ -39,8 +39,8 @@ const FriendRequest = () => {
             <h4>{friendRequest.sender.name}</h4>
           </div>
           <div className='friend-request-buttons'>
-            <div onClick={async () => accpetFriendReq(friendRequest.requestId)} className='friend-request-confirm-button'>Confirm</div>
-            <div onClick={async () => declineFriendReq(friendRequest.requestId)} className='friend-request-delete-button'>Delete</div>
+            <div onClick={async () => accpetFriendReq(friendRequest.requestId)} className='friend-request-confirm-button'>c</div>
+            <div onClick={async () => declineFriendReq(friendRequest.requestId)} className='friend-request-delete-button'>d</div>
           </div>
         </Link>
       ))}
