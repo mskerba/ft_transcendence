@@ -146,7 +146,7 @@ async setUser(client: Socket, data  : {userId: number}){
     if (!groupId)
       return {"error": "group not found"}
     
-    this.server.to(data.group).emit("BunchOfpeople", data.message);
+    this.server.to(data.group).emit("FrontDirectMessage", { "Message": data.message, "Unseen": 6});
     
     const userId = await this.chatService.findUserBySockid(client.id);
     if (!userId)
