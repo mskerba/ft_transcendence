@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../Game.css'
 
-function Timer() {
+function Timer(prop:any) {
 
 
   const [time, setTime] = useState(60);
@@ -36,11 +36,11 @@ function Timer() {
 
   return (
     <div className='game--timer'>
-        <p>0</p>
+        <p>{prop.scoreInGame.player1}</p>
         <div className='timing--text' style={pvs}>
           <p>{time < 10 ? `0${time}` : time}'</p>
         </div>
-        <p>0</p>
+        <p>{prop.scoreInGame.player2}</p>
     </div>
   );
 }

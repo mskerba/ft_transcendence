@@ -13,8 +13,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private player2: number;
   private diameter = 25;
   private ball: any;
+  private score:any
   private derection: any;
-  private speed: number = 5;
+  private speed: number = 9;
   private sign: number;
   private paddleHeight = 140;
   private paddelWidth = 18;
@@ -28,6 +29,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       height : this.canva.height - this.diameter,
       width : this.canva.width / 2
     };
+    this.score = {player1:0, player2:0}
 
     this.sign = 1
     // const randomValue = 0.1 + Math.random() * (this.canva.height * 10 / 600 - 0.1);
@@ -42,9 +44,17 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }, 60000);
 
     this.gameTimeout = setTimeout(() => { this.gameInterval = setInterval(() => {
-      this.handleGameLogic();
-      this.server.emit('ballPosition', {ball:this.ball});
-    }, 20);
+        
+        const test = {...this.derection};
+        
+        this.handleGameLogic();
+        // console.log(test, this.derection)
+        // if (test !== this.derection)
+        // {
+
+            this.server.emit('ballPosition', {ball:this.ball});
+        // }   
+    }, 16.5);
   }, 0);
   }
 
@@ -60,9 +70,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   handleGamePaddle(client: Socket, data: { player1: number, player2: number }) {
     this.player1 = data.player1;
     this.player2 = data.player2;
-    // console.log(`Received gamepaddle event from ${client.id}: ${data.player1} & ${data.player2}`);
-    // this.server.emit('gamepaddleResponse', { message: `Received ${data.player1} & ${data.player2} from ${client.id}` });
-  }
+}
   
   private handleGameLogic() {
     if (this.ball.height <= this.ball.diameter / 2 || this.ball.height >= this.canva.height - this.ball.diameter /2)
@@ -76,6 +84,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     // //calculate blue paddle 
     this.ballInPlayer2();
 
+
     this.ball.height += this.derection.height;
     this.ball.width += this.derection.width * this.sign;
 
@@ -85,11 +94,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   {
     if(this.ball.width < 0 || this.ball.width >= this.canva.width)
     {
-      // console.log(this.canva.width,'->>>',this.ball)
-      // const randomValue = 0.1 + Math.random() * (this.canva.height * 10 / 600 - 0.1);
-      // this.derection.y = -randomValue;
-      this.ball.height = this.canva.height - this.diameter;
-      this.ball.width = this.canva.width  / 2;
+        if (this.ball.width < 0)
+            this.score.player1++;
+        else
+            this.score.player2++;
+        this.ball.height = this.canva.height - this.diameter;
+        this.ball.width = this.canva.width  / 2;
+        this.server.emit('score', {score:this.score});
     }
   }
 
@@ -102,10 +113,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     {
       this.sign *= -1;
       this.derection.height = 9;
-      // this.derection.height = this.derectionY(this.ball.width - this.player2, this.derection.x);
+      this.derection.height = this.derectionY(this.ball.height - this.player1, this.derection.height);
     }
   }
-
 
   private ballInPlayer2()
   {
@@ -116,11 +126,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     {
       this.sign *= -1;
       this.derection.height = 9;
-      // this.derection.height = this.derectionY(this.ball.width - this.player2, this.derection.x);
+      this.derection.height = this.derectionY(this.ball.height - this.player2, this.derection.height);
     }
   }
 
   private derectionY(val: number, x: number): number {
+    // console.log(val, x);
     const mapVal = map(Math.abs(val), 0, this.paddleHeight / 2, 90, 120);
     const angle = (val > 0) ? 180 - mapVal : mapVal;
     const adjacent = (val > 0) ? this.canva.width - this.ball.width : this.ball.width;
@@ -129,6 +140,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const stepsXinc = opposit / x;
     let y = adjacent / stepsXinc;
     y = (y > 0.01) ? y : 0;
+    if (!y)
+        return y
     return y * (val / Math.abs(val));
   }
   

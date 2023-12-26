@@ -8,6 +8,7 @@ import Setting from "./Setting";
 
 function ScoreBoard(prop:any) {
   let [SBstyle,setSBstyle] = useState(prop.size);
+  let [scoreInGame, setScore] = useState({player1:0, player2:0})
   
   useEffect(
     () =>{
@@ -17,16 +18,22 @@ function ScoreBoard(prop:any) {
           width: `${prop.size.width - 20}px`,
         }
       })
-      console.log("-->>>",SBstyle.width)
   } ,[prop.size])
 
+  
+  useEffect(() =>{
+    setTimeout(()=>{
+        prop.socket.current.on('score', (data:any) => {
+        setScore(data.score);
+      })}, 0);
+    },[prop.socket])
 
   return (
     <div className='score--board' style={SBstyle}>
         <Setting />
         <UserData className='player1 players' image='https://thispersondoesnotexist.com/' userName='jack' levle='1.5'/>
-        <Timer />
-        <UserData className='player2 players' image='https://thispersondoesnotexist.com/' userName='freed' levle='1.5'/>
+        <Timer  scoreInGame={scoreInGame}/>
+        <UserData  className='player2 players' image='https://thispersondoesnotexist.com/' userName='freed' levle='1.5'/>
         <Emoji />
     </div>
   )

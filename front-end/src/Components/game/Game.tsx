@@ -38,11 +38,7 @@ function Game() {
       });
 
 
-      socketRef.current.emit('UserID', {userId: 0}); 
-    
-      socketRef.current.on('FrontDirectMessage', (data:any) => {
-        console.log("DFSDF",data)
-      })
+      socketRef.current.emit('UserID', {userId: 0});
 
     }
 
@@ -89,8 +85,8 @@ function Game() {
   return (
     <div className='game--page'>
         <div className='game--component'  style={canvaStyle} >
-            <ScoreBoard size={canvaStyle}/>
-            <Canva className={test} size={canvaStyle}/>
+            <ScoreBoard socket={socketRef} size={canvaStyle}/>
+            <Canva socket={socketRef} className={test} size={canvaStyle}/>
         </div>
     </div>
   )
