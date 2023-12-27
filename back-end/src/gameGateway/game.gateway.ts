@@ -1,28 +1,11 @@
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
-@WebSocketGateway({ namespace: '/game', cors: true }) // Added namespace here
-export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  private gameTimeout: NodeJS.Timeout;
-  private gameInterval: NodeJS.Timeout;
-
-  @WebSocketServer() server: Server;
-
-  private canva = { width: 1080, height: 600 };
-  private player1: number;
-  private player2: number;
-  private diameter = 25;
-  private ball: any;
-  private score:any
-  private derection: any;
-  private speed: number = 9;
-  private sign: number;
-  private paddleHeight = 300;
-  private paddelWidth = 18;
-
-  handleConnection(client: Socket) {
-    console.log(`Client connected: ${client.id}`);
-
+class ballClass {
+  constructor(player2ID, player1ID, server) {
+    this.player1ID = player1ID;
+    this.player2ID = player2ID;
+    this.server = server;
 
     this.ball = {
       diameter : this.diameter,
@@ -32,39 +15,26 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.score = {player1:0, player2:0}
 
     this.sign = 1
-    // const randomValue = 0.1 + Math.random() * (this.canva.height * 10 / 600 - 0.1);
     this.derection = {
       height : -this.speed ,
       width : 9
     };
-
-    this.gameTimeout = setTimeout(() => {
-      console.log('stopped game back');
-      this.server.emit('stopGame', {});
-    }, 60000);
-
   }
-  
-  handleDisconnect(client: Socket) {
-    console.log(`Client disconnected: ${client.id}`);
-    
-    clearTimeout(this.gameTimeout);
-    
-    clearInterval(this.gameInterval);
-  }
+  private server;
+  public player1ID;
+  public player2ID;
+  private canva = { width: 1080, height: 600 };
+  private player1: number = 300;
+  private player2: number = 300;
+  private diameter = 25;
+  private ball: any;
+  private score:any
+  private derection: any;
+  private speed: number = 9;
+  private sign: number;
+  private paddleHeight = 140;
+  private paddelWidth = 18;
 
-  @SubscribeMessage('gameball')
-  handleGameBall(client: Socket, data: { player1: number, player2: number }) { 
-    this.handleGameLogic();
-    this.server.emit('ballPosition', {ball:this.ball});
-  }
-
-  @SubscribeMessage('gamepaddle')
-  handleGamePaddle(client: Socket, data: { player1: number, player2: number }) {
-    this.player1 = data.player1;
-    this.player2 = data.player2;
-  }
-  
   private handleGameLogic() {
     if (this.ball.height <= this.ball.diameter / 2 || this.ball.height >= this.canva.height - this.ball.diameter /2)
     this.derection.height *= -1;
@@ -81,6 +51,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.ball.height += this.derection.height;
     this.ball.width += this.derection.width * this.sign;
 
+    this.server.emit('ballPosition', {ball:this.ball});
   }
 
   private restIsGoal()
@@ -136,6 +107,73 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (!y)
         return y
     return y * (val / Math.abs(val));
+  }
+  
+
+}
+let person1;
+@WebSocketGateway({ namespace: '/game', cors: true }) // Added namespace here
+export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  private gameTimeout: NodeJS.Timeout;
+  private gameInterval: NodeJS.Timeout;
+  private myMap = new Map();
+
+  @WebSocketServer() server: Server;
+
+  private connectedUsers: Set<string> = new Set();
+
+  handleConnection(client: Socket) {
+    console.log(`Client connected: ${client.id}`);
+    this.connectedUsers.add(client.id);
+
+    // this.gameTimeout = setTimeout(() => {
+    // this.server.to(this.person1.player1ID).emit('stopGame', {});
+    // }, 60000);
+    this.startGame()
+  }
+  
+  startGame() {
+    if (this.connectedUsers.size > 1) {
+      let player1, player2;
+      this.connectedUsers.forEach((element) => {
+        if (!player1)
+          player1 = element;
+        else player2 = element;
+      })
+
+      let i = 0;
+      let objBallClass = new ballClass(player1, player2, this.server);
+      this.connectedUsers.forEach((element, index) => {
+        this.server.to(element).emit('inGame', {});
+        this.myMap.set( element, {obj:objBallClass,plyer:i++});
+      });
+      this.connectedUsers.clear();
+
+    } 
+  }
+
+  handleDisconnect(client: Socket) {
+    console.log(`Client disconnected: ${client.id}`);
+    
+    this.connectedUsers.clear();
+    clearTimeout(this.gameTimeout);
+    
+    clearInterval(this.gameInterval);
+  }
+
+  @SubscribeMessage('gameball')
+  handleGameBall(client: Socket, data: { player1: number, player2: number }) { 
+    if (this.myMap.has(client.id)) {
+      this.myMap.get(client.id).obj.handleGameLogic();
+    }
+  }
+
+  @SubscribeMessage('gamepaddle')
+  handleGamePaddle(client: Socket, data: { player1: number, player2: number }) {
+    if (this.myMap.has(client.id)) {
+      this.myMap.get(client.id).obj.player1 = data.player1;
+      this.myMap.get(client.id).obj.player2 = data.player2;
+    }
   }
   
   

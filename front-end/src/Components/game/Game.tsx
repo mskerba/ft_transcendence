@@ -6,6 +6,7 @@ import Canva from "./canva/Canva";
 import io from 'socket.io-client';
 
 function Game() {
+  const [inGame, setInGame] = useState(false)
   const socketRef = useRef(null);
   const test:String='canva';
 
@@ -39,7 +40,7 @@ function Game() {
 
 
       socketRef.current.emit('UserID', {userId: 0});
-
+      socketRef.current.on('inGame', (data:any)=>setInGame(true));
     }
 
     return () => {
@@ -83,12 +84,19 @@ function Game() {
   } ,[window])
   console.log(canvaStyle.width,canvaStyle.height)
   return (
-    <div className='game--page'>
-        <div className='game--component'  style={canvaStyle} >
-            <ScoreBoard socket={socketRef} size={canvaStyle}/>
-            <Canva socket={socketRef} className={test} size={canvaStyle}/>
-        </div>
-    </div>
+    <>
+      { !inGame &&
+        <h1>Making The Game</h1>
+      }
+     { inGame &&
+       <div className='game--page'>
+          <div className='game--component'  style={canvaStyle} >
+              <ScoreBoard socket={socketRef} size={canvaStyle}/>
+              <Canva socket={socketRef} className={test} size={canvaStyle}/>
+          </div>
+      </div>
+      }
+    </>
   )
 }
 

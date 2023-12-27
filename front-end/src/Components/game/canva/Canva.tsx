@@ -95,7 +95,6 @@ const P5Component = (props: any) => {
     p5Instance = new p5(sketch);
   }
 
-  // Add the event listener on mount
   const handleKeyDown = (event:any) => {
     paddleControl(event);
   };
