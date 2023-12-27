@@ -46,6 +46,7 @@ const P5Component = (props: any) => {
 
     p.draw = () => {
       shapesDraw()
+      props.socket.current.emit('gameball');
     };
 
     
@@ -86,7 +87,7 @@ const P5Component = (props: any) => {
     player2 -= paddeleMv;
     else if (player2 < canva.y - paddeleMv - paddleHeight / 2  && event.keyCode === 40)
     player2 += paddeleMv;
-      props.socket.current.emit('gamepaddle', {'player1': player1 * 1080 / canva.x, 'player2': player2 * 600 / canva.y});
+    props.socket.current.emit('gamepaddle', {'player1': player1 * 1080 / canva.x, 'player2': player2 * 600 / canva.y});
   }
   
 
@@ -110,8 +111,8 @@ const P5Component = (props: any) => {
 
   window.addEventListener('keydown', handleKeyDown);
   return () => {
-    // p5Instance.remove();
-    // p5Instance = null;
+    p5Instance.remove();
+    p5Instance = null;
     window.removeEventListener('keydown', handleKeyDown);
 
     if (props.socket.current)

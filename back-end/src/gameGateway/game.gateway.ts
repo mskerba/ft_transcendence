@@ -17,7 +17,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private derection: any;
   private speed: number = 9;
   private sign: number;
-  private paddleHeight = 140;
+  private paddleHeight = 300;
   private paddelWidth = 18;
 
   handleConnection(client: Socket) {
@@ -43,34 +43,27 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.server.emit('stopGame', {});
     }, 60000);
 
-    this.gameTimeout = setTimeout(() => { this.gameInterval = setInterval(() => {
-        
-        const test = {...this.derection};
-        
-        this.handleGameLogic();
-        // console.log(test, this.derection)
-        // if (test !== this.derection)
-        // {
-
-            this.server.emit('ballPosition', {ball:this.ball});
-        // }   
-    }, 16.5);
-  }, 0);
   }
-
+  
   handleDisconnect(client: Socket) {
     console.log(`Client disconnected: ${client.id}`);
     
     clearTimeout(this.gameTimeout);
-
+    
     clearInterval(this.gameInterval);
+  }
+
+  @SubscribeMessage('gameball')
+  handleGameBall(client: Socket, data: { player1: number, player2: number }) { 
+    this.handleGameLogic();
+    this.server.emit('ballPosition', {ball:this.ball});
   }
 
   @SubscribeMessage('gamepaddle')
   handleGamePaddle(client: Socket, data: { player1: number, player2: number }) {
     this.player1 = data.player1;
     this.player2 = data.player2;
-}
+  }
   
   private handleGameLogic() {
     if (this.ball.height <= this.ball.diameter / 2 || this.ball.height >= this.canva.height - this.ball.diameter /2)
@@ -95,9 +88,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if(this.ball.width < 0 || this.ball.width >= this.canva.width)
     {
         if (this.ball.width < 0)
-            this.score.player1++;
-        else
             this.score.player2++;
+        else
+            this.score.player1++;
         this.ball.height = this.canva.height - this.diameter;
         this.ball.width = this.canva.width  / 2;
         this.server.emit('score', {score:this.score});
