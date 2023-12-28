@@ -19,11 +19,18 @@ const ChatList = (prop:any) => {
     try {
       const res = await axiosPrivate.get('/chat');
       let conv = Object.values(res?.data);
+      console.log(conv);
       if (!allConversation.length)
       {
         conv.forEach((element) => {
           if (element.group)
             prop.socket.current.emit('joinGroup', {group:element.convId});
+          else {
+            const updatedMap = new Map(prop.usersStatus);
+            updatedMap.set(element.id, /*element.status*/ 'online'); //remove online string and decomment element.status
+            setUsersStatus(updatedMap);
+          }
+          
         });
       }
       setAllConversation(conv);

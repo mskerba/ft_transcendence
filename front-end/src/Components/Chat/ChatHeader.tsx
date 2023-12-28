@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './chat.css';
 
 
 const ChatHeader = (prop:any) => {
   const group:Boolean = prop.convInf.group;
+
+
 
   function handelClick() {
     if (innerWidth <925)
@@ -16,6 +18,7 @@ const ChatHeader = (prop:any) => {
     });
   }
 
+
   return (
       <div className='chat-header'>
         <div className='side-bar-controle-button' onClick={handelClick}>
@@ -26,7 +29,7 @@ const ChatHeader = (prop:any) => {
             <img src={prop.convInf.Avatar} className='conversation-avatar'/>
             <div className='content'>
                 <h5>{prop.convInf.Name}</h5>
-                {!group && <p>online</p>}
+                {!group && <p>{prop.usersStatus}</p>}
             </div>
           </div>
           {group && <div  className='info-group-button' onClick={handelClickInf} ><img src='/src/assets/info-group.svg'/></div>}
