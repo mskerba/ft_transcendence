@@ -55,7 +55,7 @@ export class ChatService {
         }
         catch(error){
             console.log("error happen");
-            console.log(error);
+            //console.log(error);
         }
     }
 
@@ -262,7 +262,7 @@ export class ChatService {
             });
             
             data.forEach(item => {
-                const obj: object = {"Unseen": 2, "Name": mp.get(item.privateId).name , "lastMsg": item.text , "Date": item.dateMessage, 
+                const obj: object = {"Unseen": 2, "Id": mp.get(item.privateId).id, "Name": mp.get(item.privateId).name , "lastMsg": item.text , "Date": item.dateMessage, 
                 "Avatar": mp.get(item.privateId).avatar , "convId": item.privateId, "group": false };
                 arrData.push(obj);
             })
@@ -291,8 +291,6 @@ export class ChatService {
         });
 
         console.log("finish here");
-
-
     
         return arrData;
 

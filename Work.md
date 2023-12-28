@@ -19,6 +19,7 @@
 
  *** handle socket ***
     * send message to the group and you are (muted, banned, kicked) must not be send   
+    * send data as text fail instead of json (i need to protect this)
  
   *** postmen data ***
  -- i wanna handle when send to me data not in the database {messages, listContact, listGroups}

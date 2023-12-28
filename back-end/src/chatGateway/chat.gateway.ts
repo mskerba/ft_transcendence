@@ -25,9 +25,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
   mp = new Map<string, number>();
 
-  async handleConnection(client: Socket, ...args: any[]) {
-    console.log('!!!!!!!!!!', args);
-    console.log("client connected : id: ", client.id);
+  async handleConnection(client: Socket) {
+    //console.log("handleConnection is : id : ", client.handshake.auth.userId);
     // friends that have socketId in that database
     // i will broadcast to them that im connected
     // the same logic in disconnection 
@@ -62,6 +61,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   async handleDisconnect(client: Socket) {
     console.log("disconnected client : ", client.id , " from : ", this.mp.get(client.id));
     
+    this.sendStatus(client, this.mp.get(client.id), "offline");
+
     try{
       await this.chatService.SockToClient(null, this.mp.get(client.id));
       this.mp.delete(client.id);
@@ -70,6 +71,26 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       console.log("error: client can't disconnect");
     }
 }
+
+async sendStatus(client: Socket , userId: number, stat: string){
+  try{
+    const friends = await this.chatService.FriendStatus(userId);
+
+    if (friends.length)
+    {
+  
+        friends.forEach(item => {
+          if (item.user1.sockId == client.id)
+            client.to(item.user2.sockId).emit("status", {"Id": userId, "status": stat});
+          else
+            client.to(item.user1.sockId).emit("status", {"Id": userId, "status": stat});
+        })
+    }
+  }catch(error){
+    console.log("error in online")
+  }
+}
+
 
 @SubscribeMessage("UserID")    
 async setUser(client: Socket, data  : {userId: number}){
@@ -82,6 +103,10 @@ async setUser(client: Socket, data  : {userId: number}){
   }catch(error){
     console.log("error in setUser");
   }
+
+  // send im online
+  this.sendStatus(client, data.userId, "online");
+   
 }
 
   
@@ -111,20 +136,20 @@ async setUser(client: Socket, data  : {userId: number}){
   }
   
 
-  @SubscribeMessage('inGame')
-  async ShareStatus(client: Socket){
+  // @SubscribeMessage('inGame')
+  // async ShareStatus(client: Socket){
 
-    const friends = await this.chatService.FriendStatus(this.mp[client.id]);
+  //   const friends = await this.chatService.FriendStatus(this.mp[client.id]);
     
-    friends.forEach(item => {
-      if (item.user1.sockId == client.id)
-        client.to(item.user2.sockId).emit("status", this.mp[client.id], "in game");
-      else
-        client.to(item.user1.sockId).emit("status", this.mp[client.id], "in game");
+  //   friends.forEach(item => {
+  //     if (item.user1.sockId == client.id)
+  //       client.to(item.user2.sockId).emit("status", this.mp[client.id], "in game");
+  //     else
+  //       client.to(item.user1.sockId).emit("status", this.mp[client.id], "in game");
 
-    })
+  //   })
 
-  }
+  // }
 
   
  

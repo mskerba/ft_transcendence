@@ -40,6 +40,15 @@ async function main() {
     })
   }
 
+  // create friendship between three users
+  for (let i = 1; i < 3; i++){
+    await prisma.friendship.create({
+      data:{
+        user1: {connect:{userId: userArray[0].userId}},
+        user2: {connect:{userId: userArray[i].userId}},
+      },
+    });
+  }
 
    console.log(userArray);
 
