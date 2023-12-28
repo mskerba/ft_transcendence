@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import  useAxiosPrivate  from '../../hooks/UseAxiosPrivate';
 import './chat.css';
 
@@ -7,11 +8,12 @@ const PopupCreatGroup = (prop:any) => {
   const [channelPassword, setChannelPassword] = useState('');
   const [nameOfGroup, setNameOfGroup] = useState('');
   const axiosPrivate = useAxiosPrivate();
+  const { authUser }: any = useAuth();
 
   const fetch = async () => {
     try {
       const postGroup:any = {
-        UserId: 0,//number
+        UserId: authUser.userId,//number
         TypeRoom: channelType, // protected , public, private
         // avarar: '',//link
         title: nameOfGroup, 

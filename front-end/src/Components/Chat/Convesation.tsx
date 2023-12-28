@@ -51,7 +51,8 @@ const Conversation = (prop:any) => {
           Avatar : prop.Avatar,
           Name: prop.Name,
           convId : prop.convId,
-          group : prop.group
+          group : prop.group,
+          id: prop.id
       };
     })
     if (innerWidth <925)
