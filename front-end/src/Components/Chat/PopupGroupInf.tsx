@@ -155,7 +155,8 @@ const PopupGroupInf = (prop:any) => {
       Avatar : "",
       Name: "",
       convId : "",
-      group: ""
+      group: "",
+      id:""
     });
     prop.setShowDropdown(true);
     setTimeout(()=>prop.setShowDropdown(false), 3000);
@@ -205,7 +206,8 @@ const PopupGroupInf = (prop:any) => {
       Avatar : "",
       Name: "",
       convId : "",
-      group: ""
+      group: "",
+      id:""
     });
 
     prop.setShowDropdown(true);

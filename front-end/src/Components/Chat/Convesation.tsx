@@ -45,6 +45,7 @@ const Conversation = (prop:any) => {
     background:'green',
   }
   function handleClick() {
+    console.log("--------",prop);
     prop.setConvInf((prev:any) => {
       return {
           ...prev,
@@ -52,7 +53,7 @@ const Conversation = (prop:any) => {
           Name: prop.Name,
           convId : prop.convId,
           group : prop.group,
-          id: prop.id
+          id: prop.Id
       };
     })
     if (innerWidth <925)

@@ -17,10 +17,13 @@ const ChatHeader = (prop:any) => {
       return ({...prev,display:'flex'})
     });
   }
-
+  const tt = () =>  console.log('inMaaap', prop.convInf, "  --> " ,prop)
+  useEffect(()=> {
+    tt();
+  },[])
 
   return (
-      <div className='chat-header'>
+      <div className='chat-header' onClick={tt}>
         <div className='side-bar-controle-button' onClick={handelClick}>
           <img src='/src/assets/arrow.svg' className='arrow-svg'/>
         </div>
@@ -29,7 +32,7 @@ const ChatHeader = (prop:any) => {
             <img src={prop.convInf.Avatar} className='conversation-avatar'/>
             <div className='content'>
                 <h5>{prop.convInf.Name}</h5>
-                {!group && <p>{prop.usersStatus}</p>}
+                {!group && <p>{prop.usersStatus.get(prop.convInf.id)}</p>}
             </div>
           </div>
           {group && <div  className='info-group-button' onClick={handelClickInf} ><img src='/src/assets/info-group.svg'/></div>}
