@@ -82,7 +82,9 @@ export class ChatController {
     @Post()
     async createGroup(@Body() createGroupDto: CreateGroupDto){
 
-        const data = await this.chatService.createGroup(createGroupDto);    
+        console.log("creation of group here");
+        const data = await this.chatService.createGroup(createGroupDto);
+        
         if (data.error !== undefined)
             return data;
         return data;

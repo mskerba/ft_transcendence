@@ -2,7 +2,6 @@ import { ConsoleLogger, HttpStatus, Injectable, Param, HttpException } from '@ne
 import {PrismaService} from '../prisma/prisma.service'
 import {CreateGroupDto, CreateRoleUserDto, PunishDto, MuteDto, UpdateGroupDto} from './DTO/create-groups.dto'
 import { da, faker, tr } from '@faker-js/faker';
-import { DirectMessage } from '@prisma/client';
 import { JsonArray } from '@prisma/client/runtime/library';
 import { Dirent } from 'fs';
 
@@ -41,7 +40,7 @@ export class ChatService {
     });
    }
 
-    async SockToClient(socketId: string, id: number){
+    async SockToClient(socketId: string, id: number, stat: string,){
         
         // const data = await this.findUserByname(username);
         console.log("SockToclient() socId : ", socketId, " userId : ", id);
@@ -50,6 +49,7 @@ export class ChatService {
                 where : {userId: id},
                 data:{
                     sockId: socketId,
+                    status: stat
                 },
             })
         }
@@ -227,17 +227,17 @@ export class ChatService {
                 distinct:['conversationId'],
                 select:{
                     conversationId: true,
-                    user1: {select : {userId: true, name: true, avatar : true}},
-                    user2: {select : {userId: true, name: true, avatar : true}},
+                    user1: {select : {userId: true, name: true, avatar : true, status: true}},
+                    user2: {select : {userId: true, name: true, avatar : true, status: true}},
                 }
             })
             let obj : object;
             
             data.forEach(id => {
                 if (id.user1.userId != user1)
-                    obj = {"id": id.user1.userId, "name": id.user1.name, "avatar": id.user1.avatar};
+                    obj = {"id": id.user1.userId, "name": id.user1.name, "avatar": id.user1.avatar, "status": id.user1.status};
                 else
-                    obj = {"id": id.user2.userId, "name": id.user2.name, "avatar": id.user2.avatar};
+                    obj = {"id": id.user2.userId, "name": id.user2.name, "avatar": id.user2.avatar, "status": id.user2.status};
                 mp.set(id.conversationId, obj);
                convId.push(id.conversationId); 
             });
@@ -263,7 +263,7 @@ export class ChatService {
             
             data.forEach(item => {
                 const obj: object = {"Unseen": 2, "Id": mp.get(item.privateId).id, "Name": mp.get(item.privateId).name , "lastMsg": item.text , "Date": item.dateMessage, 
-                "Avatar": mp.get(item.privateId).avatar , "convId": item.privateId, "group": false };
+                "Avatar": mp.get(item.privateId).avatar , "convId": item.privateId, "status": mp.get(item.privateId).status ,"group": false };
                 arrData.push(obj);
             })
             return arrData;
@@ -290,7 +290,7 @@ export class ChatService {
            arrData.push(element);
         });
 
-        console.log("finish here");
+        console.log("serve all list of contact is finsished");
     
         return arrData;
 

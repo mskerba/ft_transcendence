@@ -64,7 +64,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     this.sendStatus(client, this.mp.get(client.id), "offline");
 
     try{
-      await this.chatService.SockToClient(null, this.mp.get(client.id));
+      await this.chatService.SockToClient(null, this.mp.get(client.id), "offline");
       this.mp.delete(client.id);
       return {msg : "client disconnected from socket"}  
     }catch(error){
@@ -97,7 +97,7 @@ async setUser(client: Socket, data  : {userId: number}){
   
   try{
 
-    await this.chatService.SockToClient(client.id , data.userId);
+    await this.chatService.SockToClient(client.id , data.userId, "online");
     this.mp.set(client.id, data.userId);
     console.log("user give me his id is : ", this.mp.get(client.id) , "and connected to ",  client.id);
   }catch(error){
