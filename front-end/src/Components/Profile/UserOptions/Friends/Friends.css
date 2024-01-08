@@ -1,0 +1,113 @@
+.friend {
+    height: 50px;
+    /* background-color: #038C3E; */
+    border-radius: 3px;
+    padding: 0 10px;
+    margin: 10px 0;
+
+    width: 100%;
+    display: grid;
+    grid-template-columns:  1fr 100px;
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    align-items: center;
+}
+
+.friend:hover {
+    box-shadow: 0 0 10px #000;
+}
+
+
+.user-avatar-name h4 {
+    color: white;
+    font-size: large;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+    
+}
+
+
+.user-avatar-name {
+    
+    display: grid;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    
+    width: 100%;
+    grid-area: 1 / 1 / 2 / 2;
+    grid-template-columns: 45px 1fr;
+}
+
+.user-avatar-name .avatar {
+    grid-area: 1 /1 /2 /2;
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border: 2px solid #0CF25D;
+    border-radius: 50%;
+}
+
+.friend-buttons {
+    display: flex;
+    justify-content: space-around;
+    justify-items: center;
+    align-items: center;
+    height: 75%;
+    text-align: center;
+
+    grid-area: 1 / 2 / 2 / 3;
+}
+
+.friend-play-button ,
+.friend-message-button {
+    width: 40px;
+    border-radius: 4px;
+    height: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.friend-buttons img {
+    width: 30px;
+    height: 30px;
+}
+
+.friend-play-button {
+    background-color: #0CF25D;
+    color: #034159;
+    box-shadow: 0 0 5px #3e4440;
+}
+
+.friend-message-button {
+    background-color: #034159;
+    color:#FFFFFF;
+    box-shadow: 0 0 5px #3e4440;
+}
+
+.friend-play-button:hover {
+    background-color: #13e05b;
+    box-shadow: 0 0 1px #13e05b;
+}
+
+.friend-message-button:hover {
+    background-color: #025951;
+}
+
+@media (max-width: 520px) {
+
+    .friend {
+        font-size: .9rem;
+    }
+    .friend h4 {
+        font-size: .9rem;
+    }
+
+}

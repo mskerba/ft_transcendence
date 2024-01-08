@@ -1,0 +1,29 @@
+.user-profile-buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+
+.user-profile-button {
+    cursor: pointer;
+    padding: 0;
+}
+
+
+.user-profile-buttons-container img {
+    height: 35px;
+    width: 100px;
+}
+
+.user-profile-button .hovered {
+    display: none;
+}
+
+.user-profile-button:hover img {
+    display: none;
+}
+
+.user-profile-button:hover .hovered {
+    display: inline;
+}

@@ -1,0 +1,27 @@
+.user-profile-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.user-profile-container .name {
+    color: #FFFFFF;
+}
+
+.user-profile-container .level-value {
+    color: #ffea00;
+}
+
+.level-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+}
+
+@media (max-width: 520px) { 
+    .user-profile-container .name {
+        font-size: 1rem;
+    }
+}

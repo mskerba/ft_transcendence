@@ -1,0 +1,41 @@
+.enable-twofa-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    color: #FFF;
+}
+
+.enable-twofa-container img {
+    width: 200px;
+    height: 200px;
+    border: 1px solid #0CF25D;
+}
+
+.twofa-auth-box {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #036e63;
+    background-color: #038C3E;
+    border-radius: 4px;
+    width: 270px;
+    padding: 10px;
+    gap: 5px;
+}
+
+.enable-twofa-container button {
+    margin-top: 10px;
+    width: 100px;
+    height: 30px;
+    background-color: aliceblue;
+    text-decoration: none;
+    border-radius: 4px;
+    cursor: pointer;
+}

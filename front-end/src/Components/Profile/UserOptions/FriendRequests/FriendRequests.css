@@ -1,0 +1,78 @@
+.friend-request {
+    height: 50px;
+    /* background-color: #038C3E; */
+    border-radius: 3px;
+    padding: 0 10px;
+    margin: 10px 0;
+
+    width: 100%;
+    display: grid;
+    grid-template-columns:  1fr 100px;
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    align-items: center;
+    text-decoration: none;
+}
+
+.friend-request:hover {
+    box-shadow: 0 0 10px #000;
+}
+
+
+.friend-request-buttons {
+    display: flex;
+    justify-content: space-around;
+    justify-items: center;
+    align-items: center;
+    height: 75%;
+    text-align: center;
+
+    grid-area: 1 / 2 / 2 / 3;
+}
+
+.friend-request-buttons img {
+    width: 30px;
+    height: 30px;
+}
+
+.friend-request-confirm-button ,
+.friend-request-delete-button {
+    width: 40px;
+    height: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.friend-request-confirm-button {
+    background-color: #0CF25D;
+    color: #034159;
+    box-shadow: 0 0 5px #3e4440;
+}
+
+.friend-request-delete-button {
+    background-color: #034159;
+    color:#FFFFFF;
+    box-shadow: 0 0 5px #3e4440;
+}
+
+.friend-request-confirm-button:hover {
+    background-color: #13e05b;
+    box-shadow: 0 0 1px #13e05b;
+}
+
+.friend-request-delete-button:hover {
+    background-color: #025951;
+}
+
+@media (max-width: 520px) {
+
+    .friend-request {
+        font-size: .9rem;
+    }
+
+}
+

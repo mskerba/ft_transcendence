@@ -1,0 +1,28 @@
+.profile {
+    grid-area: 2 / 1 / 3 / 2;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-rows: 45% 55%;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    overflow: hidden;
+}
+
+.row-0 {
+    grid-area: 1 / 1 / 2 / 2; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+}
+
+.row-1 {
+    grid-area: 2 / 1 / 3 / 2;
+    width: 100%;
+    height: 100%;
+    background-color: #025951;
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+}

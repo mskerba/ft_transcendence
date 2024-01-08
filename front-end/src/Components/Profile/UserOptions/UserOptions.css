@@ -1,0 +1,28 @@
+.user-options-container {
+    max-width: 500px;
+    width: 100%;
+    padding: 10px;
+    background-color: #042432;
+    border-radius: 2%;
+    box-shadow: 0 0 40px #292626;
+    overflow-y: scroll;
+    height: 98%;
+}
+
+.user-options-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+.user-options-container:hover::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+
+@media (max-width: 520px) {
+
+    .user-options-container {
+        width: 100%;
+        margin: 0 10px;
+    }
+}
