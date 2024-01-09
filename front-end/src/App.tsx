@@ -59,6 +59,8 @@ const App = () => {
         setRandomKey("");
 
       }
+
+      
       socketRef.current.on('toHome',()=>{console.log("Waaaghayerha");navigate('/')})
       
       socketRef.current.on('FrontCreatePrivateGame', (data:any) => {
