@@ -6,6 +6,7 @@ export class SearchService {
     constructor(private prisma: PrismaService) { }
 
     async search(keyword: string) {
+        console.log(keyword)
         const users = await this.prisma.user.findMany({
             where: {
                 name: {
@@ -16,6 +17,9 @@ export class SearchService {
                 userId: true,
                 name: true,
                 avatar: true,
+            },
+            orderBy: {
+                name: 'asc',
             },
         });
         const rooms = await this.prisma.room.findMany({
@@ -32,7 +36,10 @@ export class SearchService {
                 TypeRoom: true,
                 avatar: true,
                 title: true,
-            }
+            },
+            orderBy: {
+                title: 'asc',
+            },
         });
 
         console.log('users', users);

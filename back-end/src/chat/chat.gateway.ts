@@ -37,14 +37,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 
     afterInit(server: Server) {
-        // WebSocket server is ready
         console.log('WebSocket server initialized');
     }
     mp = new Map<string, number>();
 
     async handleConnection(client: Socket) {
         const cookies = client?.handshake?.headers?.cookie || '';
-        console.log(cookies);
         const userId: number | null = decodeJwtFromCookies(cookies);
 
 

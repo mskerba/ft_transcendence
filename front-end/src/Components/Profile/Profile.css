@@ -3,7 +3,7 @@
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-rows: 45% 55%;
+    grid-template-rows: 380px 1fr;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
     overflow: hidden;
@@ -25,4 +25,5 @@
     display: flex;
     justify-content: center;
     padding-top: 10px;
+    overflow: hidden;
 }

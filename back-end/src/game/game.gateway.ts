@@ -137,8 +137,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   handleConnection(client: Socket) {
 
-    const key = client?.handshake?.query?.key || '';
-    console.log('Received key:', key);
+  const key = client?.handshake?.query?.key || '';
+  console.log('Received key:', key);
   
   const cookies = client?.handshake?.headers?.cookie;
   const userId: number | null = decodeJwtFromCookies(cookies);
