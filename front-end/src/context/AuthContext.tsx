@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState(1);
   const [authUser, setAuthUser] = useState({});
   const [randomKey, setRandomKey]:any = useState<string>("");
+  const [rootAppStyle, setRootAppStyle]:any = useState({});
 
   const login = (user: any) => {
     setAuth(2);
@@ -26,7 +27,7 @@ export const AuthProvider = ({ children }) => {
 
 
   return (
-    <AuthContext.Provider value={{socketRef, auth, loading, login, logout, authUser, setAuthUser, randomKey, setRandomKey }}>
+    <AuthContext.Provider value={{rootAppStyle, setRootAppStyle, socketRef, auth, loading, login, logout, authUser, setAuthUser, randomKey, setRandomKey }}>
       {children}
     </AuthContext.Provider>
   );

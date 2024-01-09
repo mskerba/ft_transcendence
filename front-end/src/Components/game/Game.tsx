@@ -11,7 +11,7 @@ function Game() {
   const [playersInfo, setPlayersInfo] = useState();
   const socketRef = useRef(null);
   const test:String='canva';
-  const {authUse, randomKey} = useAuth();
+  const {authUse, randomKey, setRandomKey, setRootAppStyle} = useAuth();
   const navigate = useNavigate();
 
   let [canvaStyle,setCanvaStyle]: any = useState({
@@ -38,6 +38,7 @@ function Game() {
 
   useEffect(() => {
     if (socketRef.current === null) {
+      setRootAppStyle(()=>{return({'grid-template-rows': '1fr'})})
       socketRef.current = io('http://localhost:3000/game', {
         transports: ["websocket"],
         withCredentials: true,
@@ -50,7 +51,7 @@ function Game() {
 
 
       socketRef.current.on('stopGame', (data:any)=>{
-        console.log("FDSfds")
+        console.log("FDSfds", data)
         navigate('/');
         socketRef.current.close();
       });
@@ -65,6 +66,8 @@ function Game() {
       if (socketRef.current) {
         socketRef.current.disconnect();
         socketRef.current = null;
+      setRootAppStyle(()=>{return({})})
+      setRandomKey("");
       }
     };
   }, []); 

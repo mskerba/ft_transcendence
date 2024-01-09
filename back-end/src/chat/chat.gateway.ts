@@ -3,6 +3,7 @@ import { Socket, Server } from 'socket.io';
 import { ChatService } from '../chat/chat.service'
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import decodeJwtFromCookies from '../common/get-userId-from-cookie'
+import { PrismaService } from 'src/prisma/prisma.service';
 
 
 
@@ -30,7 +31,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @WebSocketServer()
     server: Server;
 
-    constructor(private readonly chatService: ChatService) { }
+    constructor(private readonly chatService: ChatService,
+        private prisma: PrismaService) { }
 
     // mp first string have sockId;
     // mp second name 
@@ -218,4 +220,24 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
     
 
+    @SubscribeMessage('removePrivateGame')
+    async handleRemovePrivateGame(client: Socket, data: { to: number }) {
+      
+        try {
+            const obj = await this.prisma.user.findUnique({
+                where: {userId:data.to},
+                select: {
+                    sockId:true,
+                }
+            })
+            
+            console.log("====>>create private game: " , obj.sockId, data.to);
+            if (obj.sockId) {
+                client.to(obj.sockId).emit("toHome", {});
+            }
+        } catch (error) {
+            console.log("error on sockId or name");
+        }
+    }
+  
 }

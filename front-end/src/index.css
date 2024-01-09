@@ -15,23 +15,9 @@ h1, h2, h3, h4 {
 }
 
 #root {
+  display: flex;
   width: 100vw;
   height: 100vh;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 56px 1fr;
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
 }
 
-@media  (max-width:1050px)
-{
-  
-  #root {
-    grid-template-rows: 110px 1fr;
-  }
-
-}
 

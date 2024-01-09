@@ -23,7 +23,7 @@ import { toast } from 'react-toastify';
 
 const App = () => {
   
-  const { auth, login, logout, socketRef, setRandomKey} = useAuth();
+  const {rootAppStyle, auth, login, logout, socketRef, setRandomKey, randomKey} = useAuth();
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
 
@@ -52,13 +52,21 @@ const App = () => {
         transports: ["websocket"],
         withCredentials: true,
       });
+      
+      const handleDecline = (to:string) => {
+        console.log("send event to decline:", to)
+        socketRef.current.emit("removePrivateGame",{to: to});
+        setRandomKey("");
 
+      }
+      socketRef.current.on('toHome',()=>{console.log("Waaaghayerha");navigate('/')})
+      
       socketRef.current.on('FrontCreatePrivateGame', (data:any) => {
         console.log("chihaja tarya")
         setRandomKey(data.gameID);
         toast(<>
         <button onClick={()=> navigate('/game') }>Accept</button>
-        <button>Decline</button>
+        <button onClick={() => handleDecline(data.from)}>Decline</button>
         </>); 
         console.log("socket --> data :" ,data);
       })
@@ -75,25 +83,25 @@ const App = () => {
 
 
   return (
-    <>
-    {auth != 1 &&
-        <Routes>
-          <Route element={ <RequireAuth /> }>
-            <Route path="user/:userId" element={ <><NavBar /><Profile /></> } />
-            <Route path="/" element={ <> <NavBar /> <Home /> </> } />
-            <Route path="/game" element={ <Game /> } />
-            <Route path="/chat" element={ <> <NavBar /> <Chat /> </> } />
-            <Route path="/leaderboard" element={ <> <NavBar /> <LeaderBoard /> </> } />
-            <Route path="/search" element={ <> <NavBar /> <Search /> </> } />
-          </Route>
+    <div className="rout_app" style={rootAppStyle}>
+      {auth != 1 &&
+          <Routes>
+            <Route element={ <RequireAuth /> }>
+              <Route path="user/:userId" element={ <><NavBar /><Profile /></> } />
+              <Route path="/" element={ <> <NavBar /> <Home /> </> } />
+              <Route path="/game" element={ <Game /> } />
+              <Route path="/chat" element={ <> <NavBar /> <Chat /> </> } />
+              <Route path="/leaderboard" element={ <> <NavBar /> <LeaderBoard /> </> } />
+              <Route path="/search" element={ <> <NavBar /> <Search /> </> } />
+            </Route>
 
-          <Route path="/login" element={ <Login /> } />
-          <Route path="/2FA" element={ <TwoFactorVerification /> } />
-          <Route path="/*" element={ <NotFound /> } />
+            <Route path="/login" element={ <Login /> } />
+            <Route path="/2FA" element={ <TwoFactorVerification /> } />
+            <Route path="/*" element={ <NotFound /> } />
 
-        </Routes>
-    }
-</>
+          </Routes>
+      }
+    </div>
     );
 };
 
