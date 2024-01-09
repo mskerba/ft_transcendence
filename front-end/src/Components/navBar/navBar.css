@@ -13,6 +13,20 @@
     grid-area: 1 / 1 / 2 / 2;
 }
 
+.search-result {
+    position: absolute;
+    top: 56px;
+    height: 200px;
+    width: 100vw;
+    background-color: red;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
 .logo-image,
 .hamburger-svg,
 .exit-svg {
@@ -245,4 +259,14 @@
     .dropdown-ham-profile {
         display: inline;
     }
+}
+
+@media  (max-width:1050px)
+{
+  
+    .search-result {
+        top: 110px;
+    }
+    
+
 }

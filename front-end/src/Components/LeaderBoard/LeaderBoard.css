@@ -45,6 +45,8 @@
     padding: 20px;
     color: #FFF;
     box-shadow: 0 0 60px #000;
+    max-height: 400px;
+    height: 100%;
 }
 
 .leaderboard-userinfo-avatar {

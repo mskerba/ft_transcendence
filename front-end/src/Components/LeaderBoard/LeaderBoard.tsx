@@ -18,7 +18,7 @@ const LeaderBoard = () => {
                 setSortedUsers(res.data);
                 console.log(res.data);
                 if (res.data.length > 0) {
-                    const res_ = await axiosPrivate(`/game/last-5/${sortedUsers[0].userId}`);
+                    const res_ = await axiosPrivate(`/game/last-5/${res.data[0].userId}`);
                     setLastFiveGames(res_.data);
                 }
             } catch(error) {}
