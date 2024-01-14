@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef }  from 'react';
 import ScoreBoard from "./score-board/ScoreBoard";
+import MakingGame from "./making-game/MakingGame";
+import EndOfGame from "./making-game/EndOfGame";
 import Canva from "./canva/Canva";
 // import './Game.css'
 import io from 'socket.io-client';
@@ -7,7 +9,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 function Game() {
-  const [inGame, setInGame] = useState(false);
+  const [inGame, setInGame] = useState(0);
   const [playersInfo, setPlayersInfo] = useState();
   const socketRef = useRef(null);
   const test:String='canva';
@@ -46,14 +48,15 @@ function Game() {
       });
       
       socketRef.current.on('inGame', (data:any)=>{
-        setInGame(true)
+        setInGame(1);
       });
 
 
       socketRef.current.on('stopGame', (data:any)=>{
         console.log("FDSfds", data)
-        navigate('/');
-        socketRef.current.close();
+        setInGame(2);
+        // navigate('/');
+        // socketRef.current.close();
       });
 
       socketRef.current.on('playersinfo', (data:any)=>{
@@ -112,16 +115,19 @@ function Game() {
 
   return (
     <>
-      { !inGame &&
-        <h1>Making The Game</h1>
+      { (inGame == 0) &&
+        <MakingGame />
       }
-     { inGame &&
+     { (inGame == 1) &&
        <div className='game--page'>
           <div className='game--component'  style={canvaStyle} >
               <ScoreBoard socket={socketRef} playersInfo={playersInfo} size={canvaStyle}/>
               <Canva socket={socketRef} className={test} size={canvaStyle}/>
           </div>
       </div>
+      }
+     { (inGame == 2) &&
+        <EndOfGame />
       }
     </>
   )

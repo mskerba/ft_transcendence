@@ -137,12 +137,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   handleConnection(client: Socket) {
 
   const key = client?.handshake?.query?.key || '';
-<<<<<<< HEAD
   console.log("the size of private map : ", this.connectedprivateUsers.size);
-=======
-  console.log('Received key:', key);
-  
->>>>>>> 6024ffd7ec334415873dea465b82c4894aaaeeaf
   const cookies = client?.handshake?.headers?.cookie;
   const userId: number | null = decodeJwtFromCookies(cookies);
   

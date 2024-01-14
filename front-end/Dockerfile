@@ -12,8 +12,8 @@ RUN npm install @mui/icons-material
 
 RUN npm i --save-dev @types/p5
 
-RUN npm install socket.io-client
-RUN npm install react-modal
+RUN npm install socket.io-client react-modal react-spring
+
 
 COPY . .
 
