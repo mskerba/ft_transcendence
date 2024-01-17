@@ -25,35 +25,47 @@ const ImageSwapper = () => {
   }, [index]);
 
   return (
-    <img
-      className="waiting-user"
-      src={index}
-      alt={`Image ${index + 1}`}
-    />
+    <div className='opp-image'>
+      <img
+        className="waiting-user"
+        src={index}
+        alt={`Image ${index + 1}`}
+        />
+    </div>
   );
 };
 
 const UserMaking = () => {
     return (
-        <img
-        className="user-making-game"
-        src={'https://xsgames.co/randomusers/avatar.php?g=male'}
-      />);
+        <div className='user-image'>
+          <img
+          className="user-making-game"
+          src={'https://xsgames.co/randomusers/avatar.php?g=male'}
+          />
+        </div>
+      );
 };
 
 function MakingGame() {
-    const navigate = useNavigate();
-    function handleExit(){
-        navigate('/');
-    }
+  
+  const navigate = useNavigate();
+
+  function handleExit(){
+      navigate('/');
+  }
+
   return (
     <div className='making-game'>
+      <div className='making-game-second-page'>
         <div onClick={handleExit}  className='exit-svg-making-game' ><img src='/src/assets/exit.svg'/></div>
         <div className='child-making-game'>
             <UserMaking />
-            <img src={"/src/assets/versus.png.png"} />
+            <div className='vsSvg'>
+              <img src={"/src/assets/versus.png.png"} />
+            </div>
             <ImageSwapper />
         </div>
+      </div>
     </div>
   );
 }

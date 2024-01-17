@@ -1,52 +1,53 @@
-.making-game {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-}
 
 .child-making-game {
     max-width: 1200px;
     width: 100%;
     display: flex;
     justify-content: space-evenly;
-    /* background-color: brown; */
+}
 
+.making-game-second-page {
+    width: 90%;
+    height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .waiting-user,
 .user-making-game {
-    width: 300px;
+    /* width: 300px; */
     height: auto;
     border-radius: 20px;
     /* opacity: 0.9; */
 }
 
-.exit-svg-making-game {
+/* .exit-svg-making-game {
     position: relative;
     top: -400px;
     display: flex;
     justify-content: space-evenly;
-}
+} */
 
 .exit-svg-making-game img {
     width: 40px;
 }
 
+.making-game,
 .end-of-game {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
     height: 100%;
-    background-color: red;
+    
 }
 
 .score-section {
+    grid-area: 1 / 2/ 2/ 3;   
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
 }
 
@@ -56,16 +57,24 @@
 
 .score-partie {
     width: 100%;
+    height: 20%;
     padding: 0;
     margin: 0;
     color: aliceblue;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
+    
 }
 
 .scores{
     padding: 0;
     margin: 0;
+    width: 40%;
+    height: 100%;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .score-partie p {
@@ -73,4 +82,103 @@
     margin: 0;
     font-weight: 900;
     font-size: xx-large;
+}
+
+.end-of-game {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.child-end-game,
+.child-making-game {
+    display:  grid;
+    grid-template: 1fr / 1fr 1fr 1fr;
+    height: fit-content;
+    width: 100%;
+    justify-content: space-between;
+}
+
+
+.exit-svg-making-game,
+.exit-svg-end-game {
+    position: absolute;
+    top: 6%;
+    left: 6%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.exit-svg-end-game img {
+    width: 40px;
+}
+
+.end-of-game-child {
+    width: 90%;
+    height: 90%;
+    display: grid;
+    grid-template: 80% 20%/ 1fr;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.player1-image-end-game,
+.player2-image-end-game {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.player1-image-end-game img,
+.player2-image-end-game img { 
+    grid-area: 1 / 1/ 2/ 2;   
+    border-radius: 10%;
+    width: 100%;
+    height: 80%;
+}
+
+.player1-image-end-game p,
+.player2-image-end-game p {
+    grid-area: 1 / 3/ 2/ 4;   
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    color: aliceblue;    
+}
+
+.opp-image {
+    grid-area: 1 / 3/ 2/ 4; 
+    display: flex;
+    height: fit-content;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.user-image {
+    grid-area: 1 / 1/ 2/ 2; 
+    display: flex;
+    height: fit-content;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.vsSvg {
+    width: 100%;
+    /* height: fit-content; */
+    display: flex;
+    justify-content: center;
+    grid-area: 1 / 2/ 2/ 3;
+}
+.vsSvg img{
+    width: 60%;
+    height: auto;
 }

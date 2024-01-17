@@ -1,4 +1,4 @@
-import React from 'react'
+ import React from 'react'
 import { useEffect, useState }  from 'react';
 import  useAxiosPrivate  from '../../../hooks/UseAxiosPrivate';
 import Timer from './Timer'
@@ -71,11 +71,11 @@ function ScoreBoard(prop:any) {
 
   return (
     <div className='score--board' style={SBstyle}>
-        <Setting />
+        {/* <Setting /> */}
         <UserData className='player1 players' image={`http://localhost:3000/avatar/${player1.avatar}`} userName={player1.name}/>
         <Timer  scoreInGame={scoreInGame}/>
         <UserData  className='player2 players' image={`http://localhost:3000/avatar/${player2.avatar}`} userName={player2.name}/>
-        <Emoji />
+        {/* <Emoji /> */}
     </div>
   )
 }

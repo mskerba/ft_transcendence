@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 function Game() {
   const [inGame, setInGame] = useState(0);
   const [playersInfo, setPlayersInfo] = useState();
+  const [finaleGameScore, setFinaleGameScore] = useState();
   const socketRef = useRef(null);
   const test:String='canva';
   const {authUse, randomKey, setRandomKey, setRootAppStyle} = useAuth();
@@ -55,6 +56,7 @@ function Game() {
       socketRef.current.on('stopGame', (data:any)=>{
         console.log("FDSfds", data)
         setInGame(2);
+        setFinaleGameScore(data.score);
         // navigate('/');
         // socketRef.current.close();
       });
@@ -127,7 +129,7 @@ function Game() {
       </div>
       }
      { (inGame == 2) &&
-        <EndOfGame />
+        <EndOfGame playersInfo={playersInfo} finaleGameScore={finaleGameScore}/>
       }
     </>
   )

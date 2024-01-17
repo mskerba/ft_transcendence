@@ -136,51 +136,51 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   handleConnection(client: Socket) {
 
-  const key = client?.handshake?.query?.key || '';
-  console.log("the size of private map : ", this.connectedprivateUsers.size);
-  const cookies = client?.handshake?.headers?.cookie;
-  const userId: number | null = decodeJwtFromCookies(cookies);
-  
-  if (userId === null)
-    return ;
+    const key = client?.handshake?.query?.key || '';
+    console.log("the size of private map : ", this.connectedprivateUsers.size);
+    const cookies = client?.handshake?.headers?.cookie;
+    const userId: number | null = decodeJwtFromCookies(cookies);
 
-  if (key != "") {
-    if ([...this.connectedprivateUsers.values()].includes(key)){
-      this.connectedprivateUsers.set({id:client.id, user:userId},key);
-      this.startPrivateGame(key);
-    }
-    else 
-      this.connectedprivateUsers.set({id:client.id, user:userId},key);
-     
+    if (userId === null)
+      return;
 
-  } else if (![...this.connectedUsers.values()].includes(userId)) {
-
-    let isUserInGame = false;
-    
-    for(const [key, value] of this.myMap) {
-      if (value.player1ID === userId || value.player2ID === userId) {
-        isUserInGame = true;
-        break;
+    if (key != "") {
+      if ([...this.connectedprivateUsers.values()].includes(key)) {
+        this.connectedprivateUsers.set({ id: client.id, user: userId }, key);
+        this.startPrivateGame(key);
       }
-      
-    };
+      else
+        this.connectedprivateUsers.set({ id: client.id, user: userId }, key);
 
-    if (!isUserInGame) {
-      this.connectedUsers.set(client.id, userId);
+
+    } else if (![...this.connectedUsers.values()].includes(userId)) {
+
+      let isUserInGame = false;
+
+      for (const [key, value] of this.myMap) {
+        if (value.player1ID === userId || value.player2ID === userId) {
+          isUserInGame = true;
+          break;
+        }
+
+      };
+
+      if (!isUserInGame) {
+        this.connectedUsers.set(client.id, userId);
+      }
+
     }
+    this.startGame();
 
+
+
+    // .player1ID
   }
-  this.startGame();
-  
-    
 
-  // .player1ID
-}
-
-  startPrivateGame(privateKey){
+  startPrivateGame(privateKey) {
     let player1, player2, player1Id, player2Id;
     this.connectedprivateUsers.forEach((value, key) => {
-      if (privateKey == value){
+      if (privateKey == value) {
         if (!player1) {
           player1 = key.id;
           player1Id = key.user;
@@ -191,7 +191,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
       }
     })
-    
+
     let i = 0;
     let objBallClass = new ballClass(player1, player2, player1Id, player2Id, this.server);
     this.connectedprivateUsers.forEach((value, key, index) => {
@@ -199,18 +199,19 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.to(key.id).emit('inGame', {});
         this.myMap.set(key.id, objBallClass);
         this.server.to(key.id).emit('playersinfo', { player1: player1Id, player2: player2Id });
-      }});
+      }
+    });
 
     this.gameTimeout = setTimeout(() => {
       if (objBallClass.score.player1 != objBallClass.score.player2) {
-        this.server.to(player1).emit('stopGame', {});
-        this.server.to(player2).emit('stopGame', {});
+        this.server.to(player1).emit('stopGame', { score: objBallClass.score });
+        this.server.to(player2).emit('stopGame', { score: objBallClass.score });
       }
       else {
         setInterval(() => {
           if (objBallClass.score.player1 != objBallClass.score.player2) {
-            this.server.to(player1).emit('stopGame', {});
-            this.server.to(player2).emit('stopGame', {});
+            this.server.to(player1).emit('stopGame', { score: objBallClass.score });
+            this.server.to(player2).emit('stopGame', { score: objBallClass.score });
           }
 
         }, 16.5);
@@ -221,10 +222,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       if (privateKey == value) {
         delete this.connectedprivateUsers[key];
         this.connectedprivateUsers.delete(key);
-      }});
+      }
+    });
 
   }
-  
+
   startGame() {
     if (this.connectedUsers.size > 1) {
       let player1, player2, player1Id, player2Id;
@@ -250,14 +252,14 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       this.gameTimeout = setTimeout(() => {
         if (objBallClass.score.player1 != objBallClass.score.player2) {
-          this.server.to(player1).emit('stopGame', {});
-          this.server.to(player2).emit('stopGame', {});
+          this.server.to(player1).emit('stopGame', { score: objBallClass.score });
+          this.server.to(player2).emit('stopGame', { score: objBallClass.score });
         }
         else {
           setInterval(() => {
             if (objBallClass.score.player1 != objBallClass.score.player2) {
-              this.server.to(player1).emit('stopGame', {});
-              this.server.to(player2).emit('stopGame', {});
+              this.server.to(player1).emit('stopGame', { score: objBallClass.score });
+              this.server.to(player2).emit('stopGame', { score: objBallClass.score });
             }
 
           }, 16.5);
@@ -276,22 +278,24 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     this.connectedUsers.clear();
 
-
+    let objBallClass;
     this.connectedprivateUsers.forEach((value, key, index) => {
       if (key.id == client.id) {
         delete this.connectedprivateUsers[key];
         this.connectedprivateUsers.delete(key);
-      }});
-
+      }
+    });
+    
     if (this.myMap.has(client.id)) {
-
+      
       let val = this.myMap.get(client.id);
+      objBallClass = val;
       let player1 = val.player1SocketID;
       let player2 = val.player2SocketID;
 
       this.gameService.saveGame({
-        player1Id : val.player1ID,
-        player2Id : val.player2ID,
+        player1Id: val.player1ID,
+        player2Id: val.player2ID,
         player1Score: val.score.player1,
         player2Score: val.score.player2,
       });
@@ -304,11 +308,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         delete this.myMap[player2];
         this.myMap.delete(player2);
       }
-      
+
       if (player1 == client.id)
-        this.server.to(player2).emit('stopGame', {});
+        this.server.to(player2).emit('stopGame', { score: objBallClass.score });
       else
-        this.server.to(player1).emit('stopGame', {});
+        this.server.to(player1).emit('stopGame', { score: objBallClass.score });
 
     }
     clearTimeout(this.gameTimeout);
