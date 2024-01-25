@@ -4,12 +4,14 @@ import io from 'socket.io-client';
 import '../Game.css';
 import { Socket } from 'socket.io-client/debug';
 import { Height } from '@mui/icons-material';
+import { useAuth } from '../../../context/AuthContext';
+
 
 let p5Instance: any;
 let canva:any;
 let player1:any;
 let player2:any;
-let diam:any = 25;
+let diam:any = 35;
 let ball:any;
 let derection:any;
 let speed:any = 9;
@@ -17,11 +19,38 @@ let sign:any;
 let paddleHeight:any;
 let paddelWidth:any;
 let y:any;
+let PowerUpApp :typePowerUpApp;
+let showPowerUp :typeShowPowerUp;
+let minimizeImg:any;
+let augmentImg:any;
+let freezOppImg:any;
+
+type typeShowPowerUp = {
+  show: boolean;
+  x: number;
+  y: number;
+  type: string;
+};
+
+type typePowerUpApp = {
+  show: boolean;
+  playerId: number;
+  player: string;
+  type: string;
+};
 
 const P5Component = (props: any) => {
   let canvas: any;
+  const {authUser} :any= useAuth();
 
   useEffect(() => {    const sketch = (p: any) => {
+
+    p.preload = () => {
+      minimizeImg = p.loadImage('src/assets/minimize.svg');
+      augmentImg = p.loadImage('src/assets/augment.svg');
+      freezOppImg = p.loadImage('src/assets/freezOpp.svg');
+    }
+
     p.setup = () => {
       const container = document.querySelector('.canva');
 
@@ -39,6 +68,19 @@ const P5Component = (props: any) => {
           diameter : diameter,
           x : canva.x / 2,
           y : canva.y  - diameter//ball.diameter 
+        };
+        showPowerUp  = {
+          show: false,
+          x: 0,
+          y: 0,
+          type: ""
+        };
+        
+        PowerUpApp = {
+          show: false,
+          playerId: 0,
+          player: "",
+          type: "",
         };
       }
       paddleHeight = canva.y * 70 /300;
@@ -70,17 +112,54 @@ const P5Component = (props: any) => {
       p.noStroke()
 
       p.fill('red');
-      p.rect(paddelWidth/2 + 5, player1, paddelWidth, paddleHeight, 5, 5);
+      if (PowerUpApp.show && PowerUpApp.player == "player2" && PowerUpApp.type == 'minimizePaddle')
+        p.rect(paddelWidth/2 + 5, player1, paddelWidth, paddleHeight*0.7, 5, 5);
+      else if (PowerUpApp.show && PowerUpApp.player == "player1" && PowerUpApp.type == 'augmentPaddle')
+          p.rect(paddelWidth/2 + 5, player1, paddelWidth, paddleHeight*1.3, 5, 5);
+      else
+        p.rect(paddelWidth/2 + 5, player1, paddelWidth, paddleHeight, 5, 5);
 
       p.fill('green');
-      p.rect(canva.x - paddelWidth/2 - 5, player2, paddelWidth, paddleHeight, 5, 5);  
-    }
+      if (PowerUpApp.show && PowerUpApp.player == "player1" && PowerUpApp.type == 'minimizePaddle')
+        p.rect(canva.x - paddelWidth/2 - 5, player2, paddelWidth, paddleHeight*0.7, 5, 5);
+      else if (PowerUpApp.show && PowerUpApp.player == "player2" && PowerUpApp.type == 'augmentPaddle')
+          p.rect(paddelWidth/2 + 5, player1, paddelWidth, paddleHeight*1.3, 5, 5);
+      else
+        p.rect(canva.x - paddelWidth/2 - 5, player2, paddelWidth, paddleHeight, 5, 5);
 
+      if (showPowerUp.show == true)
+        powerUpDrawe(); 
+    }
+    function powerUpDrawe() {
+      p.rectMode(p.CENTER);
+      p.fill('blue');
+    
+      const circleX = showPowerUp.x * canva.x / 1080;
+      const circleY = showPowerUp.y * canva.y / 600;
+      const circleSize = 60 * canva.y / 600;
+    
+      // Draw the circle
+      p.circle(circleX, circleY, circleSize);
+    
+      // Load your icon image
+      const iconSize = 40; // Adjust the size of the icon
+      const iconX = circleX - iconSize / 2;
+      const iconY = circleY - iconSize / 2;
+      if (showPowerUp.type == 'minimizePaddle')
+        p.image(minimizeImg, iconX, iconY, iconSize, iconSize);
+      else if (showPowerUp.type = 'freezOpp')
+        p.image(freezOppImg, iconX, iconY, iconSize, iconSize);
+      else
+        p.image(augmentImg, iconX, iconY, iconSize, iconSize);
+    }
     
     
   };
   
   function handleWindowMouseMove(event:any) {
+    if (PowerUpApp.show && PowerUpApp.playerId != authUser.userId && PowerUpApp.type == 'freezOpp')
+      return ;
+
     props.socket.current.emit('gamepaddle', {'y': y * 600 / canva.y});
   }  
 
@@ -92,6 +171,10 @@ const P5Component = (props: any) => {
 
   const ballPositionListener = (data:any) => {
     ball = data.ball;
+    PowerUpApp = data.PowerUpApp;
+    showPowerUp = data.showPowerUp;
+    if (PowerUpApp.show)
+      console.log("PowerUpApp===>>>", PowerUpApp);
   }
   
   const paddlesPositionListener = (data:any) => {
