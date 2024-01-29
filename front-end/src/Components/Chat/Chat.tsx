@@ -59,7 +59,7 @@ const Chat = () => {
   }, [escFunction]);
 
   useEffect(() => {
-    if (socketRef.current === null) {
+    if (socketRef.current !== null) {
 
       socketRef.current.on('FrontDirectMessage', (data:any) => {
         console.log("socket --> data :" ,data);

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import './UserProfileButtons.css'
 import useAxiosPrivate from '../../../../hooks/UseAxiosPrivate';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../../context/AuthContext';
 
 enum Friendship {
     friend,
@@ -13,6 +14,7 @@ enum Friendship {
 const UserProfileButtons = ({ userId }: any) => {
     const [friendshipStatus, setFriendshipStatus] = useState('');
     const [requestId, setRequestId] = useState('');
+    const {setOpenedConversation}: any = useAuth();
 
     const axiosPrivate = useAxiosPrivate();
     const navigate = useNavigate();
@@ -26,6 +28,7 @@ const UserProfileButtons = ({ userId }: any) => {
         setRequestId(res.data);
 
     }
+
 
     useEffect(() => {
         fetchFriendshipStatus();
@@ -106,7 +109,16 @@ const UserProfileButtons = ({ userId }: any) => {
                 </>
             }
             {friendshipStatus == 'friend' &&
-                <div className='user-profile-button'>
+                <div className='user-profile-button'
+                onClick={async () => {
+                    try {
+                        const res = await axiosPrivate.get(`/chat/check-or-create/${userId}`);
+                        setOpenedConversation(res?.data?.conversationId);
+                        console.log(res.data.conversationId);
+                        navigate('/chat');
+                    } catch (error) { }
+                }}
+                >
                     <img src='/src/assets/message.svg' />
                     <img src='/src/assets/message-hovered.svg' className='hovered' />
                 </div>

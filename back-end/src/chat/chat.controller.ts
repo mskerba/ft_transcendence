@@ -1,5 +1,5 @@
 
-import { Controller, Get, Post, Body, Param, HttpStatus, Req, HttpCode, BadRequestException, NotFoundException, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, HttpStatus, Req, ParseIntPipe, HttpCode, BadRequestException, NotFoundException, HttpException } from '@nestjs/common';
 import {ChatService} from './chat.service'
 import {CreateGroupDto, CreateRoleUserDto, PunishDto, MuteDto, UpdateGroupDto} from './dto/create-groups.dto'
 import { STATUS_CODES } from 'http';
@@ -19,11 +19,27 @@ export class ChatController {
         const user: UserEntity = req.user;
         return await this.chatService.allContact(user.userId); 
     }
+
+
+    @Get('check-or-create/:friendId')
+    async checkOrCreateConv(
+        @Req() req: any,
+        @Param('friendId', ParseIntPipe) friendId: number,
+    ) : Promise<any>{
+        const user: UserEntity = req.user;
+
+        let conversationId = await this.chatService.findLinkMessage(user.userId, friendId);
+        if (!conversationId) {
+            conversationId = await this.chatService.LinkDirectMessage(user.userId, friendId);
+        }
+
+        return conversationId;
+    }
     
     // history chat of group
     @Get("group/:groupId")
     async historyOfGroup(@Req() req: any, @Param() group: any){
-        const user: UserEntity = req.user
+        const user: UserEntity = req.user;
         console.log("group Id : ", group.groupId);
         //return {"msg": "hello"};
     
