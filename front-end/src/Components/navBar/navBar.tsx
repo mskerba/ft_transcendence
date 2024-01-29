@@ -43,12 +43,15 @@ const NavBar = () => {
   const handleInputChange = async (e: any) => {
     setSearchQuery(e.target.value);
 
+    if (e.target.value.length === 0) {
+      setResult([]);
+      return ;
+    }
+  
     try {
       const res = await axiosPrivate.get(`/search?keyword=${encodeURIComponent(e.target.value)}`);
 
       setResult(res.data);
-
-      console.log(res.data);
     } catch(error) {}
 
   };
@@ -59,7 +62,7 @@ const NavBar = () => {
       <div style={{ top: divPosition.x, left: divPosition.y, display: divPosition.display }} className='dropdown-navbar-ham'>
         <ul>
           <li><Link to="/game" className="link">Game</Link></li>
-          <li><Link to="/" className="link">Home</Link></li>
+          <li><Link to="/leaderboard" className="link">Leaderboard</Link></li>
           <li><Link to="/chat" className="link">Chat</Link></li>
           <div className='dropdown-ham-profile'>
             <li><Link to={`/user/${authUser.userId}`} className="link">Profile</Link></li>
@@ -100,7 +103,7 @@ const NavBar = () => {
 
           <div className='middle-navbar'>
             <li><Link to="/game" className="link">Game</Link></li>
-            <li><Link to="/" className="link">Home</Link></li>
+            <li><Link to="/leaderboard" className="link">Leaderboard</Link></li>
             <li><Link to="/chat" className="link">Chat</Link></li>
           </div>
 

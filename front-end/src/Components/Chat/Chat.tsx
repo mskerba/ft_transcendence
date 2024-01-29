@@ -59,7 +59,6 @@ const Chat = () => {
   }, [escFunction]);
 
   useEffect(() => {
-    // Only create the socket once
     if (socketRef.current === null) {
 
       socketRef.current.on('FrontDirectMessage', (data:any) => {
@@ -77,7 +76,6 @@ const Chat = () => {
           }
       })
       
-      //socketRef.current.emit('UserID', {userId: authUser.userId}); 
 
     }
 

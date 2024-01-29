@@ -10,7 +10,6 @@ interface DecodedToken {
 }
 
 function decodeJwtFromCookies(cookies: string): number | null {
-    console.log(cookies);
     const parsedCookies = cookies.split(';').reduce((acc, cookie) => {
         const [key, value] = cookie.trim().split('=');
         acc[key] = value;

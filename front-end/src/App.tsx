@@ -90,10 +90,9 @@ const App = () => {
           <Routes>
             <Route element={ <RequireAuth /> }>
               <Route path="user/:userId" element={ <><NavBar /><Profile /></> } />
-              <Route path="/" element={ <> <NavBar /> <Home /> </> } />
+              <Route path="/" element={ <> <NavBar /> <LeaderBoard /> </> } />
               <Route path="/game" element={ <Game /> } />
               <Route path="/chat" element={ <> <NavBar /> <Chat /> </> } />
-              <Route path="/leaderboard" element={ <> <NavBar /> <LeaderBoard /> </> } />
               <Route path="/search" element={ <> <NavBar /> <Search /> </> } />
             </Route>
 

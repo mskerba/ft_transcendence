@@ -127,23 +127,17 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     @SubscribeMessage('DirectMessage')
     async Message(client: Socket, data: { to: string, msg: string, Unseen: number }) {
-        console.log("id of sender : ", client.id);
-        console.log("data is : ", data);
 
+        console.log("MESSAGE")
 
         try {
-            const user = await this.chatService.findUserBySockid(client.id);
-            const obj = await this.chatService.findUserByname(data.to);
-            if (obj.sockId) {
-                console.log("msg sent to the socket :");
-                console.log(data);
-                console.log("i will send data to the sockId : ", obj.sockId, " uesr id is : ", obj.userId);
-                client.to(obj.sockId).emit("FrontDirectMessage", { "Message": data.msg, "Unseen": data.Unseen });
+            const sender = await this.chatService.findUserBySockid(client.id);
+            const receiver = await this.chatService.findUserByname(data.to);
+            if (receiver.sockId) {
+                client.to(receiver.sockId).emit("FrontDirectMessage", { "Message": data.msg, "Unseen": data.Unseen });
             }
-            const obj2 = await this.chatService.addDirectMessage(user.userId, obj.userId, data.msg, 3);
-        } catch (error) {
-            console.log("error on sockId or name");
-        }
+            await this.chatService.addDirectMessage(sender.userId, receiver.userId, data.msg, 3);
+        } catch (error) {}
 
     }
 

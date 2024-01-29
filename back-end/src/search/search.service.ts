@@ -6,11 +6,11 @@ export class SearchService {
     constructor(private prisma: PrismaService) { }
 
     async search(keyword: string) {
-        console.log(keyword)
         const users = await this.prisma.user.findMany({
             where: {
                 name: {
                     contains: keyword,
+                    mode: "insensitive",
                 },
             },
             select: {
@@ -29,6 +29,7 @@ export class SearchService {
                 },
                 title: {
                     contains: keyword,
+                    mode: "insensitive",
                 }
             },
             select: {
@@ -41,9 +42,6 @@ export class SearchService {
                 title: 'asc',
             },
         });
-
-        console.log('users', users);
-        console.log('rooms', rooms);
 
         return [...users, ...rooms];
     }
