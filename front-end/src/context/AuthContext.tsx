@@ -7,10 +7,16 @@ export const AuthProvider = ({ children }) => {
   
   const socketRef = useRef(null);
   const [auth, setAuth] = useState(1);
-  const [openedConversation, setOpenedConversation] = useState<string | null>(null);
   const [authUser, setAuthUser] = useState({});
   const [randomKey, setRandomKey]:any = useState<string>("");
   const [rootAppStyle, setRootAppStyle]:any = useState({});
+  const [convInf, setConvInf]:any = useState({
+    Avatar : "",
+    Name: "",
+    convId : "",
+    group: "",
+    userId:"",
+  });
 
   const login = (user: any) => {
     setAuth(2);
@@ -28,7 +34,7 @@ export const AuthProvider = ({ children }) => {
 
 
   return (
-    <AuthContext.Provider value={{rootAppStyle, setRootAppStyle, socketRef, auth, loading, login, logout, authUser, setAuthUser, randomKey, setRandomKey, openedConversation, setOpenedConversation }}>
+    <AuthContext.Provider value={{rootAppStyle, setRootAppStyle, socketRef, auth, loading, login, logout, authUser, setAuthUser, randomKey, setRandomKey, convInf, setConvInf }}>
       {children}
     </AuthContext.Provider>
   );

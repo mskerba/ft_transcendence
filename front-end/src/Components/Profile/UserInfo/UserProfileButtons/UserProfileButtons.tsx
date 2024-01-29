@@ -11,10 +11,10 @@ enum Friendship {
     sent,
 }
 
-const UserProfileButtons = ({ userId }: any) => {
+const UserProfileButtons = ({ user }: any) => {
     const [friendshipStatus, setFriendshipStatus] = useState('');
     const [requestId, setRequestId] = useState('');
-    const {setOpenedConversation}: any = useAuth();
+    const {setConvInf, convInf}: any = useAuth();
 
     const axiosPrivate = useAxiosPrivate();
     const navigate = useNavigate();
@@ -22,9 +22,9 @@ const UserProfileButtons = ({ userId }: any) => {
 
 
     const fetchFriendshipStatus = async () => {
-        let res = await axiosPrivate.get(`/friendship-status/${userId}`);
+        let res = await axiosPrivate.get(`/friendship-status/${user.userId}`);
         setFriendshipStatus(res.data);
-        res = await axiosPrivate.get(`/friend-request-id/${userId}`);
+        res = await axiosPrivate.get(`/friend-request-id/${user.userId}`);
         setRequestId(res.data);
 
     }
@@ -46,7 +46,7 @@ const UserProfileButtons = ({ userId }: any) => {
                 <div className='user-profile-button'
                     onClick={async () => {
                         try {
-                            await axiosPrivate.get(`unfriend/${userId}`);
+                            await axiosPrivate.get(`unfriend/${user.userId}`);
                             setFriendshipStatus('not-friend');
                         } catch (error) { }
                     }}
@@ -59,7 +59,7 @@ const UserProfileButtons = ({ userId }: any) => {
                 <div className='user-profile-button'
                     onClick={async () => {
                         try {
-                            const res = await axiosPrivate.get(`send-friend-request/${userId}`);
+                            const res = await axiosPrivate.get(`send-friend-request/${user.userId}`);
                             setFriendshipStatus('request-sent');
                             setRequestId(res.data.requestId);
                         } catch (error) { }
@@ -112,9 +112,14 @@ const UserProfileButtons = ({ userId }: any) => {
                 <div className='user-profile-button'
                 onClick={async () => {
                     try {
-                        const res = await axiosPrivate.get(`/chat/check-or-create/${userId}`);
-                        setOpenedConversation(res?.data?.conversationId);
-                        console.log(res.data.conversationId);
+                        const res = await axiosPrivate.get(`/chat/check-or-create/${user.userId}`);
+                        setConvInf({
+                            Avatar : user.avatar,
+                            Name: user.name,
+                            convId : res?.data?.conversationId,
+                            group: "",
+                            userId: String(user.userId),
+                        });
                         navigate('/chat');
                     } catch (error) { }
                 }}
@@ -126,7 +131,7 @@ const UserProfileButtons = ({ userId }: any) => {
             <div className='user-profile-button'
                 onClick={async () => {
                     try {
-                        await axiosPrivate.get(`block/${userId}`);
+                        await axiosPrivate.get(`block/${user.userId}`);
                         navigate('/');
                         
                     } catch (error) { }

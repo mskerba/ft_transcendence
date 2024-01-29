@@ -19,13 +19,6 @@ const Chat = () => {
   const [notifAlert, setNotifAlert] = useState({error:'',msg:'' });
   const [newMessage, setNewMessage] = useState({});
   const [usersStatus, setUsersStatus] = useState(new Map([]))
-  const [convInf, setConvInf]:any = useState({
-    Avatar : "",
-    Name: "",
-    convId : "",
-    group: "",
-    id:"",
-  })
 
   const [popupParent, setPopupParent] = useState({display:'none'});
   const [popupInfParent, setPopupInfParent] = useState({display:'none'});
