@@ -36,7 +36,7 @@ export class BlockService {
   }
 
   async blockList(userId: number) {
-    const blockList = await this.prisma.block.findMany({
+    const _blockList = await this.prisma.block.findMany({
       where: {
         OR: [
           { userId: userId, },
@@ -44,7 +44,11 @@ export class BlockService {
         ],
       },
     });
-    return blockList;
+
+    const filteredUserIds  = _blockList.map((block) => 
+      block.userId === userId ? block.blockedUserId : block.userId
+    );
+    return filteredUserIds ;
   }
 
   async block(userId: number, blockedUserId: number) {

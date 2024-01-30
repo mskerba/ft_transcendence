@@ -10,18 +10,6 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 @Injectable()
 @WebSocketGateway({ cors: true })
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -115,9 +103,9 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
                 friends.forEach(item => {
                     if (item.user1.sockId == client.id)
-                        client.to(item.user2.sockId).emit("status", { "Id": userId, "status": stat });
+                        client.to(item.user2.sockId).emit("status", { userId, "status": stat });
                     else
-                        client.to(item.user1.sockId).emit("status", { "Id": userId, "status": stat });
+                        client.to(item.user1.sockId).emit("status", { userId, "status": stat });
                 })
             }
         } catch (error) {
@@ -184,11 +172,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
                 console.log("user not found");
                 return;
             }
-            this.server.to(data.group).emit("FrontDirectMessage", {
+            this.server.to(data.group)
+            .emit("FrontDirectMessage", {
                 "Message": data.message,
                 "Unseen": 6,
                 "Avatar": user.avatar,
-                userId: user.userId,
+                Id: user.userId,
             });
 
 

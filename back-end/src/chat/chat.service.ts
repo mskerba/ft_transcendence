@@ -4,10 +4,14 @@ import { CreateGroupDto, CreateRoleUserDto, PunishDto, MuteDto, UpdateGroupDto }
 import { da, faker, tr } from '@faker-js/faker';
 import { JsonArray } from '@prisma/client/runtime/library';
 import { Dirent } from 'fs';
+import { BlockService } from 'src/block/block.service';
 
 @Injectable()
 export class ChatService {
-    constructor(private readonly prismaService: PrismaService) { }
+    constructor(
+        private readonly prismaService: PrismaService,
+        private readonly blockService: BlockService,
+    ) { }
 
     async findUserById(userid: number)//: Promise<any> 
     {
@@ -264,7 +268,7 @@ export class ChatService {
             });
 
             data.forEach(item => {
-                const conversation =  mp.get(item.privateId);
+                const conversation = mp.get(item.privateId);
                 const obj: object = {
                     'userId': conversation.userId,
                     "Unseen": 2,
@@ -517,25 +521,32 @@ export class ChatService {
     }
 
     // histoy of group
-    async historyOfGroup(group: string) {
+    async historyOfGroup(group: string, userId: number) {
 
         try {
+            const userIdsToExclude = await this.blockService.blockList(userId);
+
             const data = await this.prismaService.roomMessage.findMany({
                 where: {
-                    RoomId: group
+                    RoomId: group,
+                    UserId: {
+                        not: {
+                            in: userIdsToExclude,
+                        },
+                    },
                 },
                 select: {
                     text: true,
                     UserId: true,
                     userId: {
                         select: { name: true, avatar: true },
-                    }
-                }
+                    },
+                },
             });
 
             let arrData = [];
             for (const dt of data) {
-                let obj: object = { userId: dt.UserId, "Message": dt.text, "Name": dt.userId.name, "Avatar": dt.userId.avatar };
+                let obj: object = { Id: dt.UserId, "Message": dt.text, "Name": dt.userId.name, "Avatar": dt.userId.avatar };
                 arrData.push(obj);
             }
             return (arrData);

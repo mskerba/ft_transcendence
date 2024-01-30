@@ -58,7 +58,7 @@ const Chat = () => {
         setNewMessage({
           name: 'New User',
           Message: data.Message,
-          user: (authUser.userId === data.userId) ? 'user' : 'is-not-user',
+          user: (authUser.userId === data.Id) ? 'user' : 'is-not-user',
           Avatar: data.Avatar,
         });
 

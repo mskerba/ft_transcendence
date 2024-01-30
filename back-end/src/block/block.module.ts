@@ -8,5 +8,6 @@ import { FriendModule } from 'src/friend/friend.module';
   controllers: [BlockController],
   providers: [BlockService],
   imports: [PrismaModule, FriendModule],
+  exports: [BlockService]
 })
 export class BlockModule {}

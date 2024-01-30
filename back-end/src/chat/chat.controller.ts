@@ -40,16 +40,13 @@ export class ChatController {
     @Get("group/:groupId")
     async historyOfGroup(@Req() req: any, @Param() group: any){
         const user: UserEntity = req.user;
-        console.log("group Id : ", group.groupId);
-        //return {"msg": "hello"};
-    
 
-        let id : number = parseInt(group.userId);
+
         
         const isUserInGroup = await this.chatService.findUserInGroup(user.userId, group.groupId);
         if (isUserInGroup.error !== undefined)
             return isUserInGroup;
-        const historyGroup = await this.chatService.historyOfGroup(group.groupId);
+        const historyGroup = await this.chatService.historyOfGroup(group.groupId, user.userId);
         if (historyGroup)
             return historyGroup;
         return {"error": "message in this group occured an error", "status": HttpStatus.NOT_ACCEPTABLE};
@@ -84,7 +81,10 @@ export class ChatController {
     }
     // return chat history of private messages
     @Get(":convId")
-    async ChatHistory(@Req() req: any, @Param() param: any): Promise<any>
+    async ChatHistory(
+        @Req() req: any,
+        @Param() param: any,
+    ): Promise<any>
     {
         const user: UserEntity = req.user;
 
