@@ -535,7 +535,7 @@ export class ChatService {
 
             let arrData = [];
             for (const dt of data) {
-                let obj: object = { "Id": dt.UserId, "Message": dt.text, "Name": dt.userId.name, "Avatar": dt.userId.avatar };
+                let obj: object = { userId: dt.UserId, "Message": dt.text, "Name": dt.userId.name, "Avatar": dt.userId.avatar };
                 arrData.push(obj);
             }
             return (arrData);

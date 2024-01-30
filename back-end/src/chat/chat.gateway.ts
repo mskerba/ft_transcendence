@@ -137,7 +137,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
                 client.to(receiver.sockId).emit("FrontDirectMessage", { "Message": data.msg, "Unseen": data.Unseen });
             }
             await this.chatService.addDirectMessage(sender.userId, receiver.userId, data.msg, 3);
-        } catch (error) {}
+        } catch (error) { }
 
     }
 
@@ -173,57 +173,62 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @SubscribeMessage("messageTogroup")
     async messageTogroup(client: Socket, data: { group: string, message: string }) {
 
-        try{
+        try {
 
             const groupId = await this.chatService.findGroupById(data.group);
             if (!groupId)
                 return { "error": "group not found" }
-            
-            const userId = await this.chatService.findUserBySockid(client.id);
-            if (!userId) {
+
+            const user = await this.chatService.findUserBySockid(client.id);
+            if (!user) {
                 console.log("user not found");
                 return;
             }
-            this.server.to(data.group).emit("FrontDirectMessage", { "Message": data.message, "Unseen": 6 , "Avatar": userId.avatar});
-    
-    
-    
-            console.log("id : ", userId, "data ", data);
-            await this.chatService.addMessageToRoom(data.group, data.message, userId.userId);
-        }catch(error){
+            this.server.to(data.group).emit("FrontDirectMessage", {
+                "Message": data.message,
+                "Unseen": 6,
+                "Avatar": user.avatar,
+                userId: user.userId,
+            });
+
+
+
+            console.log("id : ", user, "data ", data);
+            await this.chatService.addMessageToRoom(data.group, data.message, user.userId);
+        } catch (error) {
             console.log("error in send to group");
         }
     }
 
     //Create game with freind 
     @SubscribeMessage("createPrivateGame")
-    async createPrivateGame(client: Socket, data: { to: string, gameID: string}) {
+    async createPrivateGame(client: Socket, data: { to: string, gameID: string }) {
         try {
             const user = await this.chatService.findUserBySockid(client.id);
             const obj = await this.chatService.findUserByname(data.to);
-            console.log("====>>create private game: " , obj.sockId, data.to);
+            console.log("====>>create private game: ", obj.sockId, data.to);
             if (obj.sockId) {
-                client.to(obj.sockId).emit("FrontCreatePrivateGame", {"from":user.userId, "gameID": data.gameID, });
+                client.to(obj.sockId).emit("FrontCreatePrivateGame", { "from": user.userId, "gameID": data.gameID, });
             }
         } catch (error) {
             console.log("error on sockId or name");
         }
 
     }
-    
+
 
     @SubscribeMessage('removePrivateGame')
     async handleRemovePrivateGame(client: Socket, data: { to: number }) {
-      
+
         try {
             const obj = await this.prisma.user.findUnique({
-                where: {userId:data.to},
+                where: { userId: data.to },
                 select: {
-                    sockId:true,
+                    sockId: true,
                 }
             })
-            
-            console.log("====>>create private game: " , obj.sockId, data.to);
+
+            console.log("====>>create private game: ", obj.sockId, data.to);
             if (obj.sockId) {
                 client.to(obj.sockId).emit("toHome", {});
             }
@@ -231,5 +236,5 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
             console.log("error on sockId or name");
         }
     }
-  
+
 }

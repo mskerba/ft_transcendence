@@ -26,7 +26,7 @@ const ChatContainer = (prop:any) => {
       setAllMessage([]);
       console.log("refresh")
       const messages = Object.values(res?.data).map((element:any) => {
-        const user = (element.Id === authUser.userId) ? 'user' : 'is-not-user';
+        const user = (element.userId === authUser.userId) ? 'user' : 'is-not-user';
         return { ...element, user };
       });
       

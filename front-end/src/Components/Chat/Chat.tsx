@@ -54,9 +54,13 @@ const Chat = () => {
     if (socketRef.current !== null) {
 
       socketRef.current.on('FrontDirectMessage', (data: any) => {
-        console.log("socket --> data :", data);
         setRefresh(2);
-        setNewMessage({ name: 'New User', Message: data.Message, user: 'is-not-user', Avatar: data.Avatar });
+        setNewMessage({
+          name: 'New User',
+          Message: data.Message,
+          user: (authUser.userId === data.userId) ? 'user' : 'is-not-user',
+          Avatar: data.Avatar,
+        });
 
       })
 
