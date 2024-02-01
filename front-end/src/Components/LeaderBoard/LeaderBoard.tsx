@@ -75,10 +75,10 @@ const LeaderBoard = () => {
                             </div>
                         </div>
                         <div className='last-five-games'>
-                            { lastFiveGames.length > 0 && lastFiveGames.map((game) => (
+                            { lastFiveGames.length > 0 && lastFiveGames.map((game, i) => (
                                 sortedUsers[index].userId === game.winnerId
-                                 ? <div className='w'>W</div>
-                                 : <div className='l'>L</div>
+                                 ? <div className='w' key={i}>W</div>
+                                 : <div className='l' key={i}>L</div>
                             ))
                             }
                         </div>

@@ -9,6 +9,7 @@ import { BlockModule } from 'src/block/block.module';
   controllers: [ChatController],
   providers: [ChatService, ChatGateway],
   imports: [PrismaModule, BlockModule],
+  exports: [ChatService],
 })
 export class ChatModule {}
 

@@ -9,7 +9,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import RequireAuth from './Components/RequireAuth/RequireAuth';
 import { useAuth } from './context/AuthContext';
 import NavBar from './Components/navBar/navBar';
-import  useAxiosPrivate  from './hooks/UseAxiosPrivate';
+import useAxiosPrivate from './hooks/UseAxiosPrivate';
 import { Navigate, useNavigate } from 'react-router-dom';
 import TwoFactorVerification from './Components/TwoFactorAuth/TwoFactorAuth';
 import Home from './Components/Home/Home';
@@ -22,22 +22,23 @@ import { toast } from 'react-toastify';
 
 
 const App = () => {
-  
-  const {rootAppStyle, auth, login, logout, socketRef, setRandomKey, randomKey} = useAuth();
+
+  const { rootAppStyle, auth, login, logout, socketRef, setRandomKey, randomKey } = useAuth();
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const test = async () => {
+    const fetchUser = async () => {
       try {
         const res = await axiosPrivate.get('/user');
-      if (res.status == 200) {
         login(res?.data);
       }
-    }
       catch (error) { logout(); }
     }
-    test();
+    fetchUser();
+    const intervalId = setInterval(fetchUser, 5000);
+
+    return () => clearInterval(intervalId);
   }, [auth]);
 
   useEffect(() => {
@@ -52,25 +53,25 @@ const App = () => {
         transports: ["websocket"],
         withCredentials: true,
       });
-      
-      const handleDecline = (to:string) => {
+
+      const handleDecline = (to: string) => {
         console.log("send event to decline:", to)
-        socketRef.current.emit("removePrivateGame",{to: to});
+        socketRef.current.emit("removePrivateGame", { to: to });
         setRandomKey("");
 
       }
 
-      
-      socketRef.current.on('toHome',()=>{console.log("Waaaghayerha");navigate('/')})
-      
-      socketRef.current.on('FrontCreatePrivateGame', (data:any) => {
+
+      socketRef.current.on('toHome', () => { console.log("Waaaghayerha"); navigate('/') })
+
+      socketRef.current.on('FrontCreatePrivateGame', (data: any) => {
         console.log("chihaja tarya")
         setRandomKey(data.gameID);
         toast(<>
-        <button onClick={()=> navigate('/game') }>Accept</button>
-        <button onClick={() => handleDecline(data.from)}>Decline</button>
-        </>); 
-        console.log("socket --> data :" ,data);
+          <button onClick={() => navigate('/game')}>Accept</button>
+          <button onClick={() => handleDecline(data.from)}>Decline</button>
+        </>);
+        console.log("socket --> data :", data);
       })
 
     }
@@ -81,29 +82,29 @@ const App = () => {
         socketRef.current = null;
       }
     };
-  }, [auth]); 
+  }, [auth]);
 
 
   return (
     <div className="rout_app" style={rootAppStyle}>
       {auth != 1 &&
-          <Routes>
-            <Route element={ <RequireAuth /> }>
-              <Route path="user/:userId" element={ <><NavBar /><Profile /></> } />
-              <Route path="/" element={ <> <NavBar /> <LeaderBoard /> </> } />
-              <Route path="/game" element={ <Game /> } />
-              <Route path="/chat" element={ <> <NavBar /> <Chat /> </> } />
-              <Route path="/search" element={ <> <NavBar /> <Search /> </> } />
-            </Route>
+        <Routes>
+          <Route element={<RequireAuth />}>
+            <Route path="user/:userId" element={<><NavBar /><Profile /></>} />
+            <Route path="/" element={<> <NavBar /> <LeaderBoard /> </>} />
+            <Route path="/game" element={<Game />} />
+            <Route path="/chat" element={<> <NavBar /> <Chat /> </>} />
+            <Route path="/search" element={<> <NavBar /> <Search /> </>} />
+          </Route>
 
-            <Route path="/login" element={ <Login /> } />
-            <Route path="/2FA" element={ <TwoFactorVerification /> } />
-            <Route path="/*" element={ <NotFound /> } />
+          <Route path="/login" element={<Login />} />
+          <Route path="/2FA" element={<TwoFactorVerification />} />
+          <Route path="/*" element={<NotFound />} />
 
-          </Routes>
+        </Routes>
       }
     </div>
-    );
+  );
 };
 
 export default App;

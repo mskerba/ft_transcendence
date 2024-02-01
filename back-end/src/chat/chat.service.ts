@@ -1,4 +1,4 @@
-import { ConsoleLogger, HttpStatus, Injectable, Param, HttpException } from '@nestjs/common';
+import { ConsoleLogger, HttpStatus, Injectable, Param, HttpException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateGroupDto, CreateRoleUserDto, PunishDto, MuteDto, UpdateGroupDto } from './dto/create-groups.dto'
 import { da, faker, tr } from '@faker-js/faker';
@@ -101,7 +101,8 @@ export class ChatService {
         let str = await this.findLinkMessage(sender, receiver);
 
         if (!str)
-            str = await this.LinkDirectMessage(sender, receiver);
+            // str = await this.LinkDirectMessage(sender, receiver);
+            throw new ForbiddenException();
 
         //console.log("this is str: ", str);
         const data = await this.prismaService.directMessage.create({

@@ -7,10 +7,12 @@ import UserOptions from './UserOptions/UserOptions';
 import useAxiosPrivate from '../../hooks/UseAxiosPrivate';
 import { useAuth } from '../../context/AuthContext';
 import { useParams } from 'react-router-dom';
+import NotFound from '../NotFound/NotFound';
 
 const Profile = () => {
     const [option, setOption] = useState(0);
     const [user, setUser] = useState({});
+    const [error, setError] = useState(false);
     const axiosPrivate = useAxiosPrivate();
     const  { userId }  = useParams();
     const { authUser }: any = useAuth();
@@ -28,11 +30,15 @@ const Profile = () => {
                 setUser(res.data)
             }
         }
-          catch (error) {  }
+          catch (err) {
+            setError(true);
+            console.log("HEREHRE");
+        }
         }
         test();
     }, [userId]);
 
+    if (error) return <NotFound />
     return (
         user.avatar == undefined
         ? <></>

@@ -3,10 +3,14 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
+import { BlockService } from 'src/block/block.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(
+    private readonly userService: UserService,
+    private readonly blockService: BlockService,
+    ) { }
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) : Promise<UserEntity> {
@@ -15,7 +19,10 @@ export class UserController {
   
   @Get()
   async findAll(@Req() req) : Promise<UserEntity> {
-    return new UserEntity(req.user);
+    const user = req.user;
+    user.blockList = await this.blockService.blockList(user.userId);
+
+    return user;
   }
 
   @Get(':id') 
