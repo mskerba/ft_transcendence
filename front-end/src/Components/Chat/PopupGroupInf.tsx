@@ -3,6 +3,8 @@ import  useAxiosPrivate  from '../../hooks/UseAxiosPrivate';
 import PopupCreatGroup from './PopupCreatGroup';
 import Modal from 'react-modal';
 import './chat.css';
+import { useAuth } from '../../context/AuthContext';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const Member = (prop:any) => {
   const {Id, Role, Name, Avatar} = prop;
@@ -51,20 +53,22 @@ const PopupGroupInf = (prop:any) => {
   const [addUsernameGroup, setAddUsernameGroup] = useState('');
   const [addRoleNewUser, setAddRoleNewUser] = useState('member');
   const axiosPrivate = useAxiosPrivate();
+  const {setConvInf, convInf}: any = useAuth();
+  const navigate = useNavigate();
 
 
   const handleCloseClick = () => {
     prop.setPopupInfParent((prev:any)=> {
       return ({...prev,display:'none'})
     });
-    prop.setRoomID(prop.convInf.convId);
+    prop.setRoomID(convInf.convId);
   };
 
 
   useEffect(() => {
     const fetch = async () => {
       try {
-        const res = await axiosPrivate.get(`/chat/about/${prop.convInf.convId}`);
+        const res = await axiosPrivate.get(`/chat/about/${convInf.convId}`);
         const listeOfData:any = Object.values(res?.data);
         const userRole = listeOfData.pop();
         setRole(userRole.UserRole);
@@ -76,10 +80,10 @@ const PopupGroupInf = (prop:any) => {
         prop.setNotifAlert(()=>{return ({error:'error',msg:error.response.data.message[0]})})
       }
     }
-    if(prop.convInf.convId !== '')
+    if(convInf.convId !== '')
       fetch();
     prop.setRefresh(0);
-  }, [prop.convInf.convId,prop.refresh]);
+  }, [convInf.convId,prop.refresh]);
 
 
   function handleMoreInfClick() {
@@ -97,7 +101,7 @@ const PopupGroupInf = (prop:any) => {
   }
 
   async function handleContact (){
-   
+    navigate(`/user/${memberSelected}`)
     handleMoreInfClick();
   }
 
@@ -110,7 +114,7 @@ const PopupGroupInf = (prop:any) => {
 
   async function handleBan (){
     const res = await axiosPrivate.post("/chat/group/ban", {
-      roomId:prop.convInf.convId,
+      roomId:convInf.convId,
       senderId: 0,
       userId: memberSelected,
 
@@ -125,7 +129,7 @@ const PopupGroupInf = (prop:any) => {
     
   async function handleKick (){
     const res = await axiosPrivate.post("/chat/group/kick", {
-      roomId:prop.convInf.convId,
+      roomId:convInf.convId,
       senderId: 0,
       userId: memberSelected,
 
@@ -148,15 +152,15 @@ const PopupGroupInf = (prop:any) => {
   }
 
   async function handleRemoveGroupClick (){
-    const res = await axiosPrivate.get(`/chat/remove/${prop.convInf.convId}`);
+    const res = await axiosPrivate.get(`/chat/remove/${convInf.convId}`);
     prop.setRefresh(1);
     handleCloseClick();
-    prop.setConvInf({
+    setConvInf({
       Avatar : "",
       Name: "",
       convId : "",
       group: "",
-      id:""
+      Id:""
     });
     prop.setShowDropdown(true);
     setTimeout(()=>prop.setShowDropdown(false), 3000);
@@ -179,7 +183,7 @@ const PopupGroupInf = (prop:any) => {
       try {
 
         const res = await axiosPrivate.post("/chat/group/mute", {
-          roomId: prop.convInf.convId,
+          roomId: convInf.convId,
           senderId: 0,
           userId: parseInt(memberSelected),
           numberHour: parseInt(muteTime)
@@ -199,10 +203,10 @@ const PopupGroupInf = (prop:any) => {
 
   async function handleLeaveGroupClick() {
     handleCloseClick();
-    const res = await axiosPrivate.get(`/chat/leave/${prop.convInf.convId}`);
+    const res = await axiosPrivate.get(`/chat/leave/${convInf.convId}`);
 
     prop.setRefresh(1);
-    prop.setConvInf({
+    setConvInf({
       Avatar : "",
       Name: "",
       convId : "",
@@ -230,7 +234,7 @@ const PopupGroupInf = (prop:any) => {
 
     closeupdate();
     let post = {
-      roomId: prop.convInf.convId,
+      roomId: convInf.convId,
       userName: addUsernameGroup,
       roleName: addRoleNewUser
     };
@@ -362,7 +366,7 @@ const PopupGroupInf = (prop:any) => {
           style={{ left: prop.divPosition.x, top: prop.divPosition.y, display: prop.divPosition.display}}>
             <ul>
               <li onClick={handlePlay}>Play</li>
-              <li onClick={handleContact}>Contact</li>
+              <li onClick={handleContact}>View Profile</li>
               {
                 (Role !== 'member' && userSelectedRole != 'owner') &&
                 <>
@@ -382,7 +386,7 @@ const PopupGroupInf = (prop:any) => {
 
           
           <div className='group-avatar-inf'>
-            <img src={prop.convInf.Avatar} />
+            <img src={convInf.Avatar} />
           </div>
 
           <div className="group-remove-add"  >

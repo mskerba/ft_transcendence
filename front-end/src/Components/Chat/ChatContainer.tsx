@@ -8,7 +8,7 @@ import './chat.css';
 
 const ChatContainer = (prop:any) => {
 
-  const { authUser }: any = useAuth();
+  const { authUser, convInf}: any = useAuth();
   const axiosPrivate = useAxiosPrivate();
   const [message, setMessage] = useState('');
 
@@ -22,7 +22,7 @@ const ChatContainer = (prop:any) => {
 
   const fetchData = async () => {
     try {
-      const res = await axiosPrivate.get(`/chat${(prop.convInf.group)?'/group':''}/${prop.convInf.convId}`);
+      const res = await axiosPrivate.get(`/chat${(convInf.group)?'/group':''}/${convInf.convId}`);
       setAllMessage([]);
       console.log("refresh")
       const messages = Object.values(res?.data).map((element:any) => {
@@ -43,7 +43,7 @@ const ChatContainer = (prop:any) => {
   useEffect(() => {
     fetchData();
     // prop.setRefresh(0);
-  }, [prop.convInf]);
+  }, [convInf]);
   
   useEffect(()=>{
     console.log(prop.newMessage);
@@ -53,30 +53,30 @@ const ChatContainer = (prop:any) => {
   const handleSendMessage = () => {
     if (message == '')
     return;
-    if (prop.convInf.group){
+    if (convInf.group){
 
-      prop.socket.current.emit('messageTogroup', {group: prop.convInf.convId, message:message});
+      prop.socket.current.emit('messageTogroup', {group: convInf.convId, message:message});
     }
     else {
-      prop.socket.current.emit('DirectMessage', {to: prop.convInf.Name, msg:message,Unseen: 3});
+      prop.socket.current.emit('DirectMessage', {to: convInf.Name, msg:message,Unseen: 3});
 
     }
     prop.setRefresh(2);
-    const newMessage = { name: 'New User', Message: message, user: 'user' };
+    const newMessage = {Message: message, user: 'user' };
     setAllMessage([ newMessage, ...allMessage]);
     setMessage('');
   };
 
   return (
     <div className='chat-container'>
-      { (prop.convInf.convId !== "") && <>
+      { (convInf.convId !== "") && <>
 
-        <ChatHeader  usersStatus={prop.usersStatus} setShow={prop.setShow} convInf={prop.convInf} setPopupInfParent={prop.setPopupInfParent} />
+        <ChatHeader  usersStatus={prop.usersStatus} setShow={prop.setShow} setPopupInfParent={prop.setPopupInfParent} />
 
         <div className='chat-conversation'>
           <div className='child-chat-conversation'>
             {allMessage.reverse().map((element, index) => (
-              <Message key={index} {...element} group={prop.convInf.group}/>
+              <Message key={index} {...element} group={convInf.group}/>
             ))}
           </div>
         </div>

@@ -18,6 +18,7 @@ const ChatList = (prop:any) => {
   const fetch = async () => {
     try {
       const res = await axiosPrivate.get('/chat');
+      // console.log(res.data)
       let conv = Object.values(res?.data);
       if (!allConversation.length)
       {
@@ -72,7 +73,7 @@ const ChatList = (prop:any) => {
           <>
           {allConversation.map((element, index) => (
               <Conversation key={index} index={index}
-              setSelectedId={setSelectedId} selectedId={selectedId}  convInf={prop.convInf} setConvInf={prop.setConvInf} {...element} setShow={prop.setShow} />
+              setSelectedId={setSelectedId} selectedId={selectedId} {...element} setShow={prop.setShow} />
           ))}
           </>
         </div>

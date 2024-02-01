@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
     Name: "",
     convId : "",
     group: "",
-    userId:"",
+    Id:"",
   });
 
   const login = (user: any) => {

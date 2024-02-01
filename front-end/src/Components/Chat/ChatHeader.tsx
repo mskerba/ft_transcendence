@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import './chat.css';
+import { useAuth } from '../../context/AuthContext';
 
 
 const ChatHeader = (prop:any) => {
-  const group:Boolean = prop.convInf.group;
+  const { convInf}: any = useAuth();
+  const group:Boolean = convInf.group;
 
 
 
@@ -17,6 +19,7 @@ const ChatHeader = (prop:any) => {
       return ({...prev,display:'flex'})
     });
   }
+  console.log(convInf.Id)
 
   return (
       <div className='chat-header'>
@@ -24,13 +27,15 @@ const ChatHeader = (prop:any) => {
           <img src='/src/assets/arrow.svg' className='arrow-svg'/>
         </div>
         <div className='right-part-header'>
-          <div className='chat-info'>
-            <img src={`http://localhost:3000/avatar/${prop.convInf.Avatar}`} className='conversation-avatar'/>
-            <div className='content'>
-                <h5>{prop.convInf.Name}</h5>
-                {!group && <p>{prop.usersStatus.get(prop.convInf.id)}</p>}
+          <a  href={`/user/${convInf.Id}`}>
+            <div className='chat-info'>
+              <img src={`http://localhost:3000/avatar/${convInf.Avatar}`} className='conversation-avatar'/>
+              <div className='content'>
+                  <h5>{convInf.Name}</h5>
+                  {!group && <p>{prop.usersStatus.get(convInf.id)}</p>}
+              </div>
             </div>
-          </div>
+          </a>
           {group && <div  className='info-group-button' onClick={handelClickInf} ><img src='/src/assets/info-group.svg'/></div>}
           {!group && <div className='play-button-chat'>
               <p>Play Now</p>

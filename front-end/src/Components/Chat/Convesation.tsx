@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import './chat.css';
+import { useAuth } from '../../context/AuthContext';
 
 const timeOfLastMessage = (date:any) => {
   const event = new Date(date);
@@ -39,20 +40,21 @@ const timeOfLastMessage = (date:any) => {
 }
 
 const Conversation = (prop:any) => {
-
+  const { setConvInf}: any = useAuth();
+  console.log("--->",prop.userId)
   const date = timeOfLastMessage(prop.Date);
   const style = {
     background:'green',
   }
   function handleClick() {
-    prop.setConvInf((prev:any) => {
+    setConvInf((prev:any) => {
       return {
         ...prev,
         Avatar : prop.Avatar,
         Name: prop.Name,
         convId : prop.convId,
         group : prop.group,
-        id: prop.Id
+        Id: prop.userId
       };
     })
     if (innerWidth <925)
