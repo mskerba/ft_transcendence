@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './navBar.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import useAxiosPrivate from '../../hooks/UseAxiosPrivate';
 
@@ -29,6 +29,7 @@ const NavBar = () => {
   const axiosPrivate = useAxiosPrivate();
   const [searchQuery, setSearchQuery] = useState<string>();
   const [result, setResult] = useState([]);
+  const navigate = useNavigate();
 
 
   const handleLogout = async () => {
@@ -45,14 +46,14 @@ const NavBar = () => {
 
     if (e.target.value.length === 0) {
       setResult([]);
-      return ;
+      return;
     }
-  
+
     try {
       const res = await axiosPrivate.get(`/search?keyword=${encodeURIComponent(e.target.value)}`);
 
       setResult(res.data);
-    } catch(error) {}
+    } catch (error) { }
 
   };
 
@@ -73,7 +74,7 @@ const NavBar = () => {
 
       <div style={{ display: divPosition.display }} className='closeDropdown' onClick={handleMoreInfClick}>
       </div>
-      
+
       <nav className='navbar-' >
 
         <div className='logo-minsize'>
@@ -95,8 +96,8 @@ const NavBar = () => {
                 type="text"
                 placeholder="Search..."
                 className='navbar-search'
-              value={searchQuery}
-              onChange={handleInputChange}
+                value={searchQuery}
+                onChange={handleInputChange}
               />
             </li>
           </div>
@@ -124,16 +125,26 @@ const NavBar = () => {
 
       </nav>
 
-      { result.length > 0 &&
-      <div className='search-result'>
-        {result.map((e) => (
-          <h3>{
-            (e.userId) ? e.name : e.title
-          }</h3>
-        ))}
-  
-      </div>
-    }
+      {result.length > 0 &&
+        <div className='search-result'>
+          {result.map((e) => (
+
+            (e.userId) ?
+              <h3
+                onClick={() => {
+                  setSearchQuery('');
+                  setResult([]);
+                  navigate(`/user/${e.userId}`);
+                }}
+              >
+                {e.name}
+              </h3>
+              : <h3>{e.title}</h3>
+
+          ))}
+
+        </div>
+      }
     </>
   );
 };

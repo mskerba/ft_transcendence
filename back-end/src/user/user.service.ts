@@ -18,19 +18,19 @@ export class UserService {
 
       throw e;
     }
-  
+
   }
 
   async findOne(id: number) {
-    try {
-      return await this.prisma.user.findUnique({
-        where: {
-          userId: id,
-        },
-      });
-    } catch (err) {
-      throw new NotFoundException();
-    }
+    const user = await this.prisma.user.findUnique({
+      where: {
+        userId: id,
+      },
+    });
+    
+    for (let attr in user) return user;
+  
+    throw new NotFoundException();
   }
 
   findByEmail(email: string) {

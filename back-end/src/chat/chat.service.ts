@@ -308,6 +308,10 @@ export class ChatService {
         arrData.sort((a, b) => b.Date - a.Date);
         console.log("serve all list of contact is finsished");
 
+        console.log('*****************');
+        console.log(arrData);
+        console.log('*****************');
+
         return arrData;
 
     }
