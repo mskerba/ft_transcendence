@@ -127,12 +127,12 @@ input {
     /* padding: 0; */
     color: white;
     
-    font-size: larger;
+    font-size: medium;
     font-weight: bold;
 
     white-space: nowrap; 
     overflow: hidden;
-    text-overflow: ellipsis; 
+    text-overflow: ellipsis;
 
 }
 

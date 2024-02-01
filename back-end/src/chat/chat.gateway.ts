@@ -130,20 +130,18 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
 
 
-    // @SubscribeMessage('inGame')
-    // async ShareStatus(client: Socket){
+    @SubscribeMessage('inGame')
+    async ShareStatus(client: Socket, isInGame: boolean) {
 
-    //   const friends = await this.chatService.FriendStatus(this.mp[client.id]);
+        const status: string = isInGame ? 'in game' : 'online';
 
-    //   friends.forEach(item => {
-    //     if (item.user1.sockId == client.id)
-    //       client.to(item.user2.sockId).emit("status", this.mp[client.id], "in game");
-    //     else
-    //       client.to(item.user1.sockId).emit("status", this.mp[client.id], "in game");
+        this.sendStatus(client, this.mp.get(client.id), status);
 
-    //   })
+        try {
+            await this.chatService.SockToClient(null, this.mp.get(client.id), status);
+        } catch (error) { }
 
-    // }
+    }
 
 
 
@@ -157,7 +155,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         client.join(data.group);
     }
 
-    // send message to people in group
     @SubscribeMessage("messageTogroup")
     async messageTogroup(client: Socket, data: { group: string, message: string }) {
 
@@ -173,12 +170,13 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
                 return;
             }
             this.server.to(data.group)
-            .emit("FrontDirectMessage", {
-                "Message": data.message,
-                "Unseen": 6,
-                "Avatar": user.avatar,
-                Id: user.userId,
-            });
+                .emit("FrontDirectMessage", {
+                    Message: data.message,
+                    Unseen: 6,
+                    Avatar: user.avatar,
+                    Id: user.userId,
+                    name: user.name
+                });
 
 
 
@@ -208,7 +206,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     @SubscribeMessage('removePrivateGame')
     async handleRemovePrivateGame(client: Socket, data: { to: number }) {
-
+        
         try {
             const obj = await this.prisma.user.findUnique({
                 where: { userId: data.to },
@@ -216,13 +214,23 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
                     sockId: true,
                 }
             })
-
+            
             console.log("====>>create private game: ", obj.sockId, data.to);
             if (obj.sockId) {
                 client.to(obj.sockId).emit("toHome", {});
             }
         } catch (error) {
             console.log("error on sockId or name");
+        }
+    }
+
+    @SubscribeMessage('removePrivateGame')
+    async seen(client: Socket, data: { convId: string, isGroup: boolean }) {
+
+        const user = await this.chatService.findUserBySockid(client.id);
+
+        if (data.isGroup) {
+            return ;
         }
     }
 
