@@ -6,12 +6,13 @@ import { useAuth } from '../../context/AuthContext';
 const ChatHeader = (prop:any) => {
   const { convInf}: any = useAuth();
   const group:Boolean = convInf.group;
-  const [status, setStatus] = useState(prop.usersStatus.get(convInf.id)); 
+  const [status, setStatus] = useState(prop.usersStatus.get(convInf.Id)); 
 
   useEffect(()=>{
-    setStatus(prop.usersStatus.get(convInf.id));
-    console.log("FSFSDFDSFDS")
-  }, [prop.usersStatus.get(convInf.id)]);
+    setStatus(prop.usersStatus.get(convInf.Id));
+    console.log("id is:", convInf.Id,"status inheader", prop.usersStatus)
+    prop.setRefresh(0)
+  }, [prop.refresh]);
 
   function handelClick() {
     if (innerWidth <925)

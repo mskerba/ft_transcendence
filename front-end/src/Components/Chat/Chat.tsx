@@ -70,12 +70,13 @@ const Chat = () => {
       })
 
       socketRef.current.on('status', (data: any) => {
-        console.log("status change")
+        setRefresh(2);
         const updatedMap = new Map(usersStatus);
-        if (updatedMap.has(data.id)) {
-          updatedMap.set(data.id, data.status);
+        console.log("status change", data, "***", usersStatus)
+        // if (updatedMap.has(data.userId)) {
+          updatedMap.set(data.userId, data.status);
           setUsersStatus(updatedMap);
-        }
+        // }
       })
 
 

@@ -84,7 +84,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     async handleDisconnect(client: Socket) {
         console.log("disconnected client : ", client.id, " from : ", this.mp.get(client.id));
 
-        this.sendStatus(client, this.mp.get(client.id), "offline");
+        await this.sendStatus(client, this.mp.get(client.id), "offline");
 
         try {
             await this.chatService.SockToClient(null, this.mp.get(client.id), "offline");
@@ -98,7 +98,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     async sendStatus(client: Socket, userId: number, stat: string) {
         try {
             const friends = await this.chatService.FriendStatus(userId);
-
+            console.log
             if (friends.length) {
 
                 friends.forEach(item => {
@@ -132,7 +132,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     @SubscribeMessage('inGame')
     async ShareStatus(client: Socket, isInGame: boolean) {
-        console.log("isInGame", isInGame)
         const status: string = isInGame ? 'in game' : 'online';
 
         this.sendStatus(client, this.mp.get(client.id), status);

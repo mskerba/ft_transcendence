@@ -71,7 +71,7 @@ const ChatContainer = (prop:any) => {
     <div className='chat-container'>
       { (convInf.convId !== "") && <>
 
-        <ChatHeader  usersStatus={prop.usersStatus} setShow={prop.setShow} setPopupInfParent={prop.setPopupInfParent} />
+        <ChatHeader  usersStatus={prop.usersStatus} setShow={prop.setShow} setPopupInfParent={prop.setPopupInfParent} setRefresh={prop.setRefresh} refresh={prop.refresh}/>
 
         <div className='chat-conversation'>
           <div className='child-chat-conversation'>

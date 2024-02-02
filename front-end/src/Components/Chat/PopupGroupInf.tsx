@@ -241,15 +241,14 @@ const PopupGroupInf = (prop:any) => {
     try {
 
       const res = await axiosPrivate.post(`/chat/group/add`, post);
-
-    prop.setShowDropdown(true);
-    setTimeout(()=>prop.setShowDropdown(false), 3000);
-    prop.setNotifAlert(()=>{return ({error:'success',msg:res.data.success})})
+      prop.setShowDropdown(true);
+      setTimeout(()=>prop.setShowDropdown(false), 3000);
+      prop.setNotifAlert(()=>{return ({error:'success',msg:res.data.success})})
     }
     catch {
       prop.setShowDropdown(true);
       setTimeout(()=>prop.setShowDropdown(false), 3000);
-      prop.setNotifAlert(()=>{return ({error:'error',msg:error.response.data.message[0]})})
+      // prop.setNotifAlert(()=>{return ({error:'error',msg:error.response.data.message[0]})})
     }
     setAddUsernameGroup('');
     prop.setRefresh(1);

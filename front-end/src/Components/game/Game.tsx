@@ -76,7 +76,6 @@ function Game() {
         socketRefGame.current = null;
         socketRef.current.emit("inGame", false)
         
-      // socketRef.current.emit("inGame", {isInGame:false})
       setRootAppStyle(()=>{return({})})
       setRandomKey("");
       }

@@ -27,9 +27,10 @@ const ChatList = (prop:any) => {
             prop.socket.current.emit('joinGroup', {group:element.convId});
           else {
             const updatedMap = new Map(prop.usersStatus);
-            updatedMap.set(element.Id, element.status); //remove online string and decomment element.status
+            updatedMap.set(element.userId, element.status); // Remove "online" string and uncomment element.status
             prop.setUsersStatus(updatedMap);
-
+            
+            console.log("++++++",prop.usersStatus, updatedMap)
           }
         });
       }
