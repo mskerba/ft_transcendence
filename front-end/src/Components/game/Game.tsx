@@ -49,6 +49,7 @@ function Game() {
         query: { key: randomKey },
       });
       socketRefGame.current.on('inGame', (data: any) => {
+        console.log('ingame work');
         setInGame(1);
       });
 

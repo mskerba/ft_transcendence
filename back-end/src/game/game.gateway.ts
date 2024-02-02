@@ -257,8 +257,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.connectedprivateUsers.set({ id: client.id, user: userId }, key);
 
 
-    } else if (![...this.connectedUsers.values()].includes(userId)) {
-
+    } else if (this.connectedUsers.size || ![...this.connectedUsers.values()].includes(userId)) {
+      console.log("making game---???>",this.connectedUsers, this.myMap)
       let isUserInGame = false;
 
       for (const [key, value] of this.myMap) {
