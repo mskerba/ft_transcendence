@@ -54,7 +54,6 @@ function Game() {
 
 
       socketRefGame.current.on('stopGame', (data:any)=>{
-        console.log("FDSfds", data)
         setInGame(2);
         setFinaleGameScore(data.score);
         // navigate('/');
@@ -67,8 +66,10 @@ function Game() {
       });
     }
     
-    if (socketRef.current !== null)
+    if (socketRef.current !== null){
+      console.log("al7aak")
       socketRef.current.emit("inGame", true)
+    }
 
     return () => {
       if (socketRefGame.current) {

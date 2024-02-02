@@ -133,6 +133,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     @SubscribeMessage('inGame')
     async ShareStatus(client: Socket, isInGame: boolean) {
+        console.log("-----*****-->>>>>>>", isInGame)
         const status: string = isInGame ? 'in game' : 'online';
 
         this.sendStatus(client, this.mp.get(client.id), status);
