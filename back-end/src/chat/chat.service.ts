@@ -74,9 +74,6 @@ export class ChatService {
                     { UserId2: user1, UserId1: user2 },
                 ]
             },
-            select: {
-                conversationId: true,
-            },
         });
         return (data);
     }
@@ -95,23 +92,33 @@ export class ChatService {
     }
 
 
-    async addDirectMessage(sender: number, receiver: number, msg: string, Unseen: number): Promise<object> {
+    async addDirectMessage(sender: number, receiver: number, msg: string): Promise<object> {
 
         console.log("the param is : ", sender, " : ", receiver, " : ", msg);
 
-        let str = await this.findLinkMessage(sender, receiver);
+        let conv = await this.findLinkMessage(sender, receiver);
 
-        if (!str)
-            // str = await this.LinkDirectMessage(sender, receiver);
+        if (!conv)
             throw new ForbiddenException();
 
-        //console.log("this is str: ", str);
+
+        const updateField = receiver === conv.UserId1 ? 'user1Count' : 'user2Count';
+        await this.prismaService.linkDirectMessage.update({
+            where: {
+                conversationId: conv.conversationId,
+            },
+            data: {
+                [updateField]: {
+                    increment: 1,
+                },
+            },
+        });
+
         const data = await this.prismaService.directMessage.create({
             data: {
                 text: msg,
                 userid: { connect: { userId: sender } },
-                PrvMsgId: { connect: { conversationId: str.conversationId } },
-                countUnseen: Unseen
+                PrvMsgId: { connect: { conversationId: conv.conversationId } },
             },
             select: {
                 text: true,
@@ -162,6 +169,7 @@ export class ChatService {
                 },
                 select: {
                     RoomId: true,
+                    unseenCount: true,
                     roomId: {
                         select: {
                             title: true,
@@ -170,6 +178,9 @@ export class ChatService {
                     }
                 },
             });
+            console.log('TAHATAHATAHATAHATAHATAHATAHATAHA');
+            console.log(GroupId);
+            console.log('HAMIDHAMIDHAMIDHAMIDHAMIDHAMIDHAMIDHAMID');
             return GroupId;
         } catch (error) {
             console.log("error in findGroupByuser")
@@ -199,6 +210,7 @@ export class ChatService {
             const room = await this.findGroupByUser(user1);
             for (const item in room) {
 
+                
                 let data = (await this.lastMessageGroup(room[item].RoomId));
                 let lastMsg: string = "welcome to " + room[item].roomId.title;
                 let date = new Date();
@@ -207,9 +219,17 @@ export class ChatService {
                     date = data.dateSent;
                 }
 
+                console.log('ROOMROOM')
+                console.log(room, item);
+                console.log('ITEMITEM')
                 const obj: object = {
-                    "Unseen": 4, "Name": room[item].roomId.title,
-                    "lastMsg": lastMsg, "Date": date, "Avatar": room[item].roomId.avatar, "convId": room[item].RoomId, "group": true
+                    Unseen: room[item].unseenCount,
+                    Name: room[item].roomId.title,
+                    lastMsg: lastMsg,
+                    Date: date,
+                    Avatar: room[item].roomId.avatar,
+                    convId: room[item].RoomId,
+                    group: true
                 };
                 arrData.push(obj);
             }
@@ -237,15 +257,36 @@ export class ChatService {
                     conversationId: true,
                     user1: { select: { userId: true, name: true, avatar: true, status: true } },
                     user2: { select: { userId: true, name: true, avatar: true, status: true } },
-                }
+                    user1Count: true,
+                    user2Count: true,
+                },
             })
+
+            console.log('------------------1');
+            console.log(data);
+            console.log('------------------2');
+
             let obj: object;
 
             data.forEach(id => {
-                if (id.user1.userId != user1)
-                    obj = { "userId": id.user1.userId, "name": id.user1.name, "avatar": id.user1.avatar, "status": id.user1.status };
-                else
-                    obj = { "userId": id.user2.userId, "name": id.user2.name, "avatar": id.user2.avatar, "status": id.user2.status };
+                let user;
+                let unseen;
+                if (id.user1.userId != user1) {
+                    user = id.user1;
+                    unseen = id.user2Count;
+                }
+                else {
+                    user = id.user2;
+                    unseen = id.user1Count;
+                }
+                console.log('testest: ', unseen);
+                obj = {
+                    userId: user.userId,
+                    name: user.name,
+                    avatar: user.avatar,
+                    status: user.status,
+                    unseen,
+                };
                 mp.set(id.conversationId, obj);
                 convId.push(id.conversationId);
             });
@@ -272,13 +313,16 @@ export class ChatService {
             data.forEach(item => {
                 const conversation = mp.get(item.privateId);
                 const obj: object = {
-                    'userId': conversation.userId,
-                    "Unseen": 2,
-                    "Id": conversation.id,
-                    "Name": conversation.name,
-                    "lastMsg": item.text, "Date": item.dateMessage,
-                    "Avatar": conversation.avatar,
-                    "convId": item.privateId, "status": conversation.status, "group": false
+                    userId: conversation.userId,
+                    Unseen: conversation.unseen,
+                    Id: conversation.id,
+                    Name: conversation.name,
+                    lastMsg: item.text,
+                    Date: item.dateMessage,
+                    Avatar: conversation.avatar,
+                    convId: item.privateId,
+                    status: conversation.status,
+                    group: false,
                 };
                 arrData.push(obj);
             })
@@ -519,7 +563,20 @@ export class ChatService {
                     roomId: { connect: { RoomId: roomId } },
                     userId: { connect: { userId: uId } }
                 }
-            })
+            });
+            await this.prismaService.roleUser.updateMany({
+                where: {
+                    RoomId: roomId,
+                    UserId: {
+                        not: uId,
+                    },
+                },
+                data: {
+                    unseenCount: {
+                        increment: 1,
+                    },
+                },
+            });
             return { success: true, status: HttpStatus.OK };
         } catch (error) {
             console.log("error happen in addMessageToRoom");

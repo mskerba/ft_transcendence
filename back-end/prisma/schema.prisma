@@ -154,10 +154,6 @@ model DirectMessage {
 
   userid   User @relation(fields: [senderId], references: [userId])
   senderId Int
-
-  isSeen Boolean @default(false)
-
-  countUnseen Int @default(0)
 }
 
 model Room {
@@ -192,6 +188,8 @@ model RoleUser {
 
   roomId Room   @relation(fields: [RoomId], references: [RoomId])
   RoomId String
+
+  unseenCount Int @default(0)
 
   @@unique([UserId, RoomId])
 }
