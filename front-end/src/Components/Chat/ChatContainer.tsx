@@ -8,7 +8,7 @@ import './chat.css';
 
 const ChatContainer = (prop:any) => {
 
-  const { authUser, convInf}: any = useAuth();
+  const { authUser, convInf, socketRef}: any = useAuth();
   const axiosPrivate = useAxiosPrivate();
   const [message, setMessage] = useState('');
 
@@ -46,23 +46,27 @@ const ChatContainer = (prop:any) => {
   }, [convInf]);
   
   useEffect(()=>{
-    console.log(prop.newMessage);
+    // console.log(prop.newMessage);
+    // if (socketRef !== null) {
+    //   if (convInf.group)
+    //     socketRef.current.emit('seen', { convId:  convInf.convId, isGroup: true });
+    //   else
+    //     socketRef.current.emit('seen', { convId:  convInf.convId, isGroup: false });
+    // }
+
     setAllMessage([ prop.newMessage, ...allMessage]);
   },[prop.newMessage])
   
   const handleSendMessage = () => {
     if (message == '')
     return;
-  console.log(convInf)
     if (convInf.group){
-      console.log(prop);
-
-      prop.socket.current.emit('seen', { convId:  convInf.convId, isGroup: true });
-      prop.socket.current.emit('messageTogroup', {group: convInf.convId, message:message});
+      socketRef.current.emit('seen', { convId:  convInf.convId, isGroup: true });
+      socketRef.current.emit('messageTogroup', {group: convInf.convId, message:message});
     }
     else {
-      prop.socket.current.emit('seen', { convId:  convInf.convId, isGroup: false });
-      prop.socket.current.emit('DirectMessage', {to: convInf.Name, msg:message,Unseen: 3});
+      socketRef.current.emit('seen', { convId:  convInf.convId, isGroup: false });
+      socketRef.current.emit('DirectMessage', {to: convInf.Name, msg:message,Unseen: 3});
 
     }
     prop.setRefresh(2);

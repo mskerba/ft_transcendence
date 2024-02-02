@@ -74,7 +74,7 @@ const ChatList = (prop:any) => {
           <>
           {allConversation.map((element, index) => (
               <Conversation key={index} index={index}
-              setSelectedId={setSelectedId} selectedId={selectedId} {...element} setShow={prop.setShow} />
+              setSelectedId={setSelectedId} selectedId={selectedId} {...element} setShow={prop.setShow} setAllConversation={setAllConversation} allConversation={allConversation} />
           ))}
           </>
         </div>
