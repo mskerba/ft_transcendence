@@ -67,14 +67,16 @@ function Game() {
       });
     }
     
-    if (socketRef.current !== null)
-      socketRef.current.emit("inGame", true)
+    if (socketRef.current !== null && socketRefGame.current !== null)
+      socketRef.current.emit("inGame", true);
 
     return () => {
-      if (socketRefGame.current) {
+      if (socketRefGame.current !== null) {
         socketRefGame.current.disconnect();
         socketRefGame.current = null;
-        socketRef.current.emit("inGame", false)
+        if (socketRef.current !== null) {
+          socketRef.current.emit("inGame", false);
+        }
         
       setRootAppStyle(()=>{return({})})
       setRandomKey("");

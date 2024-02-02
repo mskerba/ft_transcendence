@@ -178,9 +178,6 @@ export class ChatService {
                     }
                 },
             });
-            console.log('TAHATAHATAHATAHATAHATAHATAHATAHA');
-            console.log(GroupId);
-            console.log('HAMIDHAMIDHAMIDHAMIDHAMIDHAMIDHAMIDHAMID');
             return GroupId;
         } catch (error) {
             console.log("error in findGroupByuser")
@@ -219,9 +216,6 @@ export class ChatService {
                     date = data.dateSent;
                 }
 
-                console.log('ROOMROOM')
-                console.log(room, item);
-                console.log('ITEMITEM')
                 const obj: object = {
                     Unseen: room[item].unseenCount,
                     Name: room[item].roomId.title,
@@ -262,9 +256,6 @@ export class ChatService {
                 },
             })
 
-            console.log('------------------1');
-            console.log(data);
-            console.log('------------------2');
 
             let obj: object;
 
@@ -353,9 +344,6 @@ export class ChatService {
         arrData.sort((a, b) => b.Date - a.Date);
         console.log("serve all list of contact is finsished");
 
-        console.log('*****************');
-        console.log(arrData);
-        console.log('*****************');
 
         return arrData;
 
@@ -471,7 +459,7 @@ export class ChatService {
                     UserId: userId.userId,
 
                 }
-            })
+            });
             if (isBanned)
                 return {
                     "error": "User is banned and cannot be added to the group again",

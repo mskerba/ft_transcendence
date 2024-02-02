@@ -4,19 +4,19 @@ import useAxiosPrivate from '../../../../hooks/UseAxiosPrivate';
 import { useAuth } from '../../../../context/AuthContext';
 import { Link } from 'react-router-dom';
 
-const Game = () => {
+const Game = ({userId}: any) => {
     const [games, setGames] = useState([]);
     const axiosPrivate = useAxiosPrivate();
     const { authUser }: any = useAuth();
 
     useEffect(() => {
         const fetchgames = async () => {
-            const res = await axiosPrivate.get(`/game/${authUser.userId}`);
+            const res = await axiosPrivate.get(`/game/${userId}`);
             setGames(res.data);
             console.log(res.data);
         }
         fetchgames();
-    }, []);
+    }, [userId]);
 
     return (
         <div>
@@ -37,7 +37,7 @@ const Game = () => {
                     <div className='border'></div>
                     <div className='game-result'>
                         {
-                            (authUser.userId == game.winnerId)
+                            (userId == game.winnerId)
                              ? <div className='result w'>W</div>
                              : <div className='result l'>L</div>
                         }

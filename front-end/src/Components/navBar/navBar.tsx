@@ -25,12 +25,45 @@ const NavBar = () => {
     });
   }
 
-  const { authUser, logout } = useAuth();
+  const { authUser, logout, setConvInf } = useAuth();
   const axiosPrivate = useAxiosPrivate();
   const [searchQuery, setSearchQuery] = useState<string>();
   const [result, setResult] = useState([]);
   const navigate = useNavigate();
 
+
+  const handleJoinGroup = async (group: any) => {
+
+    try {
+      if (group.TypeRoom === 'public') {
+        const res = await axiosPrivate.post('/chat/group/add', {
+          userName: authUser.name,
+          roomId: group.RoomId,
+          roleName: 'member',
+        });
+
+
+        if (res.data.success) {
+          setConvInf({
+            Avatar: group.avatar,
+            Name: group.title,
+            convId: group.RoomId,
+            group: true,
+          });
+          navigate('/chat');
+        }
+      }
+    } catch (errot) { }
+
+  }
+
+  const handleNavigateToProfile = (userId: number) => {
+
+    setSearchQuery('');
+    setResult([]);
+    navigate(`/user/${userId}`);
+
+  }
 
   const handleLogout = async () => {
 
@@ -53,6 +86,7 @@ const NavBar = () => {
       const res = await axiosPrivate.get(`/search?keyword=${encodeURIComponent(e.target.value)}`);
 
       setResult(res.data);
+      console.log(res.data);
     } catch (error) { }
 
   };
@@ -79,7 +113,7 @@ const NavBar = () => {
 
       <nav className='navbar-' >
 
-        <div className='logo-minsize'  onClick={toHome}>
+        <div className='logo-minsize' onClick={toHome}>
           <h1>
             <img src="/src/assets/pingpong.png" className='logo-image' />
             PongGreen</h1>
@@ -131,20 +165,28 @@ const NavBar = () => {
         <div className='search-result'>
           {result.map((e) => (
 
+
             (e.userId) ?
-              <h3
+              <div className='result-item'
                 onClick={() => {
-                  setSearchQuery('');
-                  setResult([]);
-                  navigate(`/user/${e.userId}`);
+                  handleNavigateToProfile(e.userId);
                 }}
               >
-                {e.name}
-              </h3>
-              : <h3>{e.title}</h3>
+                <img src={`http://localhost:3000/avatar/${e.avatar}`} className='profile-button-navbar' />
+                <h3>
+                  {e.name}
+                </h3>
+              </div>
+              : <div className='result-item'
+                onClick={() => {
+                  handleJoinGroup(e);
+                }}
+              >
+                <img src={`http://localhost:3000/avatar/${e.avatar}`} className='profile-button-navbar' />
+                <h3>{e.title}</h3>
+              </div>
 
           ))}
-
         </div>
       }
     </>

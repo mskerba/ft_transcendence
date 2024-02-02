@@ -40,10 +40,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
             await this.chatService.SockToClient(client.id, userId, "online");
             this.mp.set(client.id, userId);
-            console.log("user give me his id is : ", this.mp.get(client.id), "and connected to ", client.id);
-        } catch (error) {
-            console.log("error in setUser");
-        }
+        } catch (error) {}
 
         // send im online
         this.sendStatus(client, userId, "online");
@@ -98,7 +95,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     async sendStatus(client: Socket, userId: number, stat: string) {
         try {
             const friends = await this.chatService.FriendStatus(userId);
-            console.log
             if (friends.length) {
 
                 friends.forEach(item => {
@@ -133,14 +129,17 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     @SubscribeMessage('inGame')
     async ShareStatus(client: Socket, isInGame: boolean) {
+
+        console.log('INGAME STATUS1: ', isInGame);
+        console.log('INGAME STATUS2: ', isInGame);
         const status: string = isInGame ? 'in game' : 'online';
 
+        
         this.sendStatus(client, this.mp.get(client.id), status);
-
         try {
-            await this.chatService.SockToClient(null, this.mp.get(client.id), status);
+            await this.chatService.SockToClient(client.id, this.mp.get(client.id), status);
         } catch (error) { }
-
+        
     }
 
 

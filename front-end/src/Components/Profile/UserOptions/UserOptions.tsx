@@ -9,7 +9,7 @@ import './UserOptions.css'
 const UserOptions = ({ option, user, onStateChange }: any) => {
     return (
         <div className='user-options-container'>
-            {option == 0 && <Game />}
+            {option == 0 && <Game userId={user.userId}/>}
             {option == 1 && <Achievement />}
             {option == 2 && <Friend userId={user.userId}/>}
             {option == 3 && <FriendRequest />}
