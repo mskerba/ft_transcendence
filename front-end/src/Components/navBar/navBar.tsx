@@ -57,6 +57,8 @@ const NavBar = () => {
 
   };
 
+  const toHome = () => navigate('/');
+
 
   return (
     <>
@@ -77,7 +79,7 @@ const NavBar = () => {
 
       <nav className='navbar-' >
 
-        <div className='logo-minsize'>
+        <div className='logo-minsize'  onClick={toHome}>
           <h1>
             <img src="/src/assets/pingpong.png" className='logo-image' />
             PongGreen</h1>
@@ -85,7 +87,7 @@ const NavBar = () => {
 
         <ul>
           <div className='logo-search'>
-            <li>
+            <li onClick={toHome}>
               <h1>
                 <img src="/src/assets/pingpong.png" className='logo-image' />
                 PongGreen

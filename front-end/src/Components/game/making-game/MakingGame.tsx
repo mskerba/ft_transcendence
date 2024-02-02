@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 // import { animated } from 'react-spring';
 import { useNavigate } from 'react-router-dom';
 import './MakingGame.css';
+import io from 'socket.io-client';
+import { useAuth } from '../../../context/AuthContext';
 
 const ImageSwapper = () => {
   const [index, setIndex] = useState(0);
@@ -47,7 +49,6 @@ const UserMaking = () => {
 };
 
 function MakingGame() {
-  
   const navigate = useNavigate();
 
   function handleExit(){
