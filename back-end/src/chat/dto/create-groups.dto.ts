@@ -21,7 +21,7 @@ export class CreateGroupDto{
    @IsOptional()
    @IsNotEmpty()
    @IsStrongPassword()
-   password: string
+   password: string;
 }
 
 export class UpdateGroupDto extends CreateGroupDto{
@@ -45,6 +45,9 @@ export class CreateRoleUserDto{
 
    @IsIn(['admin', 'member'])
    roleName: string;
+
+   @IsOptional()
+   password: string;
 
 }
 

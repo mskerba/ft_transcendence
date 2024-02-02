@@ -174,6 +174,7 @@ export class ChatService {
                         select: {
                             title: true,
                             avatar: true,
+                            createdAt: true,
                         }
                     }
                 },
@@ -210,7 +211,7 @@ export class ChatService {
                 
                 let data = (await this.lastMessageGroup(room[item].RoomId));
                 let lastMsg: string = "welcome to " + room[item].roomId.title;
-                let date = new Date();
+                let date = room[item].roomId.createdAt;
                 if (data) {
                     lastMsg = data.text;
                     date = data.dateSent;

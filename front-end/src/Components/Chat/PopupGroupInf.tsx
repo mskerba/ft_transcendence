@@ -1,27 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
-import  useAxiosPrivate  from '../../hooks/UseAxiosPrivate';
+import useAxiosPrivate from '../../hooks/UseAxiosPrivate';
 import PopupCreatGroup from './PopupCreatGroup';
 import Modal from 'react-modal';
 import './chat.css';
 import { useAuth } from '../../context/AuthContext';
 import { Navigate, useNavigate } from 'react-router-dom';
 
-const Member = (prop:any) => {
-  const {Id, Role, Name, Avatar} = prop;
-  function handleMoreInfClick(event:any) {
+const Member = (prop: any) => {
+  const { Id, Role, Name, Avatar } = prop;
+  function handleMoreInfClick(event: any) {
     const { clientX, clientY } = event;
     prop.setMemberSelected(Id);
     prop.setUserSelectedRole(Role);
-    prop.setDivPosition((prev:any) => 
-                          {
-                            let display = (prev.display == 'none')? 'flex' : 'none';
-                            let top =  (prop.userRole == 'member' || Role == 'owner')? 80 : 165; 
-                            return{ x: clientX - 190,
-                                    y: clientY - top,
-                                    display: display,
-                                    i:1
-                                  }
-                          });
+    prop.setDivPosition((prev: any) => {
+      let display = (prev.display == 'none') ? 'flex' : 'none';
+      let top = (prop.userRole == 'member' || Role == 'owner') ? 80 : 165;
+      return {
+        x: clientX - 190,
+        y: clientY - top,
+        display: display,
+        i: 1
+      }
+    });
     prop.setRefresh(2);
   }
 
@@ -36,30 +36,30 @@ const Member = (prop:any) => {
         <h3>{Name}</h3>
         <p>{Role}</p>
       </div>
-      <span className="v-ellipsis"  onClick={handleMoreInfClick}>&#xFE19;</span>
+      <span className="v-ellipsis" onClick={handleMoreInfClick}>&#xFE19;</span>
 
     </div>
   );
 }
 
-const PopupGroupInf = (prop:any) => {
-  const [memberSelected, setMemberSelected] :any = useState('')
-  const [Role,setRole] = useState('');
-  const [userSelectedRole,setUserSelectedRole] = useState('');
-  const [mutePopUp, setMutePopUp] :any = useState(false);
+const PopupGroupInf = (prop: any) => {
+  const [memberSelected, setMemberSelected]: any = useState('')
+  const [Role, setRole] = useState('');
+  const [userSelectedRole, setUserSelectedRole] = useState('');
+  const [mutePopUp, setMutePopUp]: any = useState(false);
   const [allMember, setAllMember] = useState([]);
   const [muteTime, setMuteTime] = useState('1');
   const [updateGroup, setUpdateGroup] = useState(false);
   const [addUsernameGroup, setAddUsernameGroup] = useState('');
   const [addRoleNewUser, setAddRoleNewUser] = useState('member');
   const axiosPrivate = useAxiosPrivate();
-  const {setConvInf, convInf}: any = useAuth();
+  const { setConvInf, convInf, authUser }: any = useAuth();
   const navigate = useNavigate();
 
 
   const handleCloseClick = () => {
-    prop.setPopupInfParent((prev:any)=> {
-      return ({...prev,display:'none'})
+    prop.setPopupInfParent((prev: any) => {
+      return ({ ...prev, display: 'none' })
     });
     prop.setRoomID(convInf.convId);
   };
@@ -69,103 +69,107 @@ const PopupGroupInf = (prop:any) => {
     const fetch = async () => {
       try {
         const res = await axiosPrivate.get(`/chat/about/${convInf.convId}`);
-        const listeOfData:any = Object.values(res?.data);
+        const listeOfData: any = Object.values(res?.data);
         const userRole = listeOfData.pop();
         setRole(userRole.UserRole);
         setAllMember(listeOfData);
       }
       catch (error) {
         prop.setShowDropdown(true);
-        setTimeout(()=>prop.setShowDropdown(false), 3000);
-        prop.setNotifAlert(()=>{return ({error:'error',msg:error.response.data.message[0]})})
+        setTimeout(() => prop.setShowDropdown(false), 3000);
+        prop.setNotifAlert(() => { return ({ error: 'error', msg: error.response.data.message[0] }) })
       }
     }
-    if(convInf.convId !== '')
+    if (convInf.convId !== '')
       fetch();
     prop.setRefresh(0);
-  }, [convInf.convId,prop.refresh]);
+  }, [convInf.convId, prop.refresh]);
 
 
   function handleMoreInfClick() {
-    prop.setDivPosition((prev:any)=> {
-                        if (prev.i == '1')
-                          return{ ...prev, i: '2'}
-                        else
-                          return{...prev, display: 'none', i: '0'}
-                  });
+    prop.setDivPosition((prev: any) => {
+      if (prev.i == '1')
+        return { ...prev, i: '2' }
+      else
+        return { ...prev, display: 'none', i: '0' }
+    });
   }
-    
-  async function handlePlay (){
-   
+
+  async function handlePlay() {
+
     handleMoreInfClick();
   }
 
-  async function handleContact (){
+  async function handleContact() {
     navigate(`/user/${memberSelected}`)
     handleMoreInfClick();
   }
 
-  
-   function handleMute (){
+
+  function handleMute() {
     handleMoreInfClick();
     setMutePopUp(true);
-   
+
   }
 
-  async function handleBan (){
-    const res = await axiosPrivate.post("/chat/group/ban", {
-      roomId:convInf.convId,
-      senderId: 0,
-      userId: memberSelected,
+  async function handleBan() {
+    try {
+      const res = await axiosPrivate.post("/chat/group/ban", {
+        roomId: convInf.convId,
+        senderId: authUser.userId,
+        userId: memberSelected,
 
-    });
-   
-    prop.setRefresh(1);
-    prop.setShowDropdown(true);
-    setTimeout(()=>prop.setShowDropdown(false), 3000);
-    prop.setNotifAlert(()=>{return ({error:'info',msg:res.data.success})})
-    handleMoreInfClick();
-  }
-    
-  async function handleKick (){
-    const res = await axiosPrivate.post("/chat/group/kick", {
-      roomId:convInf.convId,
-      senderId: 0,
-      userId: memberSelected,
+      });
 
-    });
-    prop.setRefresh(1);
-    prop.setShowDropdown(true);
-    setTimeout(()=>prop.setShowDropdown(false), 3000);
-    prop.setNotifAlert(()=>{return ({error:'info',msg:res.data.success})})
-    handleMoreInfClick();
+      prop.setRefresh(1);
+      prop.setShowDropdown(true);
+      setTimeout(() => prop.setShowDropdown(false), 3000);
+      prop.setNotifAlert(() => { return ({ error: 'info', msg: res.data.success }) })
+      handleMoreInfClick();
+    } catch (err) { }
   }
 
-  async function handleUpdateGroupClick (){
+  async function handleKick() {
+    try {
+      const res = await axiosPrivate.post("/chat/group/kick", {
+        roomId: convInf.convId,
+        senderId: authUser.userId,
+        userId: memberSelected,
+
+      });
+      prop.setRefresh(1);
+      prop.setShowDropdown(true);
+      setTimeout(() => prop.setShowDropdown(false), 3000);
+      prop.setNotifAlert(() => { return ({ error: 'info', msg: res.data.success }) })
+      handleMoreInfClick();
+    } catch (err) { }
+  }
+
+  async function handleUpdateGroupClick() {
     handleCloseClick();
-    prop.setPopupParent((prev:any) => {
+    prop.setPopupParent((prev: any) => {
       return ({
         ...prev,
-        display:'flex',
+        display: 'flex',
       })
     });
   }
 
-  async function handleRemoveGroupClick (){
+  async function handleRemoveGroupClick() {
     const res = await axiosPrivate.get(`/chat/remove/${convInf.convId}`);
     prop.setRefresh(1);
     handleCloseClick();
     setConvInf({
-      Avatar : "",
+      Avatar: "",
       Name: "",
-      convId : "",
+      convId: "",
       group: "",
-      Id:""
+      Id: ""
     });
     prop.setShowDropdown(true);
-    setTimeout(()=>prop.setShowDropdown(false), 3000);
-    prop.setNotifAlert(()=>{return ({error:'warning',msg:res.data.success})})
-    if (innerWidth <=925)
+    setTimeout(() => prop.setShowDropdown(false), 3000);
+    prop.setNotifAlert(() => { return ({ error: 'warning', msg: res.data.success }) })
+    if (innerWidth <= 925)
       prop.setShow(1);
   }
 
@@ -178,25 +182,23 @@ const PopupGroupInf = (prop:any) => {
   async function sendMute() {
 
     setMutePopUp(false)
-    if (muteTime != 'none')
-    {
+    if (muteTime != 'none') {
       try {
 
         const res = await axiosPrivate.post("/chat/group/mute", {
           roomId: convInf.convId,
-          senderId: 0,
+          senderId: authUser.userId,
           userId: parseInt(memberSelected),
           numberHour: parseInt(muteTime)
         });
-        
+
         prop.setShowDropdown(true);
-        setTimeout(()=>prop.setShowDropdown(false), 3000);
-        prop.setNotifAlert(()=>{return ({error:'warning',msg:res.data.success})})
-      } catch(error)
-      {
+        setTimeout(() => prop.setShowDropdown(false), 3000);
+        prop.setNotifAlert(() => { return ({ error: 'warning', msg: res.data.success }) })
+      } catch (error) {
         prop.setShowDropdown(true);
-        setTimeout(()=>prop.setShowDropdown(false), 3000);
-        prop.setNotifAlert(()=>{return ({error:'error',msg:error.response.data.message[0]})})
+        setTimeout(() => prop.setShowDropdown(false), 3000);
+        prop.setNotifAlert(() => { return ({ error: 'error', msg: error.response.data.message[0] }) })
       }
     }
   }
@@ -207,21 +209,21 @@ const PopupGroupInf = (prop:any) => {
 
     prop.setRefresh(1);
     setConvInf({
-      Avatar : "",
+      Avatar: "",
       Name: "",
-      convId : "",
+      convId: "",
       group: "",
-      id:""
+      id: ""
     });
 
     prop.setShowDropdown(true);
-    setTimeout(()=>prop.setShowDropdown(false), 3000);
-    prop.setNotifAlert(()=>{return ({error:'warning',msg:res.data.success})})
-    if (innerWidth <=925)
+    setTimeout(() => prop.setShowDropdown(false), 3000);
+    prop.setNotifAlert(() => { return ({ error: 'warning', msg: res.data.success }) })
+    if (innerWidth <= 925)
       prop.setShow(1);
   }
 
-  function handleMuteTimeChange(event:any) {
+  function handleMuteTimeChange(event: any) {
     setMuteTime(event.target.value);
   }
 
@@ -242,20 +244,20 @@ const PopupGroupInf = (prop:any) => {
 
       const res = await axiosPrivate.post(`/chat/group/add`, post);
       prop.setShowDropdown(true);
-      setTimeout(()=>prop.setShowDropdown(false), 3000);
-      prop.setNotifAlert(()=>{return ({error:'success',msg:res.data.success})})
+      setTimeout(() => prop.setShowDropdown(false), 3000);
+      prop.setNotifAlert(() => { return ({ error: 'success', msg: res.data.success }) })
     }
     catch {
       prop.setShowDropdown(true);
-      setTimeout(()=>prop.setShowDropdown(false), 3000);
+      setTimeout(() => prop.setShowDropdown(false), 3000);
       // prop.setNotifAlert(()=>{return ({error:'error',msg:error.response.data.message[0]})})
     }
     setAddUsernameGroup('');
     prop.setRefresh(1);
   }
 
-  const handleAddUsernameChange = (event:any) => setAddUsernameGroup(event.target.value);
-  const handleChannelMemberRole = (event:any) => setAddRoleNewUser(event.target.value);
+  const handleAddUsernameChange = (event: any) => setAddUsernameGroup(event.target.value);
+  const handleChannelMemberRole = (event: any) => setAddRoleNewUser(event.target.value);
 
   return (
     <>
@@ -263,10 +265,10 @@ const PopupGroupInf = (prop:any) => {
         isOpen={mutePopUp}
         className='pupup-mute'
         onRequestClose={closeMute}
-        >
+      >
         <h4>Mute User</h4>
         <div className='color-text-mute-popup'>
-        <label>
+          <label>
             <input
               type="radio"
               value="none"
@@ -318,13 +320,13 @@ const PopupGroupInf = (prop:any) => {
             8h
           </label>
         </div>
-        <input type='submit' className='submit'  onClick={sendMute}/>
+        <input type='submit' className='submit' onClick={sendMute} />
       </Modal>
 
       <Modal
         isOpen={updateGroup}
         className='update-group-popup'
-        onRequestClose={closeupdate} 
+        onRequestClose={closeupdate}
       >
         <h4>username:</h4>
         <input
@@ -335,7 +337,7 @@ const PopupGroupInf = (prop:any) => {
           onChange={handleAddUsernameChange}
         />
         <div className='role-new-user'>
-        <label>
+          <label>
             <input
               type="radio"
               value="member"
@@ -357,53 +359,53 @@ const PopupGroupInf = (prop:any) => {
             Admin
           </label>
         </div>
-        <input type='submit' className='submit-add-group' onClick={sendUpdateGroup}/>
+        <input type='submit' className='submit-add-group' onClick={sendUpdateGroup} />
       </Modal>
 
-      
+
       <div className='drop-down-menu'
-          style={{ left: prop.divPosition.x, top: prop.divPosition.y, display: prop.divPosition.display}}>
-            <ul>
-              <li onClick={handlePlay}>Play</li>
-              <li onClick={handleContact}>View Profile</li>
-              {
-                (Role !== 'member' && userSelectedRole != 'owner') &&
-                <>
-                  <li onClick={handleMute}>Mute</li>
-                  <li onClick={handleBan}>Ban</li>
-                  <li onClick={handleKick}>Kick</li>
-                </> 
-              }
-            </ul>
+        style={{ left: prop.divPosition.x, top: prop.divPosition.y, display: prop.divPosition.display }}>
+        <ul>
+          <li onClick={handlePlay}>Play</li>
+          <li onClick={handleContact}>View Profile</li>
+          {
+            (Role !== 'member' && userSelectedRole != 'owner') &&
+            <>
+              <li onClick={handleMute}>Mute</li>
+              <li onClick={handleBan}>Ban</li>
+              <li onClick={handleKick}>Kick</li>
+            </>
+          }
+        </ul>
       </div>
 
       <div className='popup-inf' style={prop.popupInfParent} onClick={handleMoreInfClick}>
         <div className='popup-group-inf'>
 
 
-          <div className="close-goup-inf"  onClick={handleCloseClick}>&#10799;</div>
+          <div className="close-goup-inf" onClick={handleCloseClick}>&#10799;</div>
 
-          
+
           <div className='group-avatar-inf'>
             <img src={`http://localhost:3000/avatar/${convInf.Avatar}`} />
           </div>
 
           <div className="group-remove-add"  >
-            {(Role !== 'member')&&
-            <>
-              <div className='div-add-member-group'><img src='src/assets/add-user-group.svg' className='add-member-group' onClick={handleAddMemberClick}/></div>
-              <div className='div-update-group'><img src='src/assets/update-group.svg' className='update-group' onClick={handleUpdateGroupClick}/></div>
-            </>}
-            {(Role == 'owner')&&<div className='div-remove-group'><img src='src/assets/remove-group.svg' className='remove-group' onClick={handleRemoveGroupClick}/></div>}
-            <div className='div-leave-group'><img src='src/assets/leave-group.svg' className='leave-group' onClick={handleLeaveGroupClick}/></div>
+            {(Role !== 'member') &&
+              <>
+                <div className='div-add-member-group'><img src='src/assets/add-user-group.svg' className='add-member-group' onClick={handleAddMemberClick} /></div>
+                <div className='div-update-group'><img src='src/assets/update-group.svg' className='update-group' onClick={handleUpdateGroupClick} /></div>
+              </>}
+            {(Role == 'owner') && <div className='div-remove-group'><img src='src/assets/remove-group.svg' className='remove-group' onClick={handleRemoveGroupClick} /></div>}
+            <div className='div-leave-group'><img src='src/assets/leave-group.svg' className='leave-group' onClick={handleLeaveGroupClick} /></div>
           </div>
-          
+
           <div className='group-members-inf'>
-          <>
-            {allMember.map((element:any, index:number) => (
-              <Member key={index} setRefresh={prop.setRefresh}  setDivPosition={prop.setDivPosition} setMemberSelected={setMemberSelected} {...element} userRole={Role} setUserSelectedRole={setUserSelectedRole}/>
-            ))}
-          </>
+            <>
+              {allMember.map((element: any, index: number) => (
+                <Member key={index} setRefresh={prop.setRefresh} setDivPosition={prop.setDivPosition} setMemberSelected={setMemberSelected} {...element} userRole={Role} setUserSelectedRole={setUserSelectedRole} />
+              ))}
+            </>
           </div>
         </div>
       </div>
