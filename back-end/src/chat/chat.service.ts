@@ -92,7 +92,7 @@ export class ChatService {
     }
 
 
-    async addDirectMessage(sender: number, receiver: number, msg: string): Promise<object> {
+    async addDirectMessage(sender: number, receiver: number, msg: string): Promise<any> {
 
         console.log("the param is : ", sender, " : ", receiver, " : ", msg);
 
