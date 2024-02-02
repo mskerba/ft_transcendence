@@ -385,7 +385,7 @@ const PopupGroupInf = (prop:any) => {
 
           
           <div className='group-avatar-inf'>
-            <img src={convInf.Avatar} />
+            <img src={`http://localhost:3000/avatar/${convInf.Avatar}`} />
           </div>
 
           <div className="group-remove-add"  >

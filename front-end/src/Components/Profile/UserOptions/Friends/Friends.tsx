@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 const Friend = ({ userId }: any) => {
     const [friends, setFriends] = useState([]);
     const axiosPrivate = useAxiosPrivate();
-    const { authUser, socketRef,setRandomKey }: any = useAuth();
+    const { authUser, socketRef, setRandomKey, setConvInf }: any = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -20,17 +20,17 @@ const Friend = ({ userId }: any) => {
         fetchFriends();
     }, []);
 
-    const  handlePlayFreindClick = (freindName:string) => {
-      const prefix = 'privateGame_';
-      const timestamp = Date.now().toString();
-      const randomPart = Math.random().toString(36).substring(2, 8); // Adjust the length as needed
-      const generatedName = `${prefix}${timestamp}_${randomPart}`;
-  
-      setRandomKey(generatedName);
-      socketRef.current.emit("createPrivateGame",{to:freindName, gameID:generatedName})
-      navigate('/game');
+    const handlePlayFreindClick = (freindName: string) => {
+        const prefix = 'privateGame_';
+        const timestamp = Date.now().toString();
+        const randomPart = Math.random().toString(36).substring(2, 8); // Adjust the length as needed
+        const generatedName = `${prefix}${timestamp}_${randomPart}`;
+
+        setRandomKey(generatedName);
+        socketRef.current.emit("createPrivateGame", { to: freindName, gameID: generatedName })
+        navigate('/game');
     }
-    
+
 
 
     return (
@@ -41,11 +41,26 @@ const Friend = ({ userId }: any) => {
                         <img src={`http://localhost:3000/avatar/${friend.avatar}`} className='avatar' />
                         <h4>{friend.name}</h4>
                     </Link>
-                    { userId === authUser.userId && 
+                    {userId === authUser.userId &&
                         <div className='friend-buttons'>
                             <div className='friend-play-button' onClick={() => handlePlayFreindClick(friend.name)}><img src='/src/assets/play.svg' /></div>
                             <div className='friend-message-button'>
-                            <img src='/src/assets/message.svg' /></div>
+                                <img src='/src/assets/message.svg' 
+                                onClick={async () => {
+                                    try {
+                                        const res = await axiosPrivate.get(`/chat/check-or-create/${friend.userId}`);
+                                        setConvInf({
+                                            Avatar : friend.avatar,
+                                            Name: friend.name,
+                                            convId : res?.data?.conversationId,
+                                            group: "",
+                                            userId: String(friend.userId),
+                                        });
+                                        navigate('/chat');
+                                    } catch (error) { }
+                                }}
+                                />
+                            </div>
                         </div>
                     }
                 </div>

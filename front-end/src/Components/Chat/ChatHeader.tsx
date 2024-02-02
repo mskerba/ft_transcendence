@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import './chat.css';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 
 const ChatHeader = (prop:any) => {
-  const { convInf}: any = useAuth();
+  const { convInf, setRandomKey, socketRef}: any = useAuth();
   const group:Boolean = convInf.group;
   const [status, setStatus] = useState(prop.usersStatus.get(convInf.Id)); 
+  const navigate = useNavigate();
 
   useEffect(()=>{
     setStatus(prop.usersStatus.get(convInf.Id));
@@ -25,6 +27,17 @@ const ChatHeader = (prop:any) => {
     });
   }
 
+  const handlePlayFreindClick = (freindName: string) => {
+    const prefix = 'privateGame_';
+    const timestamp = Date.now().toString();
+    const randomPart = Math.random().toString(36).substring(2, 8); // Adjust the length as needed
+    const generatedName = `${prefix}${timestamp}_${randomPart}`;
+
+    setRandomKey(generatedName);
+    socketRef.current.emit("createPrivateGame", { to: freindName, gameID: generatedName })
+    navigate('/game');
+}
+
   return (
       <div className='chat-header'>
         <div className='side-bar-controle-button' onClick={handelClick}>
@@ -41,7 +54,7 @@ const ChatHeader = (prop:any) => {
             </div>
           </a>
           {group && <div  className='info-group-button' onClick={handelClickInf} ><img src='/src/assets/info-group.svg'/></div>}
-          {!group && <div className='play-button-chat'>
+          {!group && <div className='play-button-chat' onClick={() => handlePlayFreindClick(convInf.Name)}>
               <p>Play Now</p>
               <img src='/src/assets/play-now.svg' />
           </div>}

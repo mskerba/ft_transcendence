@@ -40,10 +40,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
             await this.chatService.SockToClient(client.id, userId, "online");
             this.mp.set(client.id, userId);
-            console.log("user give me his id is : ", this.mp.get(client.id), "and connected to ", client.id);
-        } catch (error) {
-            console.log("error in setUser");
-        }
+        } catch (error) { }
 
         // send im online
         this.sendStatus(client, userId, "online");
@@ -98,7 +95,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     async sendStatus(client: Socket, userId: number, stat: string) {
         try {
             const friends = await this.chatService.FriendStatus(userId);
-            console.log
             if (friends.length) {
 
                 friends.forEach(item => {
@@ -121,9 +117,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         try {
             const sender = await this.chatService.findUserBySockid(client.id);
             const receiver = await this.chatService.findUserByname(data.to);
-            const msg = await this.chatService.addDirectMessage(sender.userId, receiver.userId, data.msg);
+            const createdMsg = await this.chatService.addDirectMessage(sender.userId, receiver.userId, data.msg);
             if (receiver.sockId) {
-                client.to(receiver.sockId).emit("FrontDirectMessage", { "Message": data.msg, "Unseen": 0 });
+                client.to(receiver.sockId).emit("FrontDirectMessage", {
+                    Message: data.msg,
+                    convId: createdMsg.privateId,
+                });
             }
 
         } catch (error) { }
@@ -133,13 +132,15 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     @SubscribeMessage('inGame')
     async ShareStatus(client: Socket, isInGame: boolean) {
-        console.log("-----*****-->>>>>>>", isInGame)
+
+        console.log('INGAME STATUS1: ', isInGame);
+        console.log('INGAME STATUS2: ', isInGame);
         const status: string = isInGame ? 'in game' : 'online';
 
-        this.sendStatus(client, this.mp.get(client.id), status);
 
+        this.sendStatus(client, this.mp.get(client.id), status);
         try {
-            await this.chatService.SockToClient(null, this.mp.get(client.id), status);
+            await this.chatService.SockToClient(client.id, this.mp.get(client.id), status);
         } catch (error) { }
 
     }
@@ -173,10 +174,10 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
             this.server.to(data.group)
                 .emit("FrontDirectMessage", {
                     Message: data.message,
-                    Unseen: 6,
                     Avatar: user.avatar,
                     Id: user.userId,
                     name: user.name,
+                    convId: data.group,
                 });
 
 
