@@ -41,7 +41,6 @@ const timeOfLastMessage = (date:any) => {
 
 const Conversation = (prop:any) => {
   const { setConvInf}: any = useAuth();
-  console.log("--->",prop.userId)
   const date = timeOfLastMessage(prop.Date);
   const style = {
     background:'green',

@@ -6,8 +6,12 @@ import { useAuth } from '../../context/AuthContext';
 const ChatHeader = (prop:any) => {
   const { convInf}: any = useAuth();
   const group:Boolean = convInf.group;
+  const [status, setStatus] = useState(prop.usersStatus.get(convInf.id)); 
 
-
+  useEffect(()=>{
+    setStatus(prop.usersStatus.get(convInf.id));
+    console.log("FSFSDFDSFDS")
+  }, [prop.usersStatus.get(convInf.id)]);
 
   function handelClick() {
     if (innerWidth <925)
@@ -19,7 +23,6 @@ const ChatHeader = (prop:any) => {
       return ({...prev,display:'flex'})
     });
   }
-  console.log(convInf.Id)
 
   return (
       <div className='chat-header'>
@@ -32,7 +35,7 @@ const ChatHeader = (prop:any) => {
               <img src={`http://localhost:3000/avatar/${convInf.Avatar}`} className='conversation-avatar'/>
               <div className='content'>
                   <h5>{convInf.Name}</h5>
-                  {!group && <p>{prop.usersStatus.get(convInf.id)}</p>}
+                  {!group && <p>{status}</p>}
               </div>
             </div>
           </a>

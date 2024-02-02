@@ -12,9 +12,9 @@ function Game() {
   const [inGame, setInGame] = useState(0);
   const [playersInfo, setPlayersInfo] = useState();
   const [finaleGameScore, setFinaleGameScore] = useState();
-  const socketRef = useRef(null);
+  const socketRefGame = useRef(null);
   const test:String='canva';
-  const {authUse, randomKey, setRandomKey, setRootAppStyle} = useAuth();
+  const {authUse, randomKey, setRandomKey, setRootAppStyle, socketRef} :any= useAuth();
   const navigate = useNavigate();
 
   let [canvaStyle,setCanvaStyle]: any = useState({
@@ -40,37 +40,43 @@ function Game() {
   
 
   useEffect(() => {
-    if (socketRef.current === null) {
+    if (socketRefGame.current === null) {
+
       setRootAppStyle(()=>{return({'grid-template-rows': '1fr'})})
-      socketRef.current = io('http://localhost:3000/game', {
+      socketRefGame.current = io('http://localhost:3000/game', {
         transports: ["websocket"],
         withCredentials: true,
         query: { key: randomKey },
       });
-      
-      socketRef.current.on('inGame', (data:any)=>{
+      socketRefGame.current.on('inGame', (data:any)=>{
         setInGame(1);
       });
 
 
-      socketRef.current.on('stopGame', (data:any)=>{
+      socketRefGame.current.on('stopGame', (data:any)=>{
         console.log("FDSfds", data)
         setInGame(2);
         setFinaleGameScore(data.score);
         // navigate('/');
-        // socketRef.current.close();
+        // socketRefGame.current.close();
       });
 
-      socketRef.current.on('playersinfo', (data:any)=>{
+      socketRefGame.current.on('playersinfo', (data:any)=>{
         setPlayersInfo(data);
         console.log('in playersinfo', data, playersInfo)
       });
     }
     
+    if (socketRef.current !== null)
+      socketRef.current.emit("inGame", true)
+
     return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-        socketRef.current = null;
+      if (socketRefGame.current) {
+        socketRefGame.current.disconnect();
+        socketRefGame.current = null;
+        socketRef.current.emit("inGame", false)
+        
+      // socketRef.current.emit("inGame", {isInGame:false})
       setRootAppStyle(()=>{return({})})
       setRandomKey("");
       }
@@ -123,8 +129,8 @@ function Game() {
      { (inGame == 1) &&
        <div className='game--page'>
           <div className='game--component'  style={canvaStyle} >
-              <ScoreBoard socket={socketRef} playersInfo={playersInfo} size={canvaStyle}/>
-              <Canva socket={socketRef} className={test} size={canvaStyle}/>
+              <ScoreBoard socket={socketRefGame} playersInfo={playersInfo} size={canvaStyle}/>
+              <Canva socket={socketRefGame} className={test} size={canvaStyle}/>
           </div>
       </div>
       }

@@ -2,15 +2,20 @@ import React, { useEffect, useState } from 'react';
 import './chat.css';
 
 function Message(props:any) {
-  const { user, Name, Message, group, Avatar} = props;
+  const { user, Name, Message, group, Avatar, Id} = props;
   const channel = group;
 
   return (
     <div className='chat-messages'>
       <div className={user}>
-        {channel && user !== 'user' && <img src={`http://localhost:3000/avatar/${Avatar}`} alt='User avatar' />}
+        
+        <a  href={`/user/${Id}`}>
+          {channel && user !== 'user' && <img src={`http://localhost:3000/avatar/${Avatar}`} alt='User avatar' />}
+        </a>
         <div className={`color-${user}`}>
-          {channel && user !== 'user' && <h4>{Name}</h4>}
+          <a  href={`/user/${Id}`}>
+            {channel && user !== 'user' && <h4>{Name}</h4>}
+          </a>
           <p>{Message}</p>
         </div>
       </div>
