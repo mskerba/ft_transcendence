@@ -10,6 +10,10 @@
     grid-column-gap: 0px;
     grid-row-gap: 0px;
   }
+
+  img {
+    object-fit: cover;
+  }
   
   @media  (max-width:1050px)
   {

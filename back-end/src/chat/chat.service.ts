@@ -41,6 +41,7 @@ export class ChatService {
             select: {
                 userId: true,
                 avatar: true,
+                name: true,
             },
         });
     }

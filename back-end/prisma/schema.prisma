@@ -136,6 +136,9 @@ model LinkDirectMessage {
   UserId2   Int
   dmMessage DirectMessage[]
 
+  user1Count Int @default(0)
+  user2Count Int @default(0)
+
   @@unique([UserId1, UserId2])
 }
 
