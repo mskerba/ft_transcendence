@@ -121,10 +121,11 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         try {
             const sender = await this.chatService.findUserBySockid(client.id);
             const receiver = await this.chatService.findUserByname(data.to);
-            await this.chatService.addDirectMessage(sender.userId, receiver.userId, data.msg, 3);
+            const msg = await this.chatService.addDirectMessage(sender.userId, receiver.userId, data.msg);
             if (receiver.sockId) {
-                client.to(receiver.sockId).emit("FrontDirectMessage", { "Message": data.msg, "Unseen": data.Unseen });
+                client.to(receiver.sockId).emit("FrontDirectMessage", { "Message": data.msg, "Unseen": 0 });
             }
+
         } catch (error) { }
 
     }
@@ -175,7 +176,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
                     Unseen: 6,
                     Avatar: user.avatar,
                     Id: user.userId,
-                    name: user.name
+                    name: user.name,
                 });
 
 
@@ -206,7 +207,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     @SubscribeMessage('removePrivateGame')
     async handleRemovePrivateGame(client: Socket, data: { to: number }) {
-        
+
         try {
             const obj = await this.prisma.user.findUnique({
                 where: { userId: data.to },
@@ -214,7 +215,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
                     sockId: true,
                 }
             })
-            
+
             console.log("====>>create private game: ", obj.sockId, data.to);
             if (obj.sockId) {
                 client.to(obj.sockId).emit("toHome", {});
@@ -224,14 +225,56 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         }
     }
 
-    @SubscribeMessage('removePrivateGame')
+    @SubscribeMessage('seen')
     async seen(client: Socket, data: { convId: string, isGroup: boolean }) {
 
         const user = await this.chatService.findUserBySockid(client.id);
 
         if (data.isGroup) {
-            return ;
+            console.log('HEHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH');
+            await this.changeGroupUseenCount(data.convId, user.userId);
+        } else {
+            await this.changeDMUseenCount(data.convId, user.userId);
         }
+    }
+
+    async changeDMUseenCount(convId: string, userId: number) {
+        // find the conversation first
+        const conv = await this.prisma.linkDirectMessage.findUnique({
+            where: {
+                conversationId: convId,
+            }
+        });
+
+        if (!conv) return;
+
+        const updateField = (userId === conv.UserId1) ? 'user1Count' : 'user2Count';
+
+        // update count to zero
+        await this.prisma.linkDirectMessage.update({
+            where: {
+                conversationId: convId,
+            },
+            data: {
+                [updateField]: 0,
+            },
+        });
+    }
+
+    async changeGroupUseenCount(convId: string, userId: number) {
+        try {
+
+            const roleUser = await this.prisma.roleUser.updateMany({
+                where: {
+                    UserId: userId,
+                    RoomId: convId,
+                },
+                data: {
+                    unseenCount: 0,
+                },
+            });
+
+        } catch (error) { }
     }
 
 }

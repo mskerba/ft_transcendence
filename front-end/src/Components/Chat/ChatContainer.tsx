@@ -54,10 +54,13 @@ const ChatContainer = (prop:any) => {
     if (message == '')
     return;
     if (prop.convInf.group){
+      console.log(prop);
 
+      prop.socket.current.emit('seen', { convId:  prop.convInf.convId, isGroup: true });
       prop.socket.current.emit('messageTogroup', {group: prop.convInf.convId, message:message});
     }
     else {
+      prop.socket.current.emit('seen', { convId:  prop.convInf.convId, isGroup: false });
       prop.socket.current.emit('DirectMessage', {to: prop.convInf.Name, msg:message,Unseen: 3});
 
     }
