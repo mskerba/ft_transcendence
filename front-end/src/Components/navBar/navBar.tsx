@@ -50,10 +50,12 @@ const NavBar = () => {
             convId: group.RoomId,
             group: true,
           });
-          navigate('/chat');
         }
       }
     } catch (errot) { }
+    setSearchQuery('');
+    setResult([]);
+    navigate('/chat');
 
   }
 

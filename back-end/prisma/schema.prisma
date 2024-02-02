@@ -176,6 +176,8 @@ model Room {
   bann BanUser[]
 
   mute MuteUser[]
+
+  createdAt    DateTime @default(now())
 }
 
 model RoleUser {
