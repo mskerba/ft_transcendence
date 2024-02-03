@@ -3,6 +3,8 @@ import './navBar.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import useAxiosPrivate from '../../hooks/UseAxiosPrivate';
+import Modal from 'react-modal';
+import { toast } from 'react-toastify';
 
 
 const NavBar = () => {
@@ -27,33 +29,47 @@ const NavBar = () => {
 
   const { authUser, logout, setConvInf } = useAuth();
   const axiosPrivate = useAxiosPrivate();
-  const [searchQuery, setSearchQuery] = useState<string>();
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [selectedRoom, setSelectedRoom] = useState<any>({});
+  const [insertPassord, setInsertPassord] = useState<boolean>(false);
   const [result, setResult] = useState([]);
   const navigate = useNavigate();
 
 
   const handleJoinGroup = async (group: any) => {
 
+
     try {
-      if (group.TypeRoom === 'public') {
-        const res = await axiosPrivate.get(`/chat/group/join/${group.RoomId}`);
+      const res = await axiosPrivate.post('/chat/group/join', {
+        roomId: group.RoomId,
+        password: password,
+      });
+
+      console.log(res);
 
 
-        if (res.data.success) {
-          setConvInf({
-            Avatar: group.avatar,
-            Name: group.title,
-            convId: group.RoomId,
-            group: true,
-          });
-        }
+      if (res.data.success !== undefined) {
+        setConvInf({
+          Avatar: group.avatar,
+          Name: group.title,
+          convId: group.RoomId,
+          group: true,
+        });
+        setSearchQuery('');
+        setResult([]);
+        navigate('/chat');
       }
-    } catch (errot) { }
-    setSearchQuery('');
-    setResult([]);
-    navigate('/chat');
+      else {
+        toast.error(res?.data?.error);
+        
+      }
+    } catch (error) { console.log(error) }
+
+    setPassword('');
 
   }
+
 
   const handleNavigateToProfile = (userId: number) => {
 
@@ -72,6 +88,10 @@ const NavBar = () => {
 
   }
 
+  const handlePasswordChange = (e: any) => {
+    setPassword(e.target.value);
+  }
+
   const handleInputChange = async (e: any) => {
     setSearchQuery(e.target.value);
 
@@ -88,6 +108,11 @@ const NavBar = () => {
     } catch (error) { }
 
   };
+
+  function closeInsertPassword() {
+    setInsertPassord(false);
+    setPassword('');
+  }
 
   const toHome = () => navigate('/');
 
@@ -161,11 +186,11 @@ const NavBar = () => {
 
       {result.length > 0 &&
         <div className='search-result'>
-          {result.map((e) => (
+          {result.map((e, i) => (
 
 
             (e.userId) ?
-              <div className='result-item'
+              <div className='result-item' key={i}
                 onClick={() => {
                   handleNavigateToProfile(e.userId);
                 }}
@@ -175,9 +200,15 @@ const NavBar = () => {
                   {e.name}
                 </h3>
               </div>
-              : <div className='result-item'
+              : <div className='result-item' key={i}
                 onClick={() => {
-                  handleJoinGroup(e);
+                  if (e.TypeRoom === 'protected') {
+                    setInsertPassord(true);
+                    setSelectedRoom(e);
+                  }
+                  else {
+                    handleJoinGroup(e);
+                  }
                 }}
               >
                 <img src={`http://localhost:3000/avatar/${e.avatar}`} className='profile-button-navbar' />
@@ -187,6 +218,25 @@ const NavBar = () => {
           ))}
         </div>
       }
+      <Modal
+        isOpen={insertPassord}
+        className='update-group-popup'
+        onRequestClose={closeInsertPassword}
+      >
+        <h4>username:</h4>
+        <input
+          type='password'
+          placeholder='password'
+          className='update-group-input'
+          value={password}
+          onChange={handlePasswordChange}
+        />
+        <input type='submit' className='submit-add-group' onClick={() => {
+          handleJoinGroup(selectedRoom);
+          setInsertPassord(false);
+        }}
+        />
+      </Modal>
     </>
   );
 };

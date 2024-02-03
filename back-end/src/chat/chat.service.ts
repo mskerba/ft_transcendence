@@ -376,7 +376,11 @@ export class ChatService {
     async createGroup(createGroupDto: CreateGroupDto) {
 
         let room;
-        const cryptedPassword = await bcrypt.hash(createGroupDto.password, 10);
+
+        let cryptedPassword = null;
+        if (createGroupDto.TypeRoom === 'protected') {
+            cryptedPassword = await bcrypt.hash(createGroupDto.password, 10);
+        }
         try {
             room = await this.prismaService.room.create({
                 data: {
@@ -396,14 +400,14 @@ export class ChatService {
             return { "error": "the data is failed to create group", "status": HttpStatus.OK };
         }
 
-        if (room && room.TypeRoom == "protected" && room.password == null) {
-            await this.prismaService.room.delete({
-                where: {
-                    RoomId: room.RoomId
-                }
-            })
-            return ({ "error": "set the password for protected group" });
-        }
+        // if (room && room.TypeRoom == "protected" && room.password == null) {
+        //     await this.prismaService.room.delete({
+        //         where: {
+        //             RoomId: room.RoomId
+        //         }
+        //     })
+        //     return ({ "error": "set the password for protected group" });
+        // }
 
         try {
 

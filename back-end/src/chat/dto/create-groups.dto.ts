@@ -55,8 +55,6 @@ export class JoinGroupDTO{
    roomId: string;
 
    @IsOptional()
-   @IsNotEmpty()
-   @IsStrongPassword()
    password: string;
 
 }

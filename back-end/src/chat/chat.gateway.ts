@@ -231,7 +231,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         const user = await this.chatService.findUserBySockid(client.id);
 
         if (data.isGroup) {
-            console.log('HEHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH');
             await this.changeGroupUseenCount(data.convId, user.userId);
         } else {
             await this.changeDMUseenCount(data.convId, user.userId);
