@@ -103,6 +103,7 @@
     justify-content: center;
     width: 100%;
 }
+
 .name
 {
     width: 100%;
@@ -110,8 +111,7 @@
     justify-content: center;
     height: fit-content;
     grid-area: 2 / 1 / 3 / 2;
-    align-items: center;
-    
+    align-items: center;   
 }
 
 .name p {
@@ -167,6 +167,11 @@
 
 }
 
+.player--image img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
 
 .canva {
     position: relative;
@@ -188,11 +193,51 @@ canvas {
     }
 }
 
+
 @media (max-width: 480px)
 {
-    .game--component{
+    .name
+    {
+        display: none;
+    }
+
+    .player--image img {
+        width: 40%;
+    }
+
+    .game--timer {
+        font: 400  10px / 1.14 "Sofascore Sans", sans-serif;
+    }
+
+    .timing--text {
+        padding: 0;
+        margin: 0;
+        font: 400 10px / 1.14 "Sofascore Sans", sans-serif;
+        height: 17px;
+        width: 20px;
+        top: 0;
+        left: 0;
+        position:static;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .timing--text p{
+        padding: 0;
+        margin: 0;
+        position: static;
+        top: 0;
+        left: 0;
+    }
+}
+
+
+@media (max-width: 480px)
+{
+    /* .game--component{
         transform: rotate(-90deg);
-    } 
+    }  */
     /* .game--page {
         display:block;
         margin: 0;
@@ -226,4 +271,3 @@ canvas {
         height: 760px;
         background: linear-gradient(0deg, black,rgb(44, 43, 43));
     } */
-}

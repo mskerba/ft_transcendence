@@ -5,7 +5,7 @@ import decodeJwtFromCookies from 'src/common/get-userId-from-cookie';
 import { GameService } from './game.service';
 import { Module } from '@nestjs/common';
 
-const powerUpType = ["freezOpp", "minimizePaddle", 'augmentPaddle', 'roadBlock'];
+const powerUpType = ["freezOpp", "minimizePaddle", "augmentPaddle", 'roadBlock'];
 
 type typeShowPowerUp = {
   show: boolean;
@@ -29,10 +29,10 @@ class ballClass {
     this.server = server;
     this.validPower = false;
     this.isGoal = true;
-    setTimeout(()=>{
+    setTimeout(() => {
       this.isGoal = false;
-    },500)
-    this.showPowerUp  = {
+    }, 500)
+    this.showPowerUp = {
       show: false,
       x: 0,
       y: 0,
@@ -42,10 +42,10 @@ class ballClass {
     this.PowerUpApp = {
       show: false,
       playerId: -1,
-      player:"",
+      player: "",
       type: "false",
     };
-    
+
     this.ball = {
       diameter: this.diameter,
       height: this.canva.height - this.diameter,
@@ -81,7 +81,7 @@ class ballClass {
   private validPower;
   private lastPlayerId;
   private lastPlayer;
-  private isGoal:boolean;
+  private isGoal: boolean;
 
   private handleGameLogic() {
     if (this.ball.height <= this.ball.diameter / 2 || this.ball.height >= this.canva.height - this.ball.diameter / 2)
@@ -101,8 +101,8 @@ class ballClass {
       this.ball.width += this.derection.width * this.sign;
     }
     this.powerUpsHandler();
-    this.server.to(this.player1SocketID).emit('ballPosition', { ball: this.ball, PowerUpApp: this.PowerUpApp, showPowerUp: this.showPowerUp});
-    this.server.to(this.player2SocketID).emit('ballPosition', { ball: this.ball, PowerUpApp: this.PowerUpApp, showPowerUp: this.showPowerUp});
+    this.server.to(this.player1SocketID).emit('ballPosition', { ball: this.ball, PowerUpApp: this.PowerUpApp, showPowerUp: this.showPowerUp });
+    this.server.to(this.player2SocketID).emit('ballPosition', { ball: this.ball, PowerUpApp: this.PowerUpApp, showPowerUp: this.showPowerUp });
   }
 
   private restIsGoal() {
@@ -116,22 +116,21 @@ class ballClass {
       this.server.to(this.player1SocketID).emit('score', { score: this.score });
       this.server.to(this.player2SocketID).emit('score', { score: this.score });
       this.isGoal = true;
-      setTimeout(()=>{
+      setTimeout(() => {
         this.isGoal = false;
-      },500)
+      }, 500)
 
     }
   }
 
   private ballInPlayer1() {
-    let minimize = (this.PowerUpApp.show && this.PowerUpApp.player == "player1" && this.PowerUpApp.type == 'minimizePaddle') ? (0.7):1;
-    minimize = (this.PowerUpApp.show && this.PowerUpApp.player == "player1" && this.PowerUpApp.type == 'augmentPaddle') ? (1.3):1;
+    let minimize = (this.PowerUpApp.show && this.PowerUpApp.player == "player1" && this.PowerUpApp.type == 'minimizePaddle') ? (0.7) : 1;
+    minimize = (this.PowerUpApp.show && this.PowerUpApp.player == "player1" && this.PowerUpApp.type == 'augmentPaddle') ? (1.3) : 1;
     let sizeH = (this.paddleHeight * minimize) / 2 + this.ball.diameter / 2;
     let sizeW = this.paddelWidth + 5 + this.ball.diameter / 2;
 
     if ((this.player1 + sizeH > this.ball.height) && (this.player1 - sizeH < this.ball.height)
-      && (sizeW == this.ball.width))
-    {
+      && (sizeW == this.ball.width)) {
       this.lastPlayer = "player1";
       this.lastPlayerId = this.player1ID;
       this.sign *= -1;
@@ -141,14 +140,13 @@ class ballClass {
   }
 
   private ballInPlayer2() {
-    let minimize = (this.PowerUpApp.show && this.PowerUpApp.player == "player2" && this.PowerUpApp.type == 'minimizePaddle') ? 0.7:1;
-    minimize = (this.PowerUpApp.show && this.PowerUpApp.player == "player2" && this.PowerUpApp.type == 'augmentPaddle') ? (1.3):1;
+    let minimize = (this.PowerUpApp.show && this.PowerUpApp.player == "player2" && this.PowerUpApp.type == 'minimizePaddle') ? 0.7 : 1;
+    minimize = (this.PowerUpApp.show && this.PowerUpApp.player == "player2" && this.PowerUpApp.type == 'augmentPaddle') ? (1.3) : 1;
     let sizeH = (this.paddleHeight * minimize) / 2 + this.ball.diameter / 2;
     let sizeW = this.canva.width - this.paddelWidth - 5 - this.ball.diameter / 2;
-    
+
     if ((this.player2 + sizeH > this.ball.height) && (this.player2 - sizeH < this.ball.height)
-      && (sizeW== this.ball.width))
-    {
+      && (sizeW == this.ball.width)) {
       this.lastPlayerId = this.player2ID;
       this.lastPlayer = "player2";
       this.sign *= -1;
@@ -172,19 +170,18 @@ class ballClass {
   }
 
   private powerUpsHandler() {
-    if (!this.validPower && !this.showPowerUp.show && !this.PowerUpApp.show ) {
-      this.validPower  = true;
-      setTimeout(()=>{
+    if (!this.validPower && !this.showPowerUp.show && !this.PowerUpApp.show) {
+      this.validPower = true;
+      setTimeout(() => {
         this.validPower = false;
         this.powerUpsShow()
-      },5000)
+      }, 5000)
     }
-   
-    if (this.circlesIntersect() && this.showPowerUp.show == true)
-    {
+
+    if (this.circlesIntersect() && this.showPowerUp.show == true) {
       console.log("FSFSDFSDFSDFDS")
       this.powerUpsApp(this.lastPlayerId);
-    } 
+    }
   }
 
   private powerUpsShow() {
@@ -196,7 +193,7 @@ class ballClass {
     this.showPowerUp.x = x;
     this.showPowerUp.y = y;
     this.showPowerUp.type = type;
-    setTimeout(() => {this.showPowerUp.show = false},5000);
+    setTimeout(() => { this.showPowerUp.show = false }, 10000);
   }
 
   private powerUpsApp(id: number) {
@@ -206,19 +203,19 @@ class ballClass {
     this.PowerUpApp.player = this.lastPlayer;
 
     this.PowerUpApp.type = this.showPowerUp.type;
-    setTimeout(() => {this.PowerUpApp.show = false},5000);
+    setTimeout(() => { this.PowerUpApp.show = false }, 9000);
   }
 
   private circlesIntersect(): boolean {
     const radius1 = this.ball.diameter / 2;
     const radius2 = 60 / 2;
-  
+
     // Calculate the distance between the centers of the circles
     const dx = this.ball.height - this.showPowerUp.y;
     const dy = this.ball.width - this.showPowerUp.x;
     const distance = Math.sqrt(dx * dx + dy * dy);
     if (distance <= radius1 + radius2)
-    console.log("*/*/*/*/*/*/*/*/*/*/", this.showPowerUp.show)
+      console.log("*/*/*/*/*/*/*/*/*/*/", this.showPowerUp.show)
     // Check if the distance is less than or equal to the sum of their radii
     return distance <= radius1 + radius2;
   }
@@ -262,7 +259,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 
     } else if (this.connectedUsers.size || ![...this.connectedUsers.values()].includes(userId)) {
-      console.log("making game---???>",this.connectedUsers, this.myMap)
+      console.log("making game---???>", this.connectedUsers, this.myMap)
       let isUserInGame = false;
 
       for (const [key, value] of this.myMap) {
@@ -393,9 +390,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.connectedprivateUsers.delete(key);
       }
     });
-    
+
     if (this.myMap.has(client.id)) {
-      
+
       let val = this.myMap.get(client.id);
       objBallClass = val;
       let player1 = val.player1SocketID;

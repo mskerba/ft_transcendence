@@ -115,7 +115,7 @@ const P5Component = (props: any) => {
       if (PowerUpApp.show && PowerUpApp.player == "player2" && PowerUpApp.type == 'minimizePaddle')
         p.rect(paddelWidth/2 + 5, player1, paddelWidth, paddleHeight*0.7, 5, 5);
       else if (PowerUpApp.show && PowerUpApp.player == "player1" && PowerUpApp.type == 'augmentPaddle')
-          p.rect(paddelWidth/2 + 5, player1, paddelWidth, paddleHeight*1.3, 5, 5);
+        p.rect(paddelWidth/2 + 5, player1, paddelWidth, paddleHeight*1.3, 5, 5);
       else
         p.rect(paddelWidth/2 + 5, player1, paddelWidth, paddleHeight, 5, 5);
 
@@ -123,13 +123,14 @@ const P5Component = (props: any) => {
       if (PowerUpApp.show && PowerUpApp.player == "player1" && PowerUpApp.type == 'minimizePaddle')
         p.rect(canva.x - paddelWidth/2 - 5, player2, paddelWidth, paddleHeight*0.7, 5, 5);
       else if (PowerUpApp.show && PowerUpApp.player == "player2" && PowerUpApp.type == 'augmentPaddle')
-          p.rect(paddelWidth/2 + 5, player1, paddelWidth, paddleHeight*1.3, 5, 5);
+          p.rect(canva.x - paddelWidth/2 - 5, player2, paddelWidth, paddleHeight*1.3, 5, 5);
       else
         p.rect(canva.x - paddelWidth/2 - 5, player2, paddelWidth, paddleHeight, 5, 5);
 
       if (showPowerUp.show == true)
         powerUpDrawe(); 
     }
+
     function powerUpDrawe() {
       p.rectMode(p.CENTER);
       p.fill('blue');
@@ -142,14 +143,14 @@ const P5Component = (props: any) => {
       p.circle(circleX, circleY, circleSize);
     
       // Load your icon image
-      const iconSize = 40; // Adjust the size of the icon
+      const iconSize = 40 * canva.y / 600; // Adjust the size of the icon
       const iconX = circleX - iconSize / 2;
       const iconY = circleY - iconSize / 2;
-      if (showPowerUp.type == 'minimizePaddle')
+      if (showPowerUp.type === "minimizePaddle")
         p.image(minimizeImg, iconX, iconY, iconSize, iconSize);
-      else if (showPowerUp.type = 'freezOpp')
+      else if (showPowerUp.type === "freezOpp")
         p.image(freezOppImg, iconX, iconY, iconSize, iconSize);
-      else
+      else if (showPowerUp.type === "augmentPaddle")
         p.image(augmentImg, iconX, iconY, iconSize, iconSize);
     }
     
