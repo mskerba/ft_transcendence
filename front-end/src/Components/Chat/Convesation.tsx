@@ -88,12 +88,12 @@ const Conversation = (prop:any) => {
     if (innerWidth <925)
       prop.setShow(0);
 
-    prop.setSelectedId(prop.index)
+    prop.setSelectedId(prop.convId)
   }
 
   return (
       <div className='convesation-container' onClick={handleClick}style={{
-      backgroundColor: (prop.selectedId == prop.index) ? '#038C3E' : '',}}
+      backgroundColor: (prop.selectedId == prop.convId) ? '#038C3E' : '',}}
 >
       <img src={`http://localhost:3000/avatar/${prop.Avatar}`} className='conversation-avatar'/>
       <div className='convesation-info'>
