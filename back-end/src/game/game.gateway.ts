@@ -128,8 +128,10 @@ class ballClass {
     minimize = (this.PowerUpApp.show && this.PowerUpApp.player == "player1" && this.PowerUpApp.type == 'augmentPaddle') ? (1.3):1;
     let sizeH = (this.paddleHeight * minimize) / 2 + this.ball.diameter / 2;
     let sizeW = this.paddelWidth + 5 + this.ball.diameter / 2;
+
     if ((this.player1 + sizeH > this.ball.height) && (this.player1 - sizeH < this.ball.height)
-      && (sizeW >= this.ball.width)) {
+      && (sizeW == this.ball.width))
+    {
       this.lastPlayer = "player1";
       this.lastPlayerId = this.player1ID;
       this.sign *= -1;
@@ -143,8 +145,10 @@ class ballClass {
     minimize = (this.PowerUpApp.show && this.PowerUpApp.player == "player2" && this.PowerUpApp.type == 'augmentPaddle') ? (1.3):1;
     let sizeH = (this.paddleHeight * minimize) / 2 + this.ball.diameter / 2;
     let sizeW = this.canva.width - this.paddelWidth - 5 - this.ball.diameter / 2;
+    
     if ((this.player2 + sizeH > this.ball.height) && (this.player2 - sizeH < this.ball.height)
-      && (sizeW <= this.ball.width)) {
+      && (sizeW== this.ball.width))
+    {
       this.lastPlayerId = this.player2ID;
       this.lastPlayer = "player2";
       this.sign *= -1;

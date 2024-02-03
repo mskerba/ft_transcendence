@@ -86,6 +86,19 @@ function Game() {
     };
   }, []);
 
+  useEffect(()=>{
+    if (socketRefGame.current !== null && inGame == 2) {
+      socketRefGame.current.disconnect();
+      socketRefGame.current = null;
+      if (socketRef.current !== null) {
+        socketRef.current.emit("inGame", false);
+      }
+
+      setRootAppStyle(() => { return ({}) })
+      setRandomKey("");
+    }
+  },[inGame])
+
   useEffect(
     () => {
       function handleResize() {
