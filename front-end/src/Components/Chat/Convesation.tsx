@@ -55,8 +55,19 @@ const Conversation = (prop:any) => {
       else 
         socketRef.current.emit('seen', { convId:  prop.convId, isGroup: false });
     } else
-      setUnseen(prop.Unseen);
+    setUnseen(prop.Unseen);
   }, [prop.Unseen])
+
+  useEffect(()=>{
+    if (convInf.convId == prop.convId){
+      if (prop.group)
+        socketRef.current.emit('seen', { convId:  prop.convId, isGroup: true });
+      else 
+        socketRef.current.emit('seen', { convId:  prop.convId, isGroup: false });
+    } else
+    setUnseen(prop.Unseen);
+  }, [])
+
   function handleClick() {
     if (prop.group)
       socketRef.current.emit('seen', { convId:  prop.convId, isGroup: true });
