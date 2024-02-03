@@ -38,11 +38,12 @@ const ImageSwapper = () => {
 };
 
 const UserMaking = () => {
+  const { authUser }: any = useAuth();
     return (
         <div className='user-image'>
           <img
           className="user-making-game"
-          src={'https://xsgames.co/randomusers/avatar.php?g=male'}
+          src={`http://localhost:3000/avatar/${authUser.avatar}`}
           />
         </div>
       );

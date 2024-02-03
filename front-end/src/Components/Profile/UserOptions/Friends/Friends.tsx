@@ -20,14 +20,14 @@ const Friend = ({ userId }: any) => {
         fetchFriends();
     }, []);
 
-    const handlePlayFreindClick = (freindName: string) => {
+    const handlePlayFreindClick = (userId: number) => {
         const prefix = 'privateGame_';
         const timestamp = Date.now().toString();
         const randomPart = Math.random().toString(36).substring(2, 8); // Adjust the length as needed
         const generatedName = `${prefix}${timestamp}_${randomPart}`;
 
         setRandomKey(generatedName);
-        socketRef.current.emit("createPrivateGame", { to: freindName, gameID: generatedName })
+        socketRef.current.emit("createPrivateGame", { userId, gameID: generatedName })
         navigate('/game');
     }
 
@@ -43,7 +43,7 @@ const Friend = ({ userId }: any) => {
                     </Link>
                     {userId === authUser.userId &&
                         <div className='friend-buttons'>
-                            <div className='friend-play-button' onClick={() => handlePlayFreindClick(friend.name)}><img src='/src/assets/play.svg' /></div>
+                            <div className='friend-play-button' onClick={() => handlePlayFreindClick(friend.userId)}><img src='/src/assets/play.svg' /></div>
                             <div className='friend-message-button'>
                                 <img src='/src/assets/message.svg' 
                                 onClick={async () => {

@@ -162,6 +162,7 @@ input {
     height: 40px;
     display: flex;
     justify-content: center;
+    cursor: pointer;
 }
 
 .play-button-chat:hover {

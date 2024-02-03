@@ -11,6 +11,34 @@
     grid-row-gap: 0px;
   }
 
+  .challenger-name {
+    color: #000;
+  }
+.game-request {
+  display: flex;
+  justify-content: flex-start;
+  gap: 30px;
+  
+}
+
+.game-request .accept-game {
+  color:#FFFFFF;
+  background-color: #33b249;
+  box-shadow: 0 0 5px #33b249;
+  border-radius: 4px;
+  width: 100px;
+  height: 40px;
+}
+
+.game-request .decline-game {
+  color:#FFFFFF;
+  background-color: #ED0800;
+  box-shadow: 0 0 5px #ED0800;
+  border-radius: 4px;
+  width: 100px;
+  height: 40px;
+}
+
   
   @media  (max-width:1050px)
   {
