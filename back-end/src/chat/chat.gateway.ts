@@ -153,7 +153,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     //join group when you click on group
     @SubscribeMessage("joinGroup")
     joinGroup(client: Socket, data: { group: string }) {
-        console.log("====>>clientId: ", client.id, " join group ", data.group);
         client.join(data.group);
     }
 

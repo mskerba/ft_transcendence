@@ -46,7 +46,17 @@ export class CreateRoleUserDto{
    @IsIn(['admin', 'member'])
    roleName: string;
 
+}
+
+export class JoinGroupDTO{
+
+   @IsString()
+   @IsNotEmpty()
+   roomId: string;
+
    @IsOptional()
+   @IsNotEmpty()
+   @IsStrongPassword()
    password: string;
 
 }

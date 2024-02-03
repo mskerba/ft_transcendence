@@ -1,10 +1,11 @@
-import { ConsoleLogger, HttpStatus, Injectable, Param, HttpException, ForbiddenException } from '@nestjs/common';
+import { HttpStatus, Injectable, Param, HttpException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service'
-import { CreateGroupDto, CreateRoleUserDto, PunishDto, MuteDto, UpdateGroupDto } from './dto/create-groups.dto'
+import { CreateGroupDto, CreateRoleUserDto, PunishDto, MuteDto, UpdateGroupDto, JoinGroupDTO } from './dto/create-groups.dto'
 import { da, faker, tr } from '@faker-js/faker';
 import { JsonArray } from '@prisma/client/runtime/library';
 import { Dirent } from 'fs';
 import { BlockService } from 'src/block/block.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class ChatService {
@@ -48,8 +49,6 @@ export class ChatService {
 
     async SockToClient(socketId: string, id: number, stat: string,) {
 
-        // const data = await this.findUserByname(username);
-        console.log("SockToclient() socId : ", socketId, " userId : ", id);
         try {
             await this.prismaService.user.update({
                 where: { userId: id },
@@ -94,7 +93,6 @@ export class ChatService {
 
     async addDirectMessage(sender: number, receiver: number, msg: string): Promise<any> {
 
-        console.log("the param is : ", sender, " : ", receiver, " : ", msg);
 
         let conv = await this.findLinkMessage(sender, receiver);
 
@@ -271,7 +269,6 @@ export class ChatService {
                     user = id.user2;
                     unseen = id.user1Count;
                 }
-                console.log('testest: ', unseen);
                 obj = {
                     userId: user.userId,
                     name: user.name,
@@ -343,7 +340,6 @@ export class ChatService {
         });
 
         arrData.sort((a, b) => b.Date - a.Date);
-        console.log("serve all list of contact is finsished");
 
 
         return arrData;
@@ -380,13 +376,14 @@ export class ChatService {
     async createGroup(createGroupDto: CreateGroupDto) {
 
         let room;
+        const cryptedPassword = await bcrypt.hash(createGroupDto.password, 10);
         try {
             room = await this.prismaService.room.create({
                 data: {
                     TypeRoom: createGroupDto.TypeRoom,
                     avatar: createGroupDto.avatar,
                     title: createGroupDto.title,
-                    password: createGroupDto.password
+                    password: cryptedPassword,
                 },
                 select: {
                     RoomId: true,
@@ -430,6 +427,62 @@ export class ChatService {
         }
     }
 
+    async joinGroup(joinDto: JoinGroupDTO, userId: number) {
+        let group;
+        try {
+
+            group = await this.prismaService.room.findUnique({
+                where: {
+                    RoomId: joinDto.roomId
+                },
+            });
+            if (!group)
+                return { "error": "Room Not Found: Please verify the room name and try again", status: HttpStatus.NOT_FOUND };
+
+        } catch (error) {
+            return { "error": "Error: Incorrect data type. Please provide the correct type of data", status: HttpStatus.BAD_REQUEST };
+        }
+
+        try {
+
+            const isBanned = await this.prismaService.banUser.findFirst({
+                where: {
+                    RoomId: joinDto.roomId,
+                    UserId: userId,
+                },
+            });
+            if (isBanned)
+                return {
+                    "error": "User is banned and cannot be added to the group again",
+                    status: HttpStatus.FORBIDDEN
+                };
+
+    
+            if (group.TypeRoom === 'protected' && joinDto.password !== group.password) {
+                const passwordMatches = await bcrypt.compare(joinDto.password, group.password);
+                if (!passwordMatches) {
+                    return {
+                        "error": "incorrect password",
+                        status: HttpStatus.FORBIDDEN
+                    };
+                }
+            }
+
+            const data = await this.prismaService.roleUser.create({
+                data: {
+                    roleUser: { connect: { userId: userId } },
+                    RoleName: 'member',
+                    roomId: { connect: { RoomId: joinDto.roomId } }
+                }
+            });
+            return { "success": true, status: HttpStatus.OK };
+        } catch (error) {
+            return {
+                "error": "Error: Incorrect data type. Please provide the correct type of data",
+                status: HttpStatus.BAD_REQUEST
+            };
+        }
+    }
     // ADD User TO the group
     async addTogroup(createROle: CreateRoleUserDto) {
 
@@ -441,7 +494,7 @@ export class ChatService {
                 where: {
                     RoomId: createROle.roomId
                 },
-            })
+            });
             if (!checkGroup)
                 return { "error": "Room Not Found: Please verify the room name and try again", status: HttpStatus.NOT_FOUND };
             userId = await this.findUserByname(createROle.userName);
@@ -538,14 +591,12 @@ export class ChatService {
     async addMessageToRoom(roomId: string, message: string, uId: number) {
 
         try {
-            console.log("roomId : ", roomId, " message ", message, " userId ", uId);
             // const userInGroup = await this.findUserInGroup(uId, roomId);
             // if (userInGroup.error != undefined)
             //     return userInGroup;
             // const isMuted = await this.checkIsMuted(roomId, message, uId);
             // if (isMuted.error != undefined)
             //     return isMuted 
-            console.log("it's not muted");
             await this.prismaService.roomMessage.create({
                 data: {
                     text: message,

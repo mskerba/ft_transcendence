@@ -36,11 +36,7 @@ const NavBar = () => {
 
     try {
       if (group.TypeRoom === 'public') {
-        const res = await axiosPrivate.post('/chat/group/add', {
-          userName: authUser.name,
-          roomId: group.RoomId,
-          roleName: 'member',
-        });
+        const res = await axiosPrivate.get(`/chat/group/join/${group.RoomId}`);
 
 
         if (res.data.success) {

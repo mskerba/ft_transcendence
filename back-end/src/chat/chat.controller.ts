@@ -1,7 +1,7 @@
 
 import { Controller, Get, Post, Body, Param, HttpStatus, Req, ParseIntPipe, HttpCode, BadRequestException, NotFoundException, HttpException } from '@nestjs/common';
 import {ChatService} from './chat.service'
-import {CreateGroupDto, CreateRoleUserDto, PunishDto, MuteDto, UpdateGroupDto} from './dto/create-groups.dto'
+import {CreateGroupDto, CreateRoleUserDto, PunishDto, MuteDto, UpdateGroupDto, JoinGroupDTO} from './dto/create-groups.dto'
 import { STATUS_CODES } from 'http';
 import { da } from '@faker-js/faker';
 import { UserEntity } from 'src/user/entities/user.entity';
@@ -75,7 +75,6 @@ export class ChatController {
     @Get("about/:convId")
     async about(@Req() req: any, @Param() param: any){
         const user: UserEntity = req.user;
-        console.log("about convId is : ", param.convId);
 
       return await  this.chatService.about(param.convId, user.userId);
     }
@@ -97,7 +96,6 @@ export class ChatController {
     @Post()
     async createGroup(@Body() createGroupDto: CreateGroupDto){
 
-        console.log("creation of group here");
         const data = await this.chatService.createGroup(createGroupDto);
         
         if (data.error !== undefined)
@@ -109,6 +107,16 @@ export class ChatController {
     @Post('group/add')
     async addToGroup(@Body() creatRole: CreateRoleUserDto){
         return  await this.chatService.addTogroup(creatRole);
+    }
+    
+    @Post('group/join/:roomId')
+    async joinGroup(
+        @Body() joinDto: JoinGroupDTO,
+        @Req() req: any,
+    ){
+        const user: UserEntity = req.user;
+
+        return  await this.chatService.joinGroup(joinDto, user.userId);
     }
 
     // kick user from group
