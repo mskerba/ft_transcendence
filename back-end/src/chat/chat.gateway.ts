@@ -40,7 +40,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
             await this.chatService.SockToClient(client.id, userId, "online");
             this.mp.set(client.id, userId);
-        } catch (error) {}
+        } catch (error) { }
 
         // send im online
         this.sendStatus(client, userId, "online");
@@ -137,12 +137,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         console.log('INGAME STATUS2: ', isInGame);
         const status: string = isInGame ? 'in game' : 'online';
 
-        
+
         this.sendStatus(client, this.mp.get(client.id), status);
         try {
             await this.chatService.SockToClient(client.id, this.mp.get(client.id), status);
         } catch (error) { }
-        
+
     }
 
 

@@ -19,12 +19,16 @@ const Chat = () => {
   const [notifAlert, setNotifAlert] = useState({ error: '', msg: '' });
   const [newMessage, setNewMessage] = useState({});
   const [usersStatus, setUsersStatus] = useState(new Map([]));
-
+  
   const [popupParent, setPopupParent] = useState({ display: 'none' });
   const [popupInfParent, setPopupInfParent] = useState({ display: 'none' });
   const [divPosition, setDivPosition] = useState({ x: 0, y: 0, display: 'none', i: 0 });
 
-
+  const selectedConvRef = useRef(convInf);
+  
+  useEffect(() => {
+    selectedConvRef.current = convInf;
+  }, [convInf]);
 
 
   const escFunction = useCallback((event: any) => {
@@ -54,10 +58,8 @@ const Chat = () => {
     if (socketRef.current !== null) {
 
       socketRef.current.on('FrontDirectMessage', (data: any) => {
-
-        console.log("data ----<<",data)
-        if (authUser.blockList.indexOf(data?.Id) === -1 && authUser?.userId !== data?.Id) {
-          setRefresh(2);
+        setRefresh(2);
+        if (authUser.blockList.indexOf(data?.Id) === -1 && authUser?.userId !== data?.Id && selectedConvRef.current.convId == data.convId) {
           setNewMessage({
             Name: data.name,
             Message: data.Message,
@@ -88,15 +90,19 @@ const Chat = () => {
 
   useEffect(() => {
     function handleResize() {
-      if (innerWidth >= 925)
+      if (window.innerWidth >= 925) {
         setShow(2);
-      else
-        setShow(1)
+      } else if (window.innerWidth < 925 && chatDivShow !== 0) {
+        setShow(1);
+      }
     }
-
-    window.addEventListener('load', handleResize);
-    window.addEventListener("resize", handleResize);
-  }, [window]);
+    handleResize();
+  
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [chatDivShow]);
 
   return (
     <div className='chat'>

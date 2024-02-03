@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './chat.css';
 import { useAuth } from '../../context/AuthContext';
 
@@ -40,12 +40,30 @@ const timeOfLastMessage = (date:any) => {
 }
 
 const Conversation = (prop:any) => {
-  const { setConvInf}: any = useAuth();
+  const [UnseenState, setUnseen] = useState(0);
+  const { setConvInf, socketRef, convInf}: any = useAuth();
   const date = timeOfLastMessage(prop.Date);
   const style = {
     background:'green',
   }
+
+
+  useEffect(()=>{
+    if (convInf.convId == prop.convId){
+      if (prop.group)
+        socketRef.current.emit('seen', { convId:  prop.convId, isGroup: true });
+      else 
+        socketRef.current.emit('seen', { convId:  prop.convId, isGroup: false });
+    } else
+      setUnseen(prop.Unseen);
+  }, [prop.Unseen])
   function handleClick() {
+    if (prop.group)
+      socketRef.current.emit('seen', { convId:  prop.convId, isGroup: true });
+    else 
+      socketRef.current.emit('seen', { convId:  prop.convId, isGroup: false });
+    console.log(UnseenState)
+    setUnseen(0);
     setConvInf((prev:any) => {
       return {
         ...prev,
@@ -74,7 +92,8 @@ const Conversation = (prop:any) => {
         </div>
         <div className='last-message'>
           <p>{prop.lastMsg}</p>
-          { (prop.Unseen) ? <div className='number-of-message'>{prop.Unseen}</div> : <></>}
+          { (UnseenState) ? <div className='number-of-message'>{UnseenState}</div> : <></>}
+          {/* { (prop.Unseen) ? <div className='number-of-message'>{prop.Unseen}</div> : <></>} */}
         </div>
       </div>
     </div>
