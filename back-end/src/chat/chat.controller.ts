@@ -109,7 +109,7 @@ export class ChatController {
         return  await this.chatService.addTogroup(creatRole);
     }
     
-    @Post('group/join/:roomId')
+    @Post('group/join')
     async joinGroup(
         @Body() joinDto: JoinGroupDTO,
         @Req() req: any,
