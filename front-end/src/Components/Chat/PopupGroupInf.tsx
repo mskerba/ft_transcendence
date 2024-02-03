@@ -53,7 +53,7 @@ const PopupGroupInf = (prop: any) => {
   const [addUsernameGroup, setAddUsernameGroup] = useState('');
   const [addRoleNewUser, setAddRoleNewUser] = useState('member');
   const axiosPrivate = useAxiosPrivate();
-  const { setConvInf, convInf, authUser }: any = useAuth();
+  const { setConvInf, convInf, authUser, socketRef }: any = useAuth();
   const navigate = useNavigate();
 
 
@@ -191,6 +191,10 @@ const PopupGroupInf = (prop: any) => {
           userId: parseInt(memberSelected),
           numberHour: parseInt(muteTime)
         });
+
+        if (res.data.success) {
+          socketRef.current.emit('mute', { userId: parseInt(memberSelected), roomId: convInf.convId });
+        }
 
         prop.setShowDropdown(true);
         setTimeout(() => prop.setShowDropdown(false), 3000);

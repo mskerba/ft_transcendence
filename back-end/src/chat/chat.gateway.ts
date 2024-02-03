@@ -161,6 +161,23 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         client.join(data.group);
     }
 
+    @SubscribeMessage("mute")
+    async mute(client: Socket, data: { userId: number, roomId: string }) {
+
+        const user = await this.prisma.user.findUnique({
+            where: {
+                userId: data.userId,
+            },
+            select: {
+                sockId: true,
+            }
+        });
+
+        this.server.sockets[user.sockId].leave(data.roomId);
+    }
+
+
+
     @SubscribeMessage("messageTogroup")
     async messageTogroup(client: Socket, data: { group: string, message: string }) {
 
