@@ -206,6 +206,9 @@ export class ChatService {
             const room = await this.findGroupByUser(user1);
             for (const item in room) {
 
+                const notMuted = await this.checkIsMuted(room[item].RoomId, user1);
+                console.log("55555555555555 | ", room[item].RoomId, notMuted);
+                if (notMuted.error) continue;
                 
                 let data = (await this.lastMessageGroup(room[item].RoomId));
                 let lastMsg: string = "welcome to " + room[item].roomId.title;
@@ -433,6 +436,16 @@ export class ChatService {
 
     async joinGroup(joinDto: JoinGroupDTO, userId: number) {
         let group;
+
+        try {
+            const role = await this.findRoleUser(userId, joinDto.roomId);
+            if (role.RoleName) {
+                const notMuted = await this.checkIsMuted(joinDto.roomId, userId);
+                if (notMuted.error) return notMuted;
+                return { "success": true, status: HttpStatus.OK };
+            }
+        } catch (err) {}
+    
         try {
 
             group = await this.prismaService.room.findUnique({
@@ -554,37 +567,35 @@ export class ChatService {
     }
 
     // checker user is muted or not
-    async checkIsMuted(roomId: string, message: string, uId: number) {
-        const time = await this.prismaService.muteUser.findFirst({
-            where: {
-                RoomId: roomId,
-                UserId: uId,
-            },
-            select: {
-                StartTime: true,
-                EndTime: true,
-                MuteUserId: true,
-            }
-        })
-        if (time) {
-            if (time.EndTime >= time.StartTime) {
-                this.prismaService.muteUser.delete({
-                    where: {
-                        MuteUserId: time.MuteUserId
+    async checkIsMuted(roomId: string, uId: number) {
+        try {
+            const time = await this.prismaService.muteUser.findFirst({
+                where: {
+                    RoomId: roomId,
+                    UserId: uId,
+                },
+            });
+            console.log(roomId, uId,  time);
+            if (time) {
+                if (time.EndTime <= new Date()) {
+                    await this.prismaService.muteUser.delete({
+                        where: {
+                            MuteUserId: time.MuteUserId
+                        }
+                    });
+                    return {
+                        "success": true,
+                        status: HttpStatus.OK
+                    };
+                }
+                else {
+                    return {
+                        "error": "User is in Muted mode",
+                        status: HttpStatus.FORBIDDEN
                     }
-                });
-                return {
-                    "error": "Attention: Please be mindful of group guidelines " +
-                        "continued violations may result in removal or suspension "
                 }
             }
-            else {
-                return {
-                    "error": "User is in Muted mode",
-                    status: HttpStatus.FORBIDDEN
-                }
-            }
-        }
+        } catch (err) { }
         return {
             "success": true,
             status: HttpStatus.OK
@@ -778,7 +789,6 @@ export class ChatService {
     // mute user in group specific type
     async muteUser(muteDto: MuteDto) {
 
-
         const data = await this.PunishCheker(muteDto);
         if (data.error != undefined)
             return data;
@@ -788,10 +798,9 @@ export class ChatService {
                 data: {
                     roomId: { connect: { RoomId: muteDto.roomId } },
                     userId: { connect: { userId: muteDto.userId } },
-                    StartTime: new Date(Date.now()),
                     EndTime: new Date(Date.now() + (muteDto.numberHour * 60 * 60 * 1000)),
-                }
-            })
+                },
+            });
             return data;
         } catch (error) {
             return {

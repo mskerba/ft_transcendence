@@ -53,7 +53,7 @@ const PopupGroupInf = (prop: any) => {
   const [addUsernameGroup, setAddUsernameGroup] = useState('');
   const [addRoleNewUser, setAddRoleNewUser] = useState('member');
   const axiosPrivate = useAxiosPrivate();
-  const { setConvInf, convInf, authUser }: any = useAuth();
+  const { setConvInf, convInf, authUser, socketRef, setRandomKey }: any = useAuth();
   const navigate = useNavigate();
 
 
@@ -96,7 +96,14 @@ const PopupGroupInf = (prop: any) => {
   }
 
   async function handlePlay() {
+    const prefix = 'privateGame_';
+    const timestamp = Date.now().toString();
+    const randomPart = Math.random().toString(36).substring(2, 8); // Adjust the length as needed
+    const generatedName = `${prefix}${timestamp}_${randomPart}`;
 
+    setRandomKey(generatedName);
+    socketRef.current.emit("createPrivateGame", { userId: parseInt(memberSelected) , gameID: generatedName })
+    navigate('/game');
     handleMoreInfClick();
   }
 
@@ -191,6 +198,10 @@ const PopupGroupInf = (prop: any) => {
           userId: parseInt(memberSelected),
           numberHour: parseInt(muteTime)
         });
+
+        if (res.data.success) {
+          socketRef.current.emit('mute', { userId: parseInt(memberSelected), roomId: convInf.convId });
+        }
 
         prop.setShowDropdown(true);
         setTimeout(() => prop.setShowDropdown(false), 3000);

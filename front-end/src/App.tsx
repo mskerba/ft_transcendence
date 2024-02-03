@@ -65,11 +65,13 @@ const App = () => {
       socketRef.current.on('toHome', () => { console.log("Waaaghayerha"); navigate('/') })
 
       socketRef.current.on('FrontCreatePrivateGame', (data: any) => {
-        console.log("chihaja tarya")
+        console.log(data);
         setRandomKey(data.gameID);
-        toast(<>
-          <button onClick={() => navigate('/game')}>Accept</button>
-          <button onClick={() => handleDecline(data.from)}>Decline</button>
+        toast(<><h3 className='challenger-name'>{data.from}</h3>
+          <div className='game-request'>
+            <button className='accept-game' onClick={() => navigate('/game')}>Accept</button>
+            <button className='decline-game' onClick={() => handleDecline(data.from)}>Decline</button>
+          </div>
         </>);
         console.log("socket --> data :", data);
       })

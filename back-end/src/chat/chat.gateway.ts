@@ -152,9 +152,31 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     //join group when you click on group
     @SubscribeMessage("joinGroup")
-    joinGroup(client: Socket, data: { group: string }) {
+    async joinGroup(client: Socket, data: { group: string }) {
+
+        const user = await this.chatService.findUserBySockid(client.id);
+        const notMuted = await this.chatService.checkIsMuted(data.group, user.userId);
+        if (notMuted.error) return;
+
         client.join(data.group);
     }
+
+    @SubscribeMessage("mute")
+    async mute(client: Socket, data: { userId: number, roomId: string }) {
+
+        const user = await this.prisma.user.findUnique({
+            where: {
+                userId: data.userId,
+            },
+            select: {
+                sockId: true,
+            }
+        });
+
+        this.server.sockets[user.sockId].leave(data.roomId);
+    }
+
+
 
     @SubscribeMessage("messageTogroup")
     async messageTogroup(client: Socket, data: { group: string, message: string }) {
@@ -190,13 +212,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     //Create game with freind 
     @SubscribeMessage("createPrivateGame")
-    async createPrivateGame(client: Socket, data: { to: string, gameID: string }) {
+    async createPrivateGame(client: Socket, data: { userId: number, gameID: string }) {
         try {
             const user = await this.chatService.findUserBySockid(client.id);
-            const obj = await this.chatService.findUserByname(data.to);
-            console.log("====>>create private game: ", obj.sockId, data.to);
-            if (obj.sockId) {
-                client.to(obj.sockId).emit("FrontCreatePrivateGame", { "from": user.userId, "gameID": data.gameID, });
+            const opponent = await this.prisma.user.findUnique({where: { userId: data.userId }});
+            if (opponent.sockId) {
+                client.to(opponent.sockId).emit("FrontCreatePrivateGame", { "from": user.name, "gameID": data.gameID, });
             }
         } catch (error) {
             console.log("error on sockId or name");

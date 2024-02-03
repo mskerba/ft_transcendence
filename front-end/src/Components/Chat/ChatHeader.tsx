@@ -27,14 +27,14 @@ const ChatHeader = (prop:any) => {
     });
   }
 
-  const handlePlayFreindClick = (freindName: string) => {
+  const handlePlayFreindClick = (userId: number) => {
     const prefix = 'privateGame_';
     const timestamp = Date.now().toString();
     const randomPart = Math.random().toString(36).substring(2, 8); // Adjust the length as needed
     const generatedName = `${prefix}${timestamp}_${randomPart}`;
 
     setRandomKey(generatedName);
-    socketRef.current.emit("createPrivateGame", { to: freindName, gameID: generatedName })
+    socketRef.current.emit("createPrivateGame", { userId, gameID: generatedName })
     navigate('/game');
 }
 
@@ -54,7 +54,7 @@ const ChatHeader = (prop:any) => {
             </div>
           </a>
           {group && <div  className='info-group-button' onClick={handelClickInf} ><img src='/src/assets/info-group.svg'/></div>}
-          {!group && <div className='play-button-chat' onClick={() => handlePlayFreindClick(convInf.Name)}>
+          {!group && <div className='play-button-chat' onClick={() => handlePlayFreindClick(convInf.Id)}>
               <p>Play Now</p>
               <img src='/src/assets/play-now.svg' />
           </div>}
