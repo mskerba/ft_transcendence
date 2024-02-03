@@ -152,7 +152,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     //join group when you click on group
     @SubscribeMessage("joinGroup")
-    joinGroup(client: Socket, data: { group: string }) {
+    async joinGroup(client: Socket, data: { group: string }) {
+
+        const user = await this.chatService.findUserBySockid(client.id);
+        const notMuted = await this.chatService.checkIsMuted(data.group, user.userId);
+        if (notMuted.error) return;
+
         client.join(data.group);
     }
 
