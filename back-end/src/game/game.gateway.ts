@@ -256,7 +256,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     console.log("key is:==>:|", key, "|size: ", key.length)
 
-    if (key === "withoutPowers" ){//&& (!this.connectedwithoutPowers.size || (this.connectedwithoutPowers.size && this.connectedwithoutPowers.values().next().value != userId))) {
+    /*if (key === "withoutPowers" ){//&& (!this.connectedwithoutPowers.size || (this.connectedwithoutPowers.size && this.connectedwithoutPowers.values().next().value != userId))) {
       console.log("------- in withoutPowers");
       let isUserInGame = false;
 
@@ -272,7 +272,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.connectedwithoutPowers.set(client.id, userId);
       }
 
-    } else  if (key != "") {
+    } else  */if (key != "") {
       console.log("------- in private game");
 
       if ([...this.connectedprivateUsers.values()].includes(key)) {
@@ -292,7 +292,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
           isUserInGame = true;
           break;
         }
-
       };
 
       if (!isUserInGame) {
@@ -300,13 +299,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       }
 
     }
-    this.startGame();
     
     console.log("connectedUsers==>>", this.connectedUsers.size)
     console.log("connectedprivateUsers==>>", this.connectedprivateUsers.size)
     console.log("connectedwithoutPowers==>>", this.connectedwithoutPowers.size)
     console.log("_____________________________________________________________________")
-
+    if (this.connectedUsers.size == 2)
+      this.startGame();
   }
 
   startPrivateGame(privateKey) {
