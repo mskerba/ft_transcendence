@@ -23,6 +23,7 @@ type typePowerUpApp = {
 class ballClass {
   constructor(player1SocketID, player2SocketID, player1ID, player2ID, server) {
     this.player1SocketID = player1SocketID;
+    this.time = 60;
     this.player2SocketID = player2SocketID;
     this.player1ID = player1ID;
     this.player2ID = player2ID;
@@ -82,8 +83,12 @@ class ballClass {
   private lastPlayerId;
   private lastPlayer;
   private isGoal: boolean;
+  private time:number;
 
-  private handleGameLogic() {
+  private handleGameLogic(time:number) {
+
+    this.time = time;
+
     if (this.ball.height <= this.ball.diameter / 2 || this.ball.height >= this.canva.height - this.ball.diameter / 2)
       this.derection.height *= -1;
 
@@ -179,7 +184,6 @@ class ballClass {
     }
 
     if (this.circlesIntersect() && this.showPowerUp.show == true) {
-      console.log("FSFSDFSDFSDFDS")
       this.powerUpsApp(this.lastPlayerId);
     }
   }
@@ -214,8 +218,6 @@ class ballClass {
     const dx = this.ball.height - this.showPowerUp.y;
     const dy = this.ball.width - this.showPowerUp.x;
     const distance = Math.sqrt(dx * dx + dy * dy);
-    if (distance <= radius1 + radius2)
-      console.log("*/*/*/*/*/*/*/*/*/*/", this.showPowerUp.show)
     // Check if the distance is less than or equal to the sum of their radii
     return distance <= radius1 + radius2;
   }
@@ -242,13 +244,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   handleConnection(client: Socket) {
 
     const key = client?.handshake?.query?.key || '';
-    console.log("__________________________________\nthe size of private map : ", this.connectedprivateUsers.size);
     const cookies = client?.handshake?.headers?.cookie;
     const userId: number | null = decodeJwtFromCookies(cookies);
 
     if (userId === null)
     return;
-    console.log("the connected user is : ",this.connectedUsers)
 
     if (key != "") {
       if ([...this.connectedprivateUsers.values()].includes(key)) {
@@ -258,9 +258,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       else
         this.connectedprivateUsers.set({ id: client.id, user: userId }, key);
 
-//  || ![...this.connectedUsers.values()].includes(userId)
     } else if (!this.connectedUsers.size || (this.connectedUsers.size && this.connectedUsers.values().next().value != userId)) {
-      console.log("making game---???>", this.connectedUsers, this.myMap)
+
       let isUserInGame = false;
 
       for (const [key, value] of this.myMap) {
@@ -398,7 +397,16 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       objBallClass = val;
       let player1 = val.player1SocketID;
       let player2 = val.player2SocketID;
-
+      let timing = val.time.current;
+      console.log("***************++++++++++++>",timing, "|||", typeof timing);
+      if (timing > 1 && client.id == val.player1SocketID){
+        val.score.player2 = 3;
+        val.score.player1 = 0;
+      } else if (timing > 1) {
+        val.score.player2 = 0;
+        val.score.player1 = 3;
+      }
+      
       this.gameService.saveGame({
         player1Id: val.player1ID,
         player2Id: val.player2ID,
@@ -429,9 +437,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 
   @SubscribeMessage('gameball')
-  handleGameBall(client: Socket, data: { player1: number, player2: number }) {
+  handleGameBall(client: Socket, data: { time: number }) {
     if (this.myMap.has(client.id)) {
-      this.myMap.get(client.id).handleGameLogic();
+      console.log("--->",data.time);
+      this.myMap.get(client.id).handleGameLogic(data.time);
     }
   }
 

@@ -3,8 +3,6 @@ import '../Game.css'
 
 function Timer(prop:any) {
 
-
-  const [time, setTime] = useState(60);
   const [pvs, setPvs] = useState({
     border:'1px solid rgb(0,255,0,.8)',
     'backgroundColor': 'rgb(255,255,255,.8)',
@@ -12,7 +10,7 @@ function Timer(prop:any) {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setTime((prevTime) => {
+      prop.setTime((prevTime) => {
         if (!prevTime) {
           clearInterval(intervalId);
           return prevTime;
@@ -38,7 +36,7 @@ function Timer(prop:any) {
     <div className='game--timer'>
         <p>{prop.scoreInGame.player1}</p>
         <div className='timing--text' style={pvs}>
-          <p>{time < 10 ? `0${time}` : time}'</p>
+          <p>{prop.time < 10 ? `0${prop.time}` : prop.time}'</p>
         </div>
         <p>{prop.scoreInGame.player2}</p>
     </div>

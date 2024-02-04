@@ -61,7 +61,7 @@ const PopupGroupInf = (prop: any) => {
     prop.setPopupInfParent((prev: any) => {
       return ({ ...prev, display: 'none' })
     });
-    prop.setRoomID(convInf.convId);
+    prop.setRoomID('');
   };
 
 
@@ -93,6 +93,7 @@ const PopupGroupInf = (prop: any) => {
       else
         return { ...prev, display: 'none', i: '0' }
     });
+    // prop.setRoomID('');
   }
 
   async function handlePlay() {
@@ -154,6 +155,8 @@ const PopupGroupInf = (prop: any) => {
 
   async function handleUpdateGroupClick() {
     handleCloseClick();
+    console.log(convInf.convId)
+    prop.setRoomID(convInf.convId);
     prop.setPopupParent((prev: any) => {
       return ({
         ...prev,

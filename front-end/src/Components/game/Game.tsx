@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 
 function Game() {
   const [inGame, setInGame] = useState(0);
+  const [time, setTime] = useState(60);
   const [playersInfo, setPlayersInfo] = useState();
   const [finaleGameScore, setFinaleGameScore] = useState();
   const socketRefGame = useRef(null);
@@ -144,8 +145,8 @@ function Game() {
       {(inGame == 1) &&
         <div className='game--page'>
           <div className='game--component' style={canvaStyle} >
-            <ScoreBoard socket={socketRefGame} playersInfo={playersInfo} size={canvaStyle} />
-            <Canva socket={socketRefGame} className={test} size={canvaStyle} />
+            <ScoreBoard socket={socketRefGame} playersInfo={playersInfo} size={canvaStyle} time={time} setTime={setTime} />
+            <Canva socket={socketRefGame} className={test} size={canvaStyle} time={time} />
           </div>
         </div>
       }

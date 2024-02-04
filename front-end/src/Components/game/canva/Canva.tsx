@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import p5, { Color } from 'p5';
 import io from 'socket.io-client';
 import '../Game.css';
@@ -42,6 +42,13 @@ type typePowerUpApp = {
 const P5Component = (props: any) => {
   let canvas: any;
   const {authUser} :any= useAuth();
+  
+  const times = useRef(props.time);
+  
+  useEffect(() => {
+    times.current = props.time;
+  }, [props.time]);
+
 
   useEffect(() => {    const sketch = (p: any) => {
 
@@ -95,10 +102,9 @@ const P5Component = (props: any) => {
       else
         y = canva.y - paddleHeight / 2;
       shapesDraw()
-      props.socket.current.emit('gameball');
+      props.socket.current.emit('gameball',{'time': times});
     };
 
-    
     function shapesDraw()
     {
       p.background(44, 43, 43);
@@ -235,7 +241,7 @@ const Canva = (props: any) => {
 
   return (
     <div className={`${props.className} grow`} style={style}>
-      <P5Component size={canvaSize} socket={props.socket} />
+      <P5Component size={canvaSize} socket={props.socket}  time={props.time}/>
     </div>
   );
 };
