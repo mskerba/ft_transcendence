@@ -10,7 +10,7 @@ const UserOptions = ({ option, user, onStateChange }: any) => {
     return (
         <div className='user-options-container'>
             {option == 0 && <Game userId={user.userId}/>}
-            {option == 1 && <Achievement />}
+            {option == 1 && <Achievement userId={user.userId}/>}
             {option == 2 && <Friend userId={user.userId}/>}
             {option == 3 && <FriendRequest />}
             {option == 4 && <Blocked />}

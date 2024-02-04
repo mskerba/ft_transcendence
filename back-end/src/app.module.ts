@@ -11,10 +11,11 @@ import { BlockModule } from './block/block.module';
 import { LeaderboardModule } from './leaderboard/leaderboard.module';
 import { GameModule } from './game/game.module';
 import { SearchModule } from './search/search.module';
+import { AchievementModule } from './achievement/achievement.module';
 
 
 @Module({
-  imports: [AuthModule, PrismaModule, UserModule, FriendModule, ChatModule, AvatarModule, BlockModule, LeaderboardModule, GameModule, SearchModule],
+  imports: [AuthModule, PrismaModule, UserModule, FriendModule, ChatModule, AvatarModule, BlockModule, LeaderboardModule, GameModule, SearchModule, AchievementModule],
   providers: [
     {
       provide: APP_GUARD,

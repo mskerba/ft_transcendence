@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { AchievementService } from 'src/achievement/achievement.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 interface Game {
@@ -13,7 +14,10 @@ interface Game {
 @Injectable()
 export class GameService {
 
-    constructor(private prisma: PrismaService) { }
+    constructor(
+        private prisma: PrismaService,
+        private achievementService: AchievementService,
+        ) { }
 
     async games(userId: number) {
         return await this.prisma.game.findMany({
@@ -100,5 +104,20 @@ export class GameService {
                 },
             },
         });
+
+        if (winner.wins >= 25) {
+            await this.achievementService.create(winner.userId, 'Champion\'s Odyssey 🏅', 'Reach the pinnacle with 25 wins, proving yourself as an indomitable force in the competitive realm.');
+        }
+        else if (winner.wins >= 10) {
+            await this.achievementService.create(winner.userId, 'Mastering the Battlefield 🥇', 'Achieve a milestone with 10 victories, showcasing your strategic prowess and gaming expertise.');
+        }
+        else if (winner.wins >= 5) {
+            await this.achievementService.create(winner.userId, 'Victorious Beginnings 🏆', 'Win 5 matches and pave the way for your triumph in the gaming arena.');
+        }
+
+        if (savedGame.loserScore === 0) {
+            await this.achievementService.create(winner.userId, 'Immaculate Conqueror 🛡️', 'Achieve victory with a cleansheet, demonstrating not only your offensive prowess but also impeccable defensive skills.');
+        }
+
     }
 }

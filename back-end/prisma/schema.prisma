@@ -44,6 +44,8 @@ model User {
   winnedGames Game[] @relation("winnedGames")
   losedGames  Game[] @relation("losedGames")
 
+  achievements Achievement[]
+
   // ... other relationships ...
 
   // iharile 
@@ -82,6 +84,18 @@ model FriendRequest {
   sender User @relation("SentFriendRequests", fields: [senderId], references: [userId])
 
   receiver User @relation("ReceivedFriendRequests", fields: [receiverId], references: [userId])
+}
+
+model Achievement {
+  achievementId String  @id @default(cuid())
+  userId        Int
+  name          String
+  description   String
+  dateEarned    DateTime @default(now())
+
+  user          User    @relation(fields: [userId], references: [userId])
+
+  @@unique([userId, name])
 }
 
 model Friendship {
