@@ -15,13 +15,15 @@ function Game() {
   const [finaleGameScore, setFinaleGameScore] = useState();
   const socketRefGame = useRef(null);
   const test: String = 'canva';
-  const { authUse, randomKey, setRandomKey, setRootAppStyle, socketRef }: any = useAuth();
+  const { authUse, randomKey, setRandomKey, setRootAppStyle, socketRef}: any = useAuth();
   const navigate = useNavigate();
 
   let [canvaStyle, setCanvaStyle]: any = useState({
     width: `${window.innerWidth}`,
     height: `700`
   });
+
+  console.log("the socket is connected")
 
   const isFirstRender = useRef(true);
 
@@ -43,7 +45,7 @@ function Game() {
   useEffect(() => {
     if (socketRefGame.current === null) {
 
-      setRootAppStyle(() => { return ({ 'grid-template-rows': '1fr' }) })
+      setRootAppStyle(() => { return ({ gridTemplateRows: '1fr' }) })
       socketRefGame.current = io('http://localhost:3000/game', {
         transports: ["websocket"],
         withCredentials: true,

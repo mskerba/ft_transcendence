@@ -394,7 +394,7 @@ input {
     border-radius: 40px 40px 40px 40px;
     color: rgb(223, 223, 223);
     display: flex;
-    background: url("/src/assets/search.svg") no-repeat left;
+    background:  no-repeat left;
     font-size: large;
     font-weight: 600;
     background-size: 30px;

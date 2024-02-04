@@ -83,9 +83,9 @@ class ballClass {
   private lastPlayerId;
   private lastPlayer;
   private isGoal: boolean;
-  private time:number;
+  private time: number;
 
-  private handleGameLogic(time:number) {
+  private handleGameLogic(time: number) {
 
     this.time = time;
 
@@ -234,6 +234,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private myMap = new Map();
   private connectedUsers = new Map();
   private connectedprivateUsers = new Map();
+  private connectedwithoutPowers = new Map();
 
   constructor(private gameService: GameService) { }
 
@@ -248,9 +249,32 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const userId: number | null = decodeJwtFromCookies(cookies);
 
     if (userId === null)
-    return;
+      return;
+    console.log("connectedUsers==>>", this.connectedUsers.size)
+    console.log("connectedprivateUsers==>>", this.connectedprivateUsers.size)
+    console.log("connectedwithoutPowers==>>", this.connectedwithoutPowers.size)
 
-    if (key != "") {
+    console.log("key is:==>:|", key, "|size: ", key.length)
+
+    if (key === "withoutPowers" ){//&& (!this.connectedwithoutPowers.size || (this.connectedwithoutPowers.size && this.connectedwithoutPowers.values().next().value != userId))) {
+      console.log("------- in withoutPowers");
+      let isUserInGame = false;
+
+      for (const [key, value] of this.myMap) {
+        if (value.player1ID === userId || value.player2ID === userId) {
+          isUserInGame = true;
+          break;
+        }
+
+      };
+
+      if (!isUserInGame) {
+        this.connectedwithoutPowers.set(client.id, userId);
+      }
+
+    } else  if (key != "") {
+      console.log("------- in private game");
+
       if ([...this.connectedprivateUsers.values()].includes(key)) {
         this.connectedprivateUsers.set({ id: client.id, user: userId }, key);
         this.startPrivateGame(key);
@@ -259,6 +283,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.connectedprivateUsers.set({ id: client.id, user: userId }, key);
 
     } else if (!this.connectedUsers.size || (this.connectedUsers.size && this.connectedUsers.values().next().value != userId)) {
+      console.log("------- in simple  game");
 
       let isUserInGame = false;
 
@@ -276,10 +301,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     }
     this.startGame();
+    
+    console.log("connectedUsers==>>", this.connectedUsers.size)
+    console.log("connectedprivateUsers==>>", this.connectedprivateUsers.size)
+    console.log("connectedwithoutPowers==>>", this.connectedwithoutPowers.size)
+    console.log("_____________________________________________________________________")
 
-
-
-    // .player1ID
   }
 
   startPrivateGame(privateKey) {
@@ -380,8 +407,22 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleDisconnect(client: Socket) {
-
+    console.log("deconection!!!!!!!")
     this.connectedUsers.clear();
+    this.connectedwithoutPowers.clear();
+    // this.connectedUsers.forEach((value, key, index) => {
+    //   if (key.id == client.id) {
+    //     delete this.connectedUsers[key];
+    //     this.connectedUsers.delete(key);
+    //   }
+    // });
+    // ;
+    // this.connectedwithoutPowers.forEach((value, key, index) => {
+    //   if (key.id == client.id) {
+    //     delete this.connectedwithoutPowers[key];
+    //     this.connectedwithoutPowers.delete(key);
+    //   }
+    // });;
 
     let objBallClass;
     this.connectedprivateUsers.forEach((value, key, index) => {
@@ -398,15 +439,14 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       let player1 = val.player1SocketID;
       let player2 = val.player2SocketID;
       let timing = val.time.current;
-      console.log("***************++++++++++++>",timing, "|||", typeof timing);
-      if (timing > 1 && client.id == val.player1SocketID){
+      if (timing > 1 && client.id == val.player1SocketID) {
         val.score.player2 = 3;
         val.score.player1 = 0;
       } else if (timing > 1) {
         val.score.player2 = 0;
         val.score.player1 = 3;
       }
-      
+
       this.gameService.saveGame({
         player1Id: val.player1ID,
         player2Id: val.player2ID,
@@ -439,7 +479,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('gameball')
   handleGameBall(client: Socket, data: { time: number }) {
     if (this.myMap.has(client.id)) {
-      console.log("--->",data.time);
       this.myMap.get(client.id).handleGameLogic(data.time);
     }
   }

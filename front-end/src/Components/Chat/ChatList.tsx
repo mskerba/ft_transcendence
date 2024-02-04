@@ -7,6 +7,8 @@ import { useAuth } from '../../context/AuthContext';
 const ChatList = (prop:any) => {
   const [allConversation, setAllConversation] = useState([]);
   const axiosPrivate = useAxiosPrivate();
+  const [searchText, setSearchText] = useState('');
+  const [conversationFilter, setConversationFilter] = useState([]);
   // const {authUser} = useAuth();
   const [selectedId, setSelectedId] = useState(null);
 
@@ -14,6 +16,10 @@ const ChatList = (prop:any) => {
   //   setSelectedId(id);
   // };
 
+
+  const handleSearchTextChange = (event: any) => {
+    setSearchText(event.target.value);
+  };
 
   const fetch = async () => {
     try {
@@ -43,6 +49,11 @@ const ChatList = (prop:any) => {
       prop.setNotifAlert(()=>{return ({error:'error',msg:error.response.data.message[0]})})
     }
   }
+
+  useEffect(()=>{
+    setConversationFilter(allConversation.filter((conv:any) => conv.Name.toLowerCase().includes(searchText.toLowerCase())))
+  }, [searchText])
+
   useEffect(() => {
     fetch();
     prop.setRefresh(0);
@@ -64,17 +75,24 @@ const ChatList = (prop:any) => {
         <div className='chatlist-header'>
             <input 
                 type="text"
-                placeholder="       Search"
-                className="input-search-input" />
+                placeholder="  Search"
+                className="input-search-input" 
+                value={searchText}
+                onChange={handleSearchTextChange} />
             <div className='add-group-icon'>
               <img src='/src/assets/group-add.svg' onClick={handleClick}/>
             </div>
         </div>
         <div className='conversations-content'>
           <>
-          {allConversation.map((element, index) => (
+          {searchText === '' && allConversation.map((element, index) => (
               <Conversation key={index} index={index}
               setSelectedId={setSelectedId} selectedId={selectedId} {...element} setShow={prop.setShow} setAllConversation={setAllConversation} allConversation={allConversation} />
+          ))}
+          
+          {searchText !== '' && conversationFilter.map((element, index) => (
+              <Conversation key={index} index={index}
+              setSelectedId={setSelectedId} selectedId={selectedId} {...element} setShow={prop.setShow} setConversationFilter={setConversationFilter} conversationFilter={conversationFilter} />
           ))}
           </>
         </div>

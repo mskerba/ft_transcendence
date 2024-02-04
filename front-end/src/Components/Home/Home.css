@@ -1,0 +1,22 @@
+.home-parent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.default-game {
+    background-color: green;
+    
+}
+
+.powerups-game {
+    background-color: red;
+    
+}
+
+.powerups-game,
+.default-game {
+    cursor: pointer;
+    padding: 5px 5px;
+}

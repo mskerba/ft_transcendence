@@ -23,7 +23,7 @@ import { toast } from 'react-toastify';
 
 const App = () => {
 
-  const { rootAppStyle, auth, login, logout, socketRef, setRandomKey, randomKey } = useAuth();
+  const { rootAppStyle, auth, login, logout, socketRef, setRandomKey } :any= useAuth();
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
 
@@ -95,6 +95,7 @@ const App = () => {
             <Route path="user/:userId" element={<><NavBar /><Profile /></>} />
             <Route path="/" element={<> <NavBar /> <LeaderBoard /> </>} />
             <Route path="/game" element={<Game />} />
+            <Route path="/Home" element={<> <NavBar /> <Home /></>} />
             <Route path="/chat" element={<> <NavBar /> <Chat /> </>} />
             <Route path="/search" element={<> <NavBar /> <Search /> </>} />
           </Route>
