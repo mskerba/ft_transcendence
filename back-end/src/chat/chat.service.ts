@@ -6,12 +6,14 @@ import { JsonArray } from '@prisma/client/runtime/library';
 import { Dirent } from 'fs';
 import { BlockService } from 'src/block/block.service';
 import * as bcrypt from 'bcrypt';
+import { AchievementService } from 'src/achievement/achievement.service';
 
 @Injectable()
 export class ChatService {
     constructor(
         private readonly prismaService: PrismaService,
         private readonly blockService: BlockService,
+        private readonly achievementService: AchievementService,
     ) { }
 
     async findUserById(userid: number)//: Promise<any> 
@@ -403,15 +405,6 @@ export class ChatService {
             return { "error": "the data is failed to create group", "status": HttpStatus.OK };
         }
 
-        // if (room && room.TypeRoom == "protected" && room.password == null) {
-        //     await this.prismaService.room.delete({
-        //         where: {
-        //             RoomId: room.RoomId
-        //         }
-        //     })
-        //     return ({ "error": "set the password for protected group" });
-        // }
-
         try {
 
             let UserGroup = await this.prismaService.roleUser.create({
@@ -426,7 +419,8 @@ export class ChatService {
                     RoleName: true,
                     RoomId: true,
                 }
-            })
+            });
+            await this.achievementService.create(createGroupDto.UserId, 'Architect of Allies 🏰', 'Take the lead by creating your own group, where camaraderie and teamwork are fostered under your visionary leadership.');
             return { "success": "the group is created", "status": HttpStatus.OK };
         }
         catch (error) {
@@ -492,6 +486,7 @@ export class ChatService {
                     roomId: { connect: { RoomId: joinDto.roomId } }
                 }
             });
+            await this.achievementService.create(userId, 'United Front 🌐', 'Join a group and become part of a collective force, collaborating with fellow gamers to achieve shared victories.');
             return { "success": true, status: HttpStatus.OK };
         } catch (error) {
             return {
@@ -545,6 +540,7 @@ export class ChatService {
                     roomId: { connect: { RoomId: createROle.roomId } }
                 }
             });
+            await this.achievementService.create(userId, 'United Front 🌐', 'Join a group and become part of a collective force, collaborating with fellow gamers to achieve shared victories.');
             return { "success": true, status: HttpStatus.OK };
         } catch (error) {
             return {

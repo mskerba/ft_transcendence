@@ -1,4 +1,5 @@
 import { Injectable, ForbiddenException } from '@nestjs/common';
+import { AchievementService } from 'src/achievement/achievement.service';
 import { FriendService } from 'src/friend/friend.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -7,6 +8,7 @@ export class BlockService {
   constructor(
     private prisma: PrismaService,
     private friendService: FriendService,
+    private achievementService: AchievementService,
   ) { }
 
   async blockedUsers(blockerId: number) {
@@ -68,6 +70,7 @@ export class BlockService {
         blockedUserId,
       }
     });
+    await this.achievementService.create(userId, 'Setting Boundaries 🚫', 'Block a user for the first time, ensuring a personalized and secure experience within the app.');
 
     const conversation = await this.prisma.linkDirectMessage.findFirst({
       where: {

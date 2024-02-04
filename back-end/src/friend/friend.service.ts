@@ -2,11 +2,15 @@ import { Injectable, ForbiddenException } from '@nestjs/common';
 import { CreateFriendDto } from './dto/create-friend.dto';
 import { UpdateFriendDto } from './dto/update-friend.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { AchievementService } from 'src/achievement/achievement.service';
 
 @Injectable()
 export class FriendService {
 
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService,
+    private achievementService: AchievementService,
+  ) { }
 
   async sendFriendReq(senderId: number, receiverId: number) {
 
@@ -33,7 +37,9 @@ export class FriendService {
       throw new ForbiddenException();
     }
     await this.deleteReq(requestId);
-    return await this.addFriend(request.senderId, request.receiverId);
+    await this.addFriend(request.senderId, request.receiverId);
+    await this.achievementService.create(request.senderId, 'Founding Bonds 🤝', 'Forge your first friendship in the gaming community, creating lasting connections on the virtual battlefield.');
+    await this.achievementService.create(request.receiverId, 'Founding Bonds 🤝', 'Forge your first friendship in the gaming community, creating lasting connections on the virtual battlefield.');
   }
 
   async unfriend(userId: number, friendId: number) {
