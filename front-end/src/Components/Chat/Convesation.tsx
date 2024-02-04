@@ -55,8 +55,19 @@ const Conversation = (prop:any) => {
       else 
         socketRef.current.emit('seen', { convId:  prop.convId, isGroup: false });
     } else
-      setUnseen(prop.Unseen);
+    setUnseen(prop.Unseen);
   }, [prop.Unseen])
+
+  useEffect(()=>{
+    if (convInf.convId == prop.convId){
+      if (prop.group)
+        socketRef.current.emit('seen', { convId:  prop.convId, isGroup: true });
+      else 
+        socketRef.current.emit('seen', { convId:  prop.convId, isGroup: false });
+    } else
+    setUnseen(prop.Unseen);
+  }, [])
+
   function handleClick() {
     if (prop.group)
       socketRef.current.emit('seen', { convId:  prop.convId, isGroup: true });
@@ -77,12 +88,12 @@ const Conversation = (prop:any) => {
     if (innerWidth <925)
       prop.setShow(0);
 
-    prop.setSelectedId(prop.index)
+    prop.setSelectedId(prop.convId)
   }
 
   return (
       <div className='convesation-container' onClick={handleClick}style={{
-      backgroundColor: (prop.selectedId == prop.index) ? '#038C3E' : '',}}
+      backgroundColor: (prop.selectedId == prop.convId) ? '#038C3E' : '',}}
 >
       <img src={`http://localhost:3000/avatar/${prop.Avatar}`} className='conversation-avatar'/>
       <div className='convesation-info'>

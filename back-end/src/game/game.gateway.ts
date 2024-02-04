@@ -130,7 +130,7 @@ class ballClass {
     let sizeW = this.paddelWidth + 5 + this.ball.diameter / 2;
 
     if ((this.player1 + sizeH > this.ball.height) && (this.player1 - sizeH < this.ball.height)
-      && (sizeW == this.ball.width)) {
+      && (sizeW >= this.ball.width)) {
       this.lastPlayer = "player1";
       this.lastPlayerId = this.player1ID;
       this.sign *= -1;
@@ -146,7 +146,7 @@ class ballClass {
     let sizeW = this.canva.width - this.paddelWidth - 5 - this.ball.diameter / 2;
 
     if ((this.player2 + sizeH > this.ball.height) && (this.player2 - sizeH < this.ball.height)
-      && (sizeW == this.ball.width)) {
+      && (sizeW <= this.ball.width)) {
       this.lastPlayerId = this.player2ID;
       this.lastPlayer = "player2";
       this.sign *= -1;
@@ -242,12 +242,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   handleConnection(client: Socket) {
 
     const key = client?.handshake?.query?.key || '';
-    console.log("the size of private map : ", this.connectedprivateUsers.size);
+    console.log("__________________________________\nthe size of private map : ", this.connectedprivateUsers.size);
     const cookies = client?.handshake?.headers?.cookie;
     const userId: number | null = decodeJwtFromCookies(cookies);
 
     if (userId === null)
-      return;
+    return;
+    console.log("the connected user is : ",this.connectedUsers)
 
     if (key != "") {
       if ([...this.connectedprivateUsers.values()].includes(key)) {
@@ -257,8 +258,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       else
         this.connectedprivateUsers.set({ id: client.id, user: userId }, key);
 
-
-    } else if (this.connectedUsers.size || ![...this.connectedUsers.values()].includes(userId)) {
+//  || ![...this.connectedUsers.values()].includes(userId)
+    } else if (!this.connectedUsers.size || (this.connectedUsers.size && this.connectedUsers.values().next().value != userId)) {
       console.log("making game---???>", this.connectedUsers, this.myMap)
       let isUserInGame = false;
 

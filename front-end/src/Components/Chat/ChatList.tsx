@@ -10,9 +10,9 @@ const ChatList = (prop:any) => {
   // const {authUser} = useAuth();
   const [selectedId, setSelectedId] = useState(null);
 
-  const handleConversationClick = (id:any) => {
-    setSelectedId(id);
-  };
+  // const handleConversationClick = (id:any) => {
+  //   setSelectedId(id);
+  // };
 
 
   const fetch = async () => {
