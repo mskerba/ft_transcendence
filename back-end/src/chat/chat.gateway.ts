@@ -214,8 +214,9 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @SubscribeMessage("createPrivateGame")
     async createPrivateGame(client: Socket, data: { userId: number, gameID: string }) {
         try {
+            console.log("c*^%#$^&^%#%&^#^%^$#%$&$%^@%^    createPrivateGame")
             const user = await this.chatService.findUserBySockid(client.id);
-            const opponent = await this.prisma.user.findUnique({where: { userId: data.userId }});
+            const opponent = await this.prisma.user.findUnique({ where: { userId: data.userId } });
             if (opponent.sockId) {
                 client.to(opponent.sockId).emit("FrontCreatePrivateGame", { "from": user.name, "gameID": data.gameID, });
             }
