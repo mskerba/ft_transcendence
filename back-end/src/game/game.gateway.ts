@@ -22,6 +22,7 @@ type typePowerUpApp = {
 
 class ballClass {
   constructor(player1SocketID, player2SocketID, player1ID, player2ID, server) {
+    this.privateKeyObj = "";
     this.player1SocketID = player1SocketID;
     this.time = 60;
     this.player2SocketID = player2SocketID;
@@ -62,6 +63,7 @@ class ballClass {
   }
 
   private server;
+  public privateKeyObj;
   public player1ID;
   public player2ID;
   public player1SocketID;
@@ -105,7 +107,8 @@ class ballClass {
       this.ball.height += this.derection.height;
       this.ball.width += this.derection.width * this.sign;
     }
-    this.powerUpsHandler();
+    if (this.privateKeyObj != 'withoutPowers')
+      this.powerUpsHandler();
     this.server.to(this.player1SocketID).emit('ballPosition', { ball: this.ball, PowerUpApp: this.PowerUpApp, showPowerUp: this.showPowerUp });
     this.server.to(this.player2SocketID).emit('ballPosition', { ball: this.ball, PowerUpApp: this.PowerUpApp, showPowerUp: this.showPowerUp });
   }
@@ -256,23 +259,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     console.log("key is:==>:|", key, "|size: ", key.length)
 
-    /*if (key === "withoutPowers" ){//&& (!this.connectedwithoutPowers.size || (this.connectedwithoutPowers.size && this.connectedwithoutPowers.values().next().value != userId))) {
-      console.log("------- in withoutPowers");
-      let isUserInGame = false;
-
-      for (const [key, value] of this.myMap) {
-        if (value.player1ID === userId || value.player2ID === userId) {
-          isUserInGame = true;
-          break;
-        }
-
-      };
-
-      if (!isUserInGame) {
-        this.connectedwithoutPowers.set(client.id, userId);
-      }
-
-    } else  */if (key != "") {
+    if (key != "") {
       console.log("------- in private game");
 
       if ([...this.connectedprivateUsers.values()].includes(key)) {
@@ -299,7 +286,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       }
 
     }
-    
+
     console.log("connectedUsers==>>", this.connectedUsers.size)
     console.log("connectedprivateUsers==>>", this.connectedprivateUsers.size)
     console.log("connectedwithoutPowers==>>", this.connectedwithoutPowers.size)
@@ -310,6 +297,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   startPrivateGame(privateKey) {
     let player1, player2, player1Id, player2Id;
+
     this.connectedprivateUsers.forEach((value, key) => {
       if (privateKey == value) {
         if (!player1) {
@@ -325,6 +313,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     let i = 0;
     let objBallClass = new ballClass(player1, player2, player1Id, player2Id, this.server);
+    if (privateKey === 'withoutPowers') {
+      objBallClass.privateKeyObj = 'withoutPowers';
+    }
     this.connectedprivateUsers.forEach((value, key, index) => {
       if (privateKey == value) {
         this.server.to(key.id).emit('inGame', {});
