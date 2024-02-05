@@ -19,15 +19,11 @@ const Home = () => {
   return (
     <div className="home-parent">
       <div className="default-game" onClick={handlePlayWithoutPowers}>
-        {/* <Link to="/game" className="link"> */}
           Simple game
-        {/* </Link> */}
       </div>
       
       <div className="powerups-game" onClick={handlePlayWithPowers}>
-        {/* <Link to="/game" className="link"> */}
           poweUp game
-          {/* </Link> */}
       </div>
     </div>
   );

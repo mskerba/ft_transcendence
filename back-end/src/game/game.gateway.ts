@@ -253,14 +253,24 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     if (userId === null)
       return;
-    console.log("connectedUsers==>>", this.connectedUsers.size)
-    console.log("connectedprivateUsers==>>", this.connectedprivateUsers.size)
-    console.log("connectedwithoutPowers==>>", this.connectedwithoutPowers.size)
 
-    console.log("key is:==>:|", key, "|size: ", key.length)
+    let isUserInGame = false;
+
+    for (const [key, value] of this.myMap) { if (value.player1ID === userId || value.player2ID === userId) { isUserInGame = true; break;}};
+
+    if (isUserInGame) return;
 
     if (key != "") {
-      console.log("------- in private game");
+
+      this.connectedprivateUsers.forEach((value, key) => {
+        console.log("======>>",key, value, client.id)
+        if (key.user === userId) {
+          isUserInGame = true;
+          return;
+        }
+      })
+      
+      if (isUserInGame) return;
 
       if ([...this.connectedprivateUsers.values()].includes(key)) {
         this.connectedprivateUsers.set({ id: client.id, user: userId }, key);
@@ -269,7 +279,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       else
         this.connectedprivateUsers.set({ id: client.id, user: userId }, key);
 
-    } else if (!this.connectedUsers.size || (this.connectedUsers.size && this.connectedUsers.values().next().value != userId)) {
+    } else if (!this.connectedUsers.size || (this.connectedUsers.size && ![...this.connectedUsers.values()].includes(userId) )) {
       console.log("------- in simple  game");
 
       let isUserInGame = false;
@@ -287,10 +297,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     }
 
-    console.log("connectedUsers==>>", this.connectedUsers.size)
-    console.log("connectedprivateUsers==>>", this.connectedprivateUsers.size)
-    console.log("connectedwithoutPowers==>>", this.connectedwithoutPowers.size)
-    console.log("_____________________________________________________________________")
     if (this.connectedUsers.size == 2)
       this.startGame();
   }
