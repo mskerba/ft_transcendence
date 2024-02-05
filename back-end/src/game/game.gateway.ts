@@ -1,9 +1,10 @@
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import decodeJwtFromCookies from 'src/common/get-userId-from-cookie';
 import { GameService } from './game.service';
 import { Module } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 const powerUpType = ["freezOpp", "minimizePaddle", "augmentPaddle", 'roadBlock'];
 
@@ -230,6 +231,7 @@ class ballClass {
 let person1;
 
 @Injectable()
+@UseGuards(JwtAuthGuard)
 @WebSocketGateway({ namespace: '/game', cors: true }) // Added namespace here
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private gameTimeout: NodeJS.Timeout;

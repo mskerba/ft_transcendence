@@ -1,9 +1,10 @@
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { ChatService } from '../chat/chat.service'
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, UseGuards } from '@nestjs/common';
 import decodeJwtFromCookies from '../common/get-userId-from-cookie'
 import { PrismaService } from 'src/prisma/prisma.service';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 
 
@@ -11,6 +12,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 
 @Injectable()
+@UseGuards(JwtAuthGuard)
 @WebSocketGateway({ cors: true })
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
