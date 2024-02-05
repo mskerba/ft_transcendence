@@ -12,7 +12,6 @@ const ChatHeader = (prop:any) => {
 
   useEffect(()=>{
     setStatus(prop.usersStatus.get(convInf.Id));
-    console.log("id is:", convInf.Id,"status inheader", prop.usersStatus)
     prop.setRefresh(0)
   }, [prop.refresh]);
 
@@ -43,8 +42,9 @@ const ChatHeader = (prop:any) => {
         <div className='side-bar-controle-button' onClick={handelClick}>
           <img src='/src/assets/arrow.svg' className='arrow-svg'/>
         </div>
+
         <div className='right-part-header'>
-          <a  href={`/user/${convInf.Id}`}>
+          {!convInf.group && <a  href={`/user/${convInf.Id}`}>
             <div className='chat-info'>
               <img src={`http://localhost:3000/avatar/${convInf.Avatar}`} className='conversation-avatar'/>
               <div className='content'>
@@ -52,13 +52,23 @@ const ChatHeader = (prop:any) => {
                   {!group && <p>{status}</p>}
               </div>
             </div>
-          </a>
+          </a>}
+          {convInf.group &&
+            <div className='chat-info'>
+              <img src={`http://localhost:3000/avatar/${convInf.Avatar}`} className='conversation-avatar'/>
+              <div className='content'>
+                  <h5>{convInf.Name}</h5>
+                  {!group && <p>{status}</p>}
+              </div>
+            </div>}
+
           {group && <div  className='info-group-button' onClick={handelClickInf} ><img src='/src/assets/info-group.svg'/></div>}
           {!group && <div className='play-button-chat' onClick={() => handlePlayFreindClick(convInf.Id)}>
               <p>Play Now</p>
               <img src='/src/assets/play-now.svg' />
           </div>}
         </div>
+
       </div>
   );
 };

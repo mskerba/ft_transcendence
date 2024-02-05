@@ -19,11 +19,21 @@ const Home = () => {
   return (
     <div className="home-parent">
       <div className="default-game" onClick={handlePlayWithoutPowers}>
-          Simple game
+        <div className='image-default-game'>
+          <img src={"src/assets/Planet9_3840x2160.jpg"}/>
+        </div>
+        <div className="game-type-paragraph">
+          <p>Simple game</p>
+        </div>
       </div>
       
       <div className="powerups-game" onClick={handlePlayWithPowers}>
-          poweUp game
+        <div className='image-powerups-game'>
+          <img src={"src/assets/Planet9_3840x2160.jpg"}/>
+        </div>
+        <div className="game-type-paragraph">
+          <p>poweUp game</p>
+        </div>
       </div>
     </div>
   );

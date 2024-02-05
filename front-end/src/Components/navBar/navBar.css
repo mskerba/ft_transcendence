@@ -16,6 +16,7 @@
 .logo-image,
 .hamburger-svg,
 .exit-svg {
+    cursor: pointer;
     width: 30px;
     height: 30px;
     object-fit: cover;
@@ -24,6 +25,11 @@
 .navbar- h1 {
     display: flex;
     gap: 3px;
+}
+
+.logo-minsize,
+.logo-search {
+    cursor: pointer;
 }
 
 .logo-minsize h1{
@@ -108,6 +114,7 @@
 
 .middle-navbar-hamburger {
     display: none;
+    cursor: pointer;
 }
 
 .middle-navbar-hamburger li{

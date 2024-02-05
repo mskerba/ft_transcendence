@@ -114,6 +114,25 @@ const NavBar = () => {
     setPassword('');
   }
 
+
+  useEffect(() => {
+    function handleResize() {
+      setDivPosition((prev: any) => {
+        return {
+          ...prev,
+          x: '0px',
+          y: '0px',
+          display: 'none',
+        }
+      });
+    }
+  
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   const toHome = () => navigate('/');
 
 
@@ -121,9 +140,9 @@ const NavBar = () => {
     <>
       <div style={{ top: divPosition.x, left: divPosition.y, display: divPosition.display }} className='dropdown-navbar-ham'>
         <ul>
-          <li><Link to="/game" className="link">Game</Link></li>
-          <li><Link to="/leaderboard" className="link">Leaderboard</Link></li>
-          <li><Link to="/chat" className="link">Chat</Link></li>
+          <li onClick={handleMoreInfClick} ><Link to="/" className="link">Home</Link></li>
+          <li onClick={handleMoreInfClick} ><Link to="/leaderboard" className="link">Leaderboard</Link></li>
+          <li onClick={handleMoreInfClick} ><Link to="/chat" className="link">Chat</Link></li>
           <div className='dropdown-ham-profile'>
             <li><Link to={`/user/${authUser.userId}`} className="link">Profile</Link></li>
             <li onClick={handleLogout} >Exit</li>
@@ -162,7 +181,7 @@ const NavBar = () => {
           </div>
 
           <div className='middle-navbar'>
-            <li><Link to="/game" className="link">Game</Link></li>
+            <li><Link to="/" className="link">Home</Link></li>
             <li><Link to="/leaderboard" className="link">Leaderboard</Link></li>
             <li><Link to="/chat" className="link">Chat</Link></li>
           </div>
