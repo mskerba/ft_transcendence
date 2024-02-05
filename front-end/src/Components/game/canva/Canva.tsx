@@ -164,7 +164,7 @@ const P5Component = (props: any) => {
   };
   
   function handleWindowMouseMove(event:any) {
-    if (PowerUpApp.show && PowerUpApp.playerId != authUser.userId && PowerUpApp.type == 'freezOpp')
+    if (PowerUpApp.show == true && PowerUpApp.playerId != authUser.userId && PowerUpApp.type == 'freezOpp')
       return ;
 
     props.socket.current.emit('gamepaddle', {'y': y * 600 / canva.y});
