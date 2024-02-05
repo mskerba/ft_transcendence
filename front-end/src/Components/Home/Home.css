@@ -7,12 +7,12 @@
 }
 
 .default-game {
-    background-color: green;
+    background-color: #056839;
     border-radius: 20px 0px 0px 20px;
 }
 
 .powerups-game {
-    background-color: green;
+    background-color: #FFB700;
     border-radius: 0px 20px 20px 0px;
 }
 
