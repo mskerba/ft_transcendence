@@ -32,6 +32,7 @@ const ChatHeader = (prop: any) => {
   }
 
   function handelClickInf() {
+    prop.setRefresh(2);
     prop.setPopupInfParent((prev: any) => {
       return ({ ...prev, display: 'flex' })
     });
