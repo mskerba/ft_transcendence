@@ -635,7 +635,7 @@ input {
     height: auto;
 }
 
-input[type="radio"] {
+/* input[type="radio"] {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -647,7 +647,7 @@ input[type="radio"] {
 input[type="radio"]:checked {
     background-color: #67a757;
     border-color: #6857a7;
-}
+} */
 
 
 .close:hover,

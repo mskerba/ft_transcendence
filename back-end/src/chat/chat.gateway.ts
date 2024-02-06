@@ -221,6 +221,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @SubscribeMessage("messageTogroup")
     async messageTogroup(client: Socket, data: { group: string, message: string }) {
 
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!id is ", client.id, "data is : ", data);
         try {
 
             const groupId = await this.chatService.findGroupById(data.group);

@@ -114,6 +114,7 @@ export class FriendService {
                 userId: true,
                 name: true,
                 avatar: true,
+                status: true,
               }
             },
           },
@@ -125,6 +126,7 @@ export class FriendService {
                 userId: true,
                 name: true,
                 avatar: true,
+                status: true,
               }
             },
           },

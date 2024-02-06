@@ -11,7 +11,7 @@ function Timer(prop:any) {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      prop.setTime((prevTime) => {
+      prop.setTime((prevTime:any) => {
         if (!prevTime) {
           clearInterval(intervalId);
           return prevTime;

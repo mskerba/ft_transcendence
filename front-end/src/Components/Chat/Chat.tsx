@@ -18,7 +18,7 @@ const Chat = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [notifAlert, setNotifAlert] = useState({ error: '', msg: '' });
   const [newMessage, setNewMessage] = useState({});
-  const [usersStatus, setUsersStatus] = useState(new Map([]));
+  const [usersStatus, setUsersStatus] = useState(new Map());
   
   const [popupParent, setPopupParent] = useState({ display: 'none' });
   const [popupInfParent, setPopupInfParent] = useState({ display: 'none' });
@@ -91,12 +91,9 @@ const Chat = () => {
 
       socketRef.current.on('status', (data: any) => {
         setRefresh(2);
-        const updatedMap = new Map(usersStatus);
-        console.log("status change", data, "***", usersStatus)
-        // if (updatedMap.has(data.userId)) {
-          updatedMap.set(data.userId, data.status);
-          setUsersStatus(updatedMap);
-        // }
+        setUsersStatus(usersStatus.set(data.userId, data.status))
+        setUsersStatus(usersStatus.set(4, data.status))
+        console.log("status change", data, data.userId, data.status, "***", usersStatus)
       })
 
 
