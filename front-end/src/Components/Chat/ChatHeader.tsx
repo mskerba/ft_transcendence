@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import './chat.css';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import useAxiosPrivate from '../../hooks/UseAxiosPrivate';
 
 
@@ -51,7 +51,7 @@ const ChatHeader = (prop:any) => {
         </div>
 
         <div className='right-part-header'>
-          {!convInf.group && <a  href={`/user/${convInf.Id}`}>
+          {!convInf.group && <Link  to={`/user/${convInf.Id}`}>
             <div className='chat-info'>
               <img src={`http://localhost:3000/avatar/${convInf.Avatar}`} className='conversation-avatar'/>
               <div className='content'>
@@ -59,7 +59,7 @@ const ChatHeader = (prop:any) => {
                   {!group && <p>{status}</p>}
               </div>
             </div>
-          </a>}
+          </Link>}
           {convInf.group &&
             <div className='chat-info'>
               <img src={`http://localhost:3000/avatar/${convInf.Avatar}`} className='conversation-avatar'/>

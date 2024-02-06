@@ -69,7 +69,7 @@ const Chat = () => {
           });
         }
 
-      })
+      });
 
       socketRef.current.on('status', (data: any) => {
         setRefresh(2);

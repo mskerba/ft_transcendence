@@ -258,6 +258,11 @@ const PopupGroupInf = (prop: any) => {
     try {
 
       const res = await axiosPrivate.post(`/chat/group/add`, post);
+
+      if (res.data.success) {
+        socketRef.current.emit("addToGroup",  { name: addUsernameGroup, roomId: convInf.convId });
+      }
+      
       prop.setShowDropdown(true);
       setTimeout(() => prop.setShowDropdown(false), 3000);
       prop.setNotifAlert(() => { return ({ error: 'success', msg: res.data.success }) })

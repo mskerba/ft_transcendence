@@ -36,14 +36,14 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
         let data: any;
         let userId: number;
-    
-    
+
+
         if (client?.handshake?.query.userId === undefined) {
-          this.handleDisconnect(client);
-          return ;
+            this.handleDisconnect(client);
+            return;
         } else {
-          data = client?.handshake?.query;
-          userId = parseInt(data.userId);
+            data = client?.handshake?.query;
+            userId = parseInt(data.userId);
         }
 
 
@@ -175,16 +175,44 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @SubscribeMessage("mute")
     async mute(client: Socket, data: { userId: number, roomId: string }) {
 
-        const user = await this.prisma.user.findUnique({
-            where: {
-                userId: data.userId,
-            },
-            select: {
-                sockId: true,
-            }
-        });
+        try {
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    userId: data.userId,
+                },
+                select: {
+                    sockId: true,
+                }
+            });
 
-        this.server.sockets[user.sockId].leave(data.roomId);
+            const _client = this.server.sockets.sockets.get(user.sockId);
+            if (_client) {
+                _client.leave(data.roomId);
+            }
+        } catch (err) { }
+    }
+
+    @SubscribeMessage("addToGroup")
+    async addToGroup(client: Socket, data: { name: string, roomId: string }) {
+
+        console.log('data1');
+        console.log(data);
+        console.log('data2');
+        try {
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    name: data.name,
+                },
+                select: {
+                    sockId: true,
+                }
+            });
+
+            const _client = this.server.sockets.sockets.get(user.sockId);
+            if (_client) {
+                _client.join(data.roomId);
+            }
+        } catch (err) { }
     }
 
 
