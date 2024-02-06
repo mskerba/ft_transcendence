@@ -34,8 +34,17 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     async handleConnection(client: Socket, ...args: any[]) {
 
-        const userId_str: any = client?.handshake?.query?.userId;
-        const userId: number = parseInt(userId_str);
+        let data: any;
+        let userId: number;
+    
+    
+        if (client?.handshake?.query.userId === undefined) {
+          this.handleDisconnect(client);
+          return ;
+        } else {
+          data = client?.handshake?.query;
+          userId = parseInt(data.userId);
+        }
 
 
         try {

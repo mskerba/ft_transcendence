@@ -249,33 +249,21 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 
 
-  handleConnection(client: Socket) {
-    const data: any = client?.handshake?.query?.data;
+  handleConnection(client: Socket, ... args: any[]) {
+    let data: any;
+    let key: string;
+    let userId: number;
 
-    let key: string =  '';
-    let userId: number = 22;
 
-    try {
-      if (data) {
-        const parsedData = JSON.parse(data);
-        key = parsedData.key;
-        userId = parsedData.userId;
-      } else {
-        console.log('Received data is undefined or null.');
-      }
-    } catch (error) {
-      console.error('Error parsing JSON:', error);
+    if (client?.handshake?.query.key === undefined || client?.handshake?.query.userId === undefined) {
       this.handleDisconnect(client);
+      console.log('FAILLED');
       return ;
+    } else {
+      data = client?.handshake?.query;
+      key = data.key;
+      userId = parseInt(data.userId);
     }
-
-
-
-    console.log(typeof userId);
-
-    console.log('*****************1');
-    // console.log(JSON.parse(data));
-    console.log('*****************2');
 
 
     console.log("myMap----->", this.myMap.size);

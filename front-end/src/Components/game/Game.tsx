@@ -44,14 +44,12 @@ function Game() {
   useEffect(() => {
     if (socketRefGame.current === null) {
       setIsInGame(true);
-      let data = {key: randomKey , userId:authUser.userId};
-      JSON.stringify
 
       setRootAppStyle(() => { return ({ gridTemplateRows: '1fr' }) })
       socketRefGame.current = io('http://localhost:3000/game', {
         transports: ["websocket"],
         withCredentials: true,
-        query: { data: JSON.stringify(data) },
+        query: { key: randomKey , userId: authUser.userId },
       });
       socketRefGame.current.on('inGame', (data: any) => {
         setInGame(1);
