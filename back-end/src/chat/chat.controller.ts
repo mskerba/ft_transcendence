@@ -122,26 +122,19 @@ export class ChatController {
     // kick user from group
     @Post('group/kick')
     async kickUser(@Body() punishDto: PunishDto){
-        const data = await this.chatService.kickUser(punishDto);
-        if (data.error !== undefined)
-            throw new HttpException(data.error, HttpStatus.NOT_FOUND);
-        return data;
+        return await this.chatService.kickUser(punishDto);
     }
 
     // ban user from group
     @Post('group/ban')
     async banUser(@Body() punishDto: PunishDto){
-        const data = await this.chatService.banUser(punishDto);
-        if (data.error !== undefined)
-            throw new HttpException(data.error, data.status);
-        return data;
+        return await this.chatService.banUser(punishDto);
     }
 
     // mute user from group
     @Post('group/mute')
     async muteUser(@Body() muteDto: MuteDto){
-        const data = await this.chatService.muteUser(muteDto);
-        return data;
+        return await this.chatService.muteUser(muteDto);
     }
 
     // update group

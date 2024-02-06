@@ -70,6 +70,24 @@ const Chat = () => {
         }
 
       });
+    
+      socketRef.current.on('refresh', (data: any) => {
+        
+        if (data.convId === convInf.convId) {
+          setConvInf((prev) => {
+            return ({
+              ...prev,
+              Avatar : "",
+              Name: "",
+              convId : "",
+              group: "",
+              Id:"",
+            });
+          });
+        }
+        
+        setRefresh(2);
+      });
 
       socketRef.current.on('status', (data: any) => {
         setRefresh(2);

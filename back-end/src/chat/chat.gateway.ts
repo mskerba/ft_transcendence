@@ -183,12 +183,15 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
                 },
                 select: {
                     sockId: true,
-                }
+                },
             });
+
+            if (!user) return;
 
             const _client = this.server.sockets.sockets.get(user.sockId);
             if (_client) {
                 _client.leave(data.roomId);
+                client.to(user.sockId).emit('refresh', { convId: data.roomId});
             }
         } catch (err) { }
     }

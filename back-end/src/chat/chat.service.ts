@@ -743,7 +743,7 @@ export class ChatService {
                     ]
                 }
             })
-            return data;
+            return {success: 'kicked succesfully', status: HttpStatus.OK};;
         } catch (error) {
             return { "error": "this user can't be kicked " }
         }
@@ -774,7 +774,7 @@ export class ChatService {
                 }
             })
 
-            return data;
+            return {success: 'banned succesfully', status: HttpStatus.OK};;
         }
         catch (error) {
             return {
@@ -799,7 +799,7 @@ export class ChatService {
                     EndTime: new Date(Date.now() + (muteDto.numberHour * 60 * 60 * 1000)),
                 },
             });
-            return data;
+            return {success: 'muted succesfully', status: HttpStatus.OK};
         } catch (error) {
             return {
                 "error": "user already muted or can't be muted",

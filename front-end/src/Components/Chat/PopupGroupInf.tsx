@@ -130,6 +130,10 @@ const PopupGroupInf = (prop: any) => {
 
       });
 
+      if (res.data.success) {
+        socketRef.current.emit('mute', { userId: parseInt(memberSelected), roomId: convInf.convId });
+      }
+
       prop.setRefresh(1);
       prop.setShowDropdown(true);
       setTimeout(() => prop.setShowDropdown(false), 3000);
@@ -146,6 +150,12 @@ const PopupGroupInf = (prop: any) => {
         userId: memberSelected,
 
       });
+
+      console.log('HAMID', res.data);
+      if (res.data.success) {
+        socketRef.current.emit('mute', { userId: parseInt(memberSelected), roomId: convInf.convId });
+      }
+
       prop.setRefresh(1);
       prop.setShowDropdown(true);
       setTimeout(() => prop.setShowDropdown(false), 3000);
@@ -168,6 +178,7 @@ const PopupGroupInf = (prop: any) => {
 
   async function handleRemoveGroupClick() {
     const res = await axiosPrivate.get(`/chat/remove/${convInf.convId}`);
+    
     prop.setRefresh(1);
     handleCloseClick();
     setConvInf({
