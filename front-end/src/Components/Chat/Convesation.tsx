@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import './chat.css';
 import { useAuth } from '../../context/AuthContext';
+import { axiosPrivate } from '../../api/axios';
 
 const timeOfLastMessage = (date:any) => {
   const event = new Date(date);
@@ -49,24 +50,38 @@ const Conversation = (prop:any) => {
   }
 
 
+  async function  fet() {
+    const res = await axiosPrivate.get('/chat');
+    console.log("??????>>", res.data)
+    let conv = Object.values(res?.data);
+    console.log("======>>>", conv);
+    conv.forEach((element:any) => {
+      if (convInf.convId == element.convId)
+        setUnseen(element.Unseen);
+    });
+  }
+  
   useEffect(()=>{
+
     if (convInf.convId == prop.convId){
       if (prop.group)
         socketRef.current.emit('seen', { convId:  prop.convId, isGroup: true });
       else 
         socketRef.current.emit('seen', { convId:  prop.convId, isGroup: false });
-    } else
-    setUnseen(prop.Unseen);
+      fet()
+    }else
+      setUnseen(prop.Unseen);
   }, [prop.Unseen])
 
   useEffect(()=>{
     if (convInf.convId == prop.convId){
       if (prop.group)
-        socketRef.current.emit('seen', { convId:  prop.convId, isGroup: true });
+      socketRef.current.emit('seen', { convId:  prop.convId, isGroup: true });
       else 
         socketRef.current.emit('seen', { convId:  prop.convId, isGroup: false });
+      fet()
     } else
-    setUnseen(prop.Unseen);
+      setUnseen(prop.Unseen);
   }, [])
 
   function handleClick() {

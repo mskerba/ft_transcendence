@@ -14,14 +14,15 @@ const ChatHeader = (prop: any) => {
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
-    console.log(prop.usersStatus.get(convInf.Id));
-    setStatus(prop.usersStatus.get(convInf.Id));
+    let userId = (typeof convInf.Id == 'string')?parseInt(convInf.Id):convInf.Id;
+    setStatus(prop.usersStatus.get(userId));
     prop.setRefresh(0)
   }, [prop.refresh, prop.usersStatus.get(convInf.Id)]);
 
   useEffect(() => {
     console.log("!!!!!>>>>>", status, " " , convInf.status);
-    setStatus(convInf.status);
+    if (convInf.status)
+      setStatus(convInf.status);
   }, [])
 
 
