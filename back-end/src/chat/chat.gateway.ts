@@ -12,7 +12,6 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 
 @Injectable()
-@UseGuards(JwtAuthGuard)
 @WebSocketGateway({ cors: true })
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 

@@ -231,8 +231,7 @@ class ballClass {
 let person1;
 
 @Injectable()
-@UseGuards(JwtAuthGuard)
-@WebSocketGateway({ namespace: '/game', cors: true }) // Added namespace here
+@WebSocketGateway({ namespace: '/game', cors: true })
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private gameTimeout: NodeJS.Timeout;
   private gameInterval: NodeJS.Timeout;
