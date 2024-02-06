@@ -15,11 +15,7 @@ function Game() {
   const [finaleGameScore, setFinaleGameScore] = useState();
   const socketRefGame = useRef(null);
   const test: String = 'canva';
-<<<<<<< HEAD
-  const { authUser, randomKey, setRandomKey, setRootAppStyle, socketRef}: any = useAuth();
-=======
-  const {isInGame, setIsInGame, authUse, randomKey, setRandomKey, setRootAppStyle, socketRef}: any = useAuth();
->>>>>>> 78284770a1a3f4e2de572b3861f9f54f37eaea92
+  const {isInGame, setIsInGame, authUser, randomKey, setRandomKey, setRootAppStyle, socketRef}: any = useAuth();
   const navigate = useNavigate();
 
   let [canvaStyle, setCanvaStyle]: any = useState({

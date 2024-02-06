@@ -23,7 +23,7 @@ import { toast } from 'react-toastify';
 
 const App = () => {
 
-  const { rootAppStyle, isInGame, rootAppStyle, auth, login, logout, socketRef, setRandomKey, authUser }: any = useAuth();
+  const { isInGame, rootAppStyle, auth, login, logout, socketRef, setRandomKey, authUser }: any = useAuth();
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   // const location = useLocation();

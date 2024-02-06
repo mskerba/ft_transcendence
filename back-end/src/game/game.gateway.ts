@@ -254,12 +254,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const userId_str: any = client?.handshake?.query?.userId;
     const userId: number = parseInt(userId_str);
 
-    
+
     console.log("myMap----->", this.myMap.size);
     console.log("connectedUsers----->", this.connectedUsers.size);
     console.log("connectedprivateUsers----->", this.connectedprivateUsers.size);
-    if (userId === null)
-      return;
 
     let isUserInGame = false;
 
