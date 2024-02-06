@@ -1,3 +1,4 @@
+// @ts-ignore
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
 

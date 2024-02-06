@@ -1,3 +1,4 @@
+// @ts-ignore
 import React, { useState, useEffect } from 'react'
 import './navBar.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -206,7 +207,7 @@ const NavBar = () => {
 
       {result.length > 0 &&
         <div className='search-result'>
-          {result.map((e, i) => (
+          {result.map((e: any, i) => (
 
 
             (e.userId) ?

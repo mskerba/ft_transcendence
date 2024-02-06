@@ -1,3 +1,4 @@
+// @ts-ignore
 import { useEffect, useState, useRef } from 'react';
 import ScoreBoard from "./score-board/ScoreBoard";
 import MakingGame from "./making-game/MakingGame";

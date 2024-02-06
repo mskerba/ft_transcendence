@@ -1,3 +1,4 @@
+// @ts-ignore
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 import ChatList from './ChatList';
 import ChatContainer from './ChatContainer'

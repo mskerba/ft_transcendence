@@ -1,3 +1,4 @@
+// @ts-ignore
 import React, { useState, useEffect } from 'react';
 import './MakingGame.css';
 import { useNavigate } from 'react-router-dom';

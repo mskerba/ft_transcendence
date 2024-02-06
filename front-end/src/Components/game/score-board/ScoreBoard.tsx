@@ -1,4 +1,5 @@
- import React from 'react'
+// @ts-ignore
+import React from 'react'
 import { useEffect, useState }  from 'react';
 import  useAxiosPrivate  from '../../../hooks/UseAxiosPrivate';
 import Timer from './Timer'

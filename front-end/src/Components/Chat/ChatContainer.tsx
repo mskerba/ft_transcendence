@@ -1,3 +1,4 @@
+// @ts-ignore
 import React, { useEffect, useState } from 'react';
 import ChatHeader from './ChatHeader';
 import Message from './Message';
@@ -72,7 +73,7 @@ const ChatContainer = (prop: any) => {
 
     }
     prop.setRefresh(2);
-    const newMessage = { Message: message, user: 'user' };
+    const newMessage: any = { Message: message, user: 'user' };
     setAllMessage([newMessage, ...allMessage]);
     setMessage('');
   };

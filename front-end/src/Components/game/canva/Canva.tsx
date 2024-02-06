@@ -1,3 +1,4 @@
+// @ts-ignore
 import React, { useEffect, useRef, useState } from 'react';
 import p5, { Color } from 'p5';
 import io from 'socket.io-client';

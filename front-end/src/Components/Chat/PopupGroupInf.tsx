@@ -1,3 +1,4 @@
+// @ts-ignore
 import React, { useState, useEffect, useRef } from 'react';
 import useAxiosPrivate from '../../hooks/UseAxiosPrivate';
 import PopupCreatGroup from './PopupCreatGroup';
