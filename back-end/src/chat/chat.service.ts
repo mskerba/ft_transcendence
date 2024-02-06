@@ -421,7 +421,7 @@ export class ChatService {
                 }
             });
             await this.achievementService.create(createGroupDto.UserId, 'Architect of Allies 🏰', 'Take the lead by creating your own group, where camaraderie and teamwork are fostered under your visionary leadership.');
-            return { "success": "the group is created", "status": HttpStatus.OK };
+            return { "success": "the group is created", roomId: room.RoomId, "status": HttpStatus.OK };
         }
         catch (error) {
             return { "error": "this user can't create group", "status": HttpStatus.BAD_REQUEST }

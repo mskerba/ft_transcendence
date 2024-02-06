@@ -196,10 +196,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @SubscribeMessage("addToGroup")
     async addToGroup(client: Socket, data: { name: string, roomId: string }) {
 
-        client.join(data.roomId);
-        console.log('data1');
-        console.log(data);
-        console.log('data2');
         try {
             const user = await this.prisma.user.findUnique({
                 where: {
