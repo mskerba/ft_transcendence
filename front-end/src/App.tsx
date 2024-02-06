@@ -71,7 +71,7 @@ const App = () => {
       }
 
 
-      socketRef.current.on('toHome', () => { console.log("Waaaghayerha"); navigate('/') })
+      socketRef.current.on('toHome', () => { toast.info('The user is busy'); navigate('/') })
 
       socketRef.current.on('FrontCreatePrivateGame', (data: any) => {
         console.log("in app",isInGameInApp.current)
