@@ -43,12 +43,14 @@ function Game() {
   useEffect(() => {
     if (socketRefGame.current === null) {
       setIsInGame(true);
+      let data = {key: randomKey , userId:authUser.userId};
+      JSON.stringify
 
       setRootAppStyle(() => { return ({ gridTemplateRows: '1fr' }) })
       socketRefGame.current = io('http://localhost:3000/game', {
         transports: ["websocket"],
         withCredentials: true,
-        query: { key: randomKey , userId: authUser.userId},
+        query: { data: JSON.stringify(data) },
       });
       socketRefGame.current.on('inGame', (data: any) => {
         setInGame(1);
@@ -84,7 +86,7 @@ function Game() {
         setRandomKey("");
       }
     };
-  }, []);
+  }, [socketRefGame ]);
 
   useEffect(()=>{
     if (socketRefGame.current !== null && inGame == 2) {

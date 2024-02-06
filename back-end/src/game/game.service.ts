@@ -63,6 +63,7 @@ export class GameService {
     }
 
     async saveGame(game) {
+        try {
         const data = {
             winnerId: (game.player1Score > game.player2Score ? game.player1Id : game.player2Id),
             loserId: (game.player1Score < game.player2Score ? game.player1Id : game.player2Id),
@@ -118,6 +119,7 @@ export class GameService {
         if (savedGame.loserScore === 0) {
             await this.achievementService.create(winner.userId, 'Immaculate Conqueror 🛡️', 'Achieve victory with a cleansheet, demonstrating not only your offensive prowess but also impeccable defensive skills.');
         }
+    } catch (error) {}
 
     }
 }
