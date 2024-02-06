@@ -55,7 +55,7 @@ const Friend = ({ userId }: any) => {
                                             convId : res?.data?.conversationId,
                                             group: "",
                                             Id: String(friend.userId),
-                                            status: friend.userId,
+                                            status: friend.status,
                                         });
                                         navigate('/chat');
                                     } catch (error) { }

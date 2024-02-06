@@ -119,7 +119,7 @@ const UserProfileButtons = ({ user }: any) => {
                             convId : res?.data?.conversationId,
                             group: "",
                             Id: String(user.userId),
-                            status: userId.userId,
+                            status: user.status,
                         });
                         navigate('/chat');
                     } catch (error) { }
