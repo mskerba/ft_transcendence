@@ -246,14 +246,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 
 
-  handleConnection(client: Socket) {
+  handleConnection(client: Socket,  ...args: any[]) {
 
     const key = client?.handshake?.query?.key || '';
-    const cookies = client?.handshake?.headers?.cookie;
-    const userId: number | null = decodeJwtFromCookies(cookies);
-
-    if (userId === null)
-      return;
+    const userId_str: any = client?.handshake?.query?.userId;
+    
+    const userId: number = parseInt(userId_str);
 
     let isUserInGame = false;
 

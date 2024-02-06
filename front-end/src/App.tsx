@@ -23,7 +23,7 @@ import { toast } from 'react-toastify';
 
 const App = () => {
 
-  const { rootAppStyle, auth, login, logout, socketRef, setRandomKey } :any= useAuth();
+  const { rootAppStyle, auth, login, logout, socketRef, setRandomKey, authUser } :any= useAuth();
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
 
@@ -50,6 +50,7 @@ const App = () => {
     // Only create the socket once
     if (socketRef.current === null && auth == 2) {
       socketRef.current = io('http://localhost:3000', {
+        query: { userId: authUser.userId },
         transports: ["websocket"],
         withCredentials: true,
       });
