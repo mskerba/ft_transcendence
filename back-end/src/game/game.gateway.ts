@@ -238,20 +238,28 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private myMap = new Map();
   private connectedUsers = new Map();
   private connectedprivateUsers = new Map();
-  private connectedwithoutPowers = new Map();
 
   constructor(private gameService: GameService) { }
 
   @WebSocketServer() server: Server;
 
-
+  
+  
+  
+  
 
   handleConnection(client: Socket,  ...args: any[]) {
 
     const key = client?.handshake?.query?.key || '';
     const userId_str: any = client?.handshake?.query?.userId;
-    
     const userId: number = parseInt(userId_str);
+
+    
+    console.log("myMap----->", this.myMap.size);
+    console.log("connectedUsers----->", this.connectedUsers.size);
+    console.log("connectedprivateUsers----->", this.connectedprivateUsers.size);
+    if (userId === null)
+      return;
 
     let isUserInGame = false;
 
@@ -262,7 +270,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (key != "") {
 
       this.connectedprivateUsers.forEach((value, key) => {
-        console.log("======>>",key, value, client.id)
         if (key.user === userId) {
           isUserInGame = true;
           return;
@@ -279,8 +286,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.connectedprivateUsers.set({ id: client.id, user: userId }, key);
 
     } else if (!this.connectedUsers.size || (this.connectedUsers.size && ![...this.connectedUsers.values()].includes(userId) )) {
-      console.log("------- in simple  game");
-
       let isUserInGame = false;
 
       for (const [key, value] of this.myMap) {
@@ -402,9 +407,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleDisconnect(client: Socket) {
-    console.log("deconection!!!!!!!")
     this.connectedUsers.clear();
-    this.connectedwithoutPowers.clear();
     // this.connectedUsers.forEach((value, key, index) => {
     //   if (key.id == client.id) {
     //     delete this.connectedUsers[key];
@@ -412,12 +415,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     //   }
     // });
     // ;
-    // this.connectedwithoutPowers.forEach((value, key, index) => {
-    //   if (key.id == client.id) {
-    //     delete this.connectedwithoutPowers[key];
-    //     this.connectedwithoutPowers.delete(key);
-    //   }
-    // });;
 
     let objBallClass;
     this.connectedprivateUsers.forEach((value, key, index) => {

@@ -10,7 +10,7 @@ import RequireAuth from './Components/RequireAuth/RequireAuth';
 import { useAuth } from './context/AuthContext';
 import NavBar from './Components/navBar/navBar';
 import useAxiosPrivate from './hooks/UseAxiosPrivate';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import TwoFactorVerification from './Components/TwoFactorAuth/TwoFactorAuth';
 import Home from './Components/Home/Home';
 import NotFound from './Components/NotFound/NotFound';
@@ -23,9 +23,18 @@ import { toast } from 'react-toastify';
 
 const App = () => {
 
-  const { rootAppStyle, auth, login, logout, socketRef, setRandomKey, authUser } :any= useAuth();
+  const { rootAppStyle, isInGame, rootAppStyle, auth, login, logout, socketRef, setRandomKey, authUser }: any = useAuth();
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
+  // const location = useLocation();
+  
+
+  const isInGameInApp = useRef(isInGame);
+  
+  useEffect(() => {
+    isInGameInApp.current = isInGame;
+  }, [isInGame]);
+
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -47,7 +56,6 @@ const App = () => {
 
 
   useEffect(() => {
-    // Only create the socket once
     if (socketRef.current === null && auth == 2) {
       socketRef.current = io('http://localhost:3000', {
         query: { userId: authUser.userId },
@@ -66,15 +74,22 @@ const App = () => {
       socketRef.current.on('toHome', () => { console.log("Waaaghayerha"); navigate('/') })
 
       socketRef.current.on('FrontCreatePrivateGame', (data: any) => {
-        console.log(data);
-        setRandomKey(data.gameID);
-        toast(<><h3 className='challenger-name'>{data.from}</h3>
-          <div className='game-request'>
-            <button className='accept-game' onClick={() => navigate('/game')}>Accept</button>
-            <button className='decline-game' onClick={() => handleDecline(data.from)}>Decline</button>
-          </div>
-        </>);
-        console.log("socket --> data :", data);
+        console.log("in app",isInGameInApp.current)
+        if (isInGameInApp.current == true)
+          handleDecline(data.from);
+        else {
+          // if (location.pathname === '/game'){
+            navigate('/')
+          // }
+          setRandomKey(data.gameID);
+          toast(<><h3 className='challenger-name'>{data.from}</h3>
+            <div className='game-request'>
+              <button className='accept-game' onClick={() => {navigate('/game')}}>Accept</button>
+              <button className='decline-game' onClick={() => handleDecline(data.from)}>Decline</button>
+            </div>
+          </>);
+          console.log("socket --> data :", data);
+        }
       })
 
     }

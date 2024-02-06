@@ -15,15 +15,17 @@ function Game() {
   const [finaleGameScore, setFinaleGameScore] = useState();
   const socketRefGame = useRef(null);
   const test: String = 'canva';
+<<<<<<< HEAD
   const { authUser, randomKey, setRandomKey, setRootAppStyle, socketRef}: any = useAuth();
+=======
+  const {isInGame, setIsInGame, authUse, randomKey, setRandomKey, setRootAppStyle, socketRef}: any = useAuth();
+>>>>>>> 78284770a1a3f4e2de572b3861f9f54f37eaea92
   const navigate = useNavigate();
 
   let [canvaStyle, setCanvaStyle]: any = useState({
     width: `${window.innerWidth}`,
     height: `700`
   });
-
-  console.log("the socket is connected")
 
   const isFirstRender = useRef(true);
 
@@ -44,6 +46,7 @@ function Game() {
 
   useEffect(() => {
     if (socketRefGame.current === null) {
+      setIsInGame(true);
 
       setRootAppStyle(() => { return ({ gridTemplateRows: '1fr' }) })
       socketRefGame.current = io('http://localhost:3000/game', {
@@ -52,7 +55,6 @@ function Game() {
         query: { key: randomKey, userId: authUser.userId },
       });
       socketRefGame.current.on('inGame', (data: any) => {
-        console.log('ingame work');
         setInGame(1);
       });
 
@@ -66,18 +68,17 @@ function Game() {
 
       socketRefGame.current.on('playersinfo', (data: any) => {
         setPlayersInfo(data);
-        console.log('in playersinfo', data, playersInfo)
       });
     }
 
     if (socketRef.current !== null) {
-      console.log("al7aak")
       socketRef.current.emit("inGame", true)
     }
 
     return () => {
       if (socketRefGame.current !== null) {
         socketRefGame.current.disconnect();
+        setIsInGame(false);
         socketRefGame.current = null;
         if (socketRef.current !== null) {
           socketRef.current.emit("inGame", false);
@@ -92,6 +93,7 @@ function Game() {
   useEffect(()=>{
     if (socketRefGame.current !== null && inGame == 2) {
       socketRefGame.current.disconnect();
+      setIsInGame(false);
       socketRefGame.current = null;
       if (socketRef.current !== null) {
         socketRef.current.emit("inGame", false);
