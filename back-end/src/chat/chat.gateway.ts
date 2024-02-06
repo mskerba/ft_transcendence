@@ -32,9 +32,11 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
     mp = new Map<string, number>();
 
-    async handleConnection(client: Socket) {
-        const cookies = client?.handshake?.headers?.cookie || '';
-        const userId: number | null = decodeJwtFromCookies(cookies);
+    async handleConnection(client: Socket, ...args: any[]) {
+
+        const userId_str: any = client.handshake.query.userId;
+    
+        const userId: number = parseInt(userId_str);
 
 
         try {

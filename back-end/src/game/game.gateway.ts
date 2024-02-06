@@ -249,10 +249,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 
 
-  handleConnection(client: Socket) {
-    // const key = client?.handshake?.query?.key || '';
-    // const cookies = client?.handshake?.headers?.cookie;
-    // const userId: number | null = decodeJwtFromCookies(cookies);
+  handleConnection(client: Socket, ...args: any[]) {
 
     const key = client?.handshake?.query?.key || '';
     const userId_str: any = client?.handshake?.query?.userId;
@@ -262,8 +259,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log("myMap----->", this.myMap.size);
     console.log("connectedUsers----->", this.connectedUsers.size);
     console.log("connectedprivateUsers----->", this.connectedprivateUsers.size);
-    if (userId === null)
-      return;
 
     let isUserInGame = false;
 

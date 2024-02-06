@@ -23,7 +23,7 @@ import { toast } from 'react-toastify';
 
 const App = () => {
 
-  const { isInGame, rootAppStyle, auth, login, logout, socketRef, setRandomKey }: any = useAuth();
+  const { isInGame, rootAppStyle, auth, login, logout, socketRef, setRandomKey, authUser }: any = useAuth();
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   // const location = useLocation();
@@ -58,6 +58,7 @@ const App = () => {
   useEffect(() => {
     if (socketRef.current === null && auth == 2) {
       socketRef.current = io('http://localhost:3000', {
+        query: { userId: authUser.userId },
         transports: ["websocket"],
         withCredentials: true,
       });
