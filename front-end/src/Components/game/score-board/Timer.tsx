@@ -16,16 +16,16 @@ function Timer(prop:any) {
           clearInterval(intervalId);
           return prevTime;
         }
-        if(prevTime < 11)
-        {
-          setPvs((prevPvs:any) => {
-            return {
-              ...prevPvs,
-              border:'1px solid rgb(255,0,0,.8)',
-              color:'red'
-            }
-          })
-        }
+        // if(prevTime < 11)
+        // {
+        //   setPvs((prevPvs:any) => {
+        //     return {
+        //       ...prevPvs,
+        //       border:'1px solid rgb(255,0,0,.8)',
+        //       color:'red'
+        //     }
+        //   })
+        // }
         return prevTime - 1;
       });
     }, 1000);

@@ -73,8 +73,6 @@ const ChatContainer = (prop: any) => {
 
     }
     prop.setRefresh(2);
-    const newMessage: any = { Message: message, user: 'user' };
-    setAllMessage([newMessage, ...allMessage]);
     setMessage('');
   };
 
