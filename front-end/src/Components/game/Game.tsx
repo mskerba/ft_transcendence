@@ -15,7 +15,7 @@ function Game() {
   const [finaleGameScore, setFinaleGameScore] = useState();
   const socketRefGame = useRef(null);
   const test: String = 'canva';
-  const {isInGame, setIsInGame, authUse, randomKey, setRandomKey, setRootAppStyle, socketRef}: any = useAuth();
+  const {isInGame, setIsInGame, authUser, randomKey, setRandomKey, setRootAppStyle, socketRef}: any = useAuth();
   const navigate = useNavigate();
 
   let [canvaStyle, setCanvaStyle]: any = useState({
@@ -48,7 +48,7 @@ function Game() {
       socketRefGame.current = io('http://localhost:3000/game', {
         transports: ["websocket"],
         withCredentials: true,
-        query: { key: randomKey },
+        query: { key: randomKey , userId:authUser.userId},
       });
       socketRefGame.current.on('inGame', (data: any) => {
         setInGame(1);

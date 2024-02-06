@@ -11,9 +11,17 @@ const ChatHeader = (prop:any) => {
   const navigate = useNavigate();
 
   useEffect(()=>{
+    console.log(prop.usersStatus.get(convInf.Id));
     setStatus(prop.usersStatus.get(convInf.Id));
     prop.setRefresh(0)
   }, [prop.refresh]);
+
+  useEffect(()=>{
+    console.log(">>??? ",prop.usersStatus.get(convInf.Id));
+    setStatus(prop.usersStatus.get(convInf.Id));
+    prop.setRefresh(0)
+  }, []);
+
 
   function handelClick() {
     if (innerWidth <925)

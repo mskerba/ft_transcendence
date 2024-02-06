@@ -58,7 +58,9 @@ const ChatContainer = (prop: any) => {
   }, [prop.newMessage])
 
   const handleSendMessage = () => {
-    if (message == '')
+    let trimMsg =message.trim(); 
+    setMessage(trimMsg);
+    if (trimMsg == '')
       return;
     if (convInf.group) {
       socketRef.current.emit('seen', { convId: convInf.convId, isGroup: true });

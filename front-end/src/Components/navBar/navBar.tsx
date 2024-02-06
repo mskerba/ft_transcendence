@@ -16,6 +16,7 @@ const NavBar = () => {
   })
 
   function handleMoreInfClick(event: any) {
+    setRefresh(2)
     const { clientX, clientY } = event;
     setDivPosition((prev: any) => {
       let display = (prev.display == 'none') ? 'flex' : 'none';
@@ -27,7 +28,7 @@ const NavBar = () => {
     });
   }
 
-  const { authUser, logout, setConvInf } = useAuth();
+  const {setRefresh,  authUser, logout, setConvInf } = useAuth();
   const axiosPrivate = useAxiosPrivate();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -181,8 +182,8 @@ const NavBar = () => {
           </div>
 
           <div className='middle-navbar'>
-            <li><Link to="/" className="link">Home</Link></li>
-            <li><Link to="/leaderboard" className="link">Leaderboard</Link></li>
+            <li onClick={()=>setRefresh(2)}><Link to="/" className="link">Home</Link></li>
+            <li onClick={()=>setRefresh(2)}><Link to="/leaderboard" className="link">Leaderboard</Link></li>
             <li><Link to="/chat" className="link">Chat</Link></li>
           </div>
 

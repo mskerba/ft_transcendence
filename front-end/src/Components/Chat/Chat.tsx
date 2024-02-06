@@ -11,10 +11,9 @@ import { useAuth } from '../../context/AuthContext';
 
 const Chat = () => {
 
-  const { authUser, socketRef, convInf, setConvInf }: any = useAuth();
+  const {refresh, setRefresh, authUser, socketRef, convInf, setConvInf }: any = useAuth();
   const [chatDivShow, setShow]: any = useState((innerWidth >= 925) ? 2 : 1);
   const [RoomId, setRoomID] = useState('');
-  const [refresh, setRefresh] = useState(0);
   const [showDropdown, setShowDropdown] = useState(false);
   const [notifAlert, setNotifAlert] = useState({ error: '', msg: '' });
   const [newMessage, setNewMessage] = useState({});

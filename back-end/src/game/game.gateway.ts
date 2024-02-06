@@ -241,17 +241,24 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(private gameService: GameService) { }
 
+
   @WebSocketServer() server: Server;
 
-  
-  
-  
-  
+
+
+
+
 
   handleConnection(client: Socket) {
+    // const key = client?.handshake?.query?.key || '';
+    // const cookies = client?.handshake?.headers?.cookie;
+    // const userId: number | null = decodeJwtFromCookies(cookies);
+
     const key = client?.handshake?.query?.key || '';
-    const cookies = client?.handshake?.headers?.cookie;
-    const userId: number | null = decodeJwtFromCookies(cookies);
+    const userId_str: any = client?.handshake?.query?.userId;
+    const userId: number = parseInt(userId_str);
+
+
     console.log("myMap----->", this.myMap.size);
     console.log("connectedUsers----->", this.connectedUsers.size);
     console.log("connectedprivateUsers----->", this.connectedprivateUsers.size);
@@ -260,7 +267,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     let isUserInGame = false;
 
-    for (const [key, value] of this.myMap) { if (value.player1ID === userId || value.player2ID === userId) { isUserInGame = true; break;}};
+    for (const [key, value] of this.myMap) { if (value.player1ID === userId || value.player2ID === userId) { isUserInGame = true; break; } };
 
     if (isUserInGame) return;
 
@@ -272,7 +279,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
           return;
         }
       })
-      
+
       if (isUserInGame) return;
 
       if ([...this.connectedprivateUsers.values()].includes(key)) {
@@ -282,7 +289,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       else
         this.connectedprivateUsers.set({ id: client.id, user: userId }, key);
 
-    } else if (!this.connectedUsers.size || (this.connectedUsers.size && ![...this.connectedUsers.values()].includes(userId) )) {
+    } else if (!this.connectedUsers.size || (this.connectedUsers.size && ![...this.connectedUsers.values()].includes(userId))) {
       let isUserInGame = false;
 
       for (const [key, value] of this.myMap) {
