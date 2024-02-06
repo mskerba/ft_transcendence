@@ -36,7 +36,6 @@ const ChatList = (prop:any) => {
             updatedMap.set(element.userId, element.status); // Remove "online" string and uncomment element.status
             prop.setUsersStatus(updatedMap);
             
-            console.log("++++++",prop.usersStatus, updatedMap)
           }
         });
       }

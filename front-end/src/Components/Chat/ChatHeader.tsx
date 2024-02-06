@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './chat.css';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import useAxiosPrivate from '../../hooks/UseAxiosPrivate';
 
 
 const ChatHeader = (prop:any) => {
@@ -9,19 +10,16 @@ const ChatHeader = (prop:any) => {
   const group:Boolean = convInf.group;
   const [status, setStatus] = useState(prop.usersStatus.get(convInf.Id)); 
   const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
 
   useEffect(()=>{
     console.log(prop.usersStatus.get(convInf.Id));
     setStatus(prop.usersStatus.get(convInf.Id));
     prop.setRefresh(0)
-  }, [prop.refresh]);
+  }, [prop.refresh, prop.usersStatus.get(convInf.Id)]);
 
-  useEffect(()=>{
-    console.log(">>??? ",prop.usersStatus.get(convInf.Id));
-    setStatus(prop.usersStatus.get(convInf.Id));
-    prop.setRefresh(0)
-  }, []);
 
+  
 
   function handelClick() {
     if (innerWidth <925)

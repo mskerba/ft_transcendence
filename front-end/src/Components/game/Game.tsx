@@ -48,7 +48,7 @@ function Game() {
       socketRefGame.current = io('http://localhost:3000/game', {
         transports: ["websocket"],
         withCredentials: true,
-        query: { key: randomKey , userId:authUser.userId},
+        query: { key: randomKey , userId: authUser.userId},
       });
       socketRefGame.current.on('inGame', (data: any) => {
         setInGame(1);
