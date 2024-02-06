@@ -9,7 +9,7 @@ const PopupCreatGroup = (prop:any) => {
   const [channelPassword, setChannelPassword] = useState('');
   const [nameOfGroup, setNameOfGroup] = useState('');
   const axiosPrivate = useAxiosPrivate();
-  const { authUser }: any = useAuth();
+  const { authUser, socketRef}: any = useAuth();
 
   const fetch = async () => {
     try {
@@ -21,8 +21,12 @@ const PopupCreatGroup = (prop:any) => {
       };
       (channelType == 'protected') ? postGroup.password = channelPassword : '';
       let res;
-      if (prop.RoomId === '')
+      if (prop.RoomId === '') {
         res = await axiosPrivate.post("/chat", postGroup);
+        if (res.data.success) {
+          socketRef.current.emit('joinGroup', {group: res.data.roomId});
+        }
+      }
       else
       {
         postGroup.RoomId = prop.RoomId; 

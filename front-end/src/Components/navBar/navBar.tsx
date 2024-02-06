@@ -29,7 +29,7 @@ const NavBar = () => {
     });
   }
 
-  const {setRefresh,  authUser, logout, setConvInf } = useAuth();
+  const {setRefresh,  authUser, logout, setConvInf, socketRef } = useAuth();
   const axiosPrivate = useAxiosPrivate();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -48,10 +48,13 @@ const NavBar = () => {
         password: password,
       });
 
-      console.log(res);
 
 
-      if (res.data.success !== undefined) {
+
+
+
+      if (res.data.success) {
+        socketRef.current.emit('addToGroup', { name: authUser.name, roomId: group.RoomId });
         setConvInf({
           Avatar: group.avatar,
           Name: group.title,

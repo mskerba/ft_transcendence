@@ -196,9 +196,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @SubscribeMessage("addToGroup")
     async addToGroup(client: Socket, data: { name: string, roomId: string }) {
 
-        console.log('data1');
-        console.log(data);
-        console.log('data2');
         try {
             const user = await this.prisma.user.findUnique({
                 where: {
@@ -233,6 +230,9 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
                 console.log("user not found");
                 return;
             }
+            const notMuted = await this.chatService.checkIsMuted(data.group, user.userId);
+            if (notMuted.error) return;
+
             this.server.to(data.group)
                 .emit("FrontDirectMessage", {
                     Message: data.message,
