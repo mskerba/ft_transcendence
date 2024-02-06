@@ -498,6 +498,8 @@ export class ChatService {
     // ADD User TO the group
     async addTogroup(createROle: CreateRoleUserDto) {
 
+        console.log(createROle);
+
 
         let userId;
         try {
@@ -540,7 +542,7 @@ export class ChatService {
                     roomId: { connect: { RoomId: createROle.roomId } }
                 }
             });
-            await this.achievementService.create(userId, 'United Front 🌐', 'Join a group and become part of a collective force, collaborating with fellow gamers to achieve shared victories.');
+            await this.achievementService.create(userId.userId, 'United Front 🌐', 'Join a group and become part of a collective force, collaborating with fellow gamers to achieve shared victories.');
             return { "success": true, status: HttpStatus.OK };
         } catch (error) {
             return {

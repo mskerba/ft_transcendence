@@ -166,7 +166,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     async joinGroup(client: Socket, data: { group: string }) {
 
         const user = await this.chatService.findUserBySockid(client.id);
-        if (!user) return ;
+
         const notMuted = await this.chatService.checkIsMuted(data.group, user.userId);
         if (notMuted.error) return;
 
@@ -268,11 +268,11 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 
     @SubscribeMessage('removePrivateGame')
-    async handleRemovePrivateGame(client: Socket, data: { to: number }) {
+    async handleRemovePrivateGame(client: Socket, data: { to: string }) {
 
         try {
             const obj = await this.prisma.user.findUnique({
-                where: { userId: data.to },
+                where: { name: data.to },
                 select: {
                     sockId: true,
                 }
@@ -292,7 +292,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
         const user = await this.chatService.findUserBySockid(client.id);
 
-        if (!user) return ;
         if (data.isGroup) {
             await this.changeGroupUseenCount(data.convId, user.userId);
         } else {
