@@ -129,13 +129,13 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
             const sender = await this.chatService.findUserBySockid(client.id);
             const receiver = await this.chatService.findUserByname(data.to);
             const createdMsg = await this.chatService.addDirectMessage(sender.userId, receiver.userId, data.msg);
+            client.emit('FrontDirectMessage', {
+                Message: data.msg,
+                convId: createdMsg.privateId,
+                Id: sender.userId,
+            });
             if (receiver.sockId) {
                 client.to(receiver.sockId).emit("FrontDirectMessage", {
-                    Message: data.msg,
-                    convId: createdMsg.privateId,
-                    Id: sender.userId,
-                });
-                client.emit('FrontDirectMessage', {
                     Message: data.msg,
                     convId: createdMsg.privateId,
                     Id: sender.userId,
