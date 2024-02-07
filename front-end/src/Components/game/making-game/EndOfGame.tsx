@@ -8,10 +8,10 @@ import { useAuth } from '../../../context/AuthContext';
 const ImageOpponent = ({player2}:any) => {
     return (
         <div className='player2-image-end-game'>
-        <img
+        {player2.avatar && <img
         
         src={`http://10.14.5.10:3000/avatar/${player2.avatar}`}
-        />
+        />}
         <p>{player2.name}</p>
         </div>
     );
@@ -20,10 +20,10 @@ const ImageOpponent = ({player2}:any) => {
 const UserMaking = ({player1}:any) => {
     return (
         <div className='player1-image-end-game'>
-            <img
+            {player1.avatar && <img
             
             src={`http://10.14.5.10:3000/avatar/${player1.avatar}`}
-            />
+            />}
             <p>{player1.name}</p>
         </div>
     );
