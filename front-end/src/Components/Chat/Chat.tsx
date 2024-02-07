@@ -59,7 +59,7 @@ const Chat = () => {
 
       socketRef.current.on('FrontDirectMessage', (data: any) => {
         setRefresh(2);
-        if (authUser.blockList.indexOf(data?.Id) === -1 && authUser?.userId !== data?.Id && selectedConvRef.current.convId == data.convId) {
+        if (authUser.blockList.indexOf(data?.Id) === -1 && selectedConvRef.current.convId == data.convId) {
           setNewMessage({
             Name: data.name,
             Message: data.Message,

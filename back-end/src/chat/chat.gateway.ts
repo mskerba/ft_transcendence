@@ -133,6 +133,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
                 client.to(receiver.sockId).emit("FrontDirectMessage", {
                     Message: data.msg,
                     convId: createdMsg.privateId,
+                    Id: sender.userId,
+                });
+                client.emit('FrontDirectMessage', {
+                    Message: data.msg,
+                    convId: createdMsg.privateId,
+                    Id: sender.userId,
                 });
             }
 
