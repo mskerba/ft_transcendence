@@ -38,7 +38,7 @@ const Friend = ({ userId }: any) => {
             {friends.length > 0 && friends.map((friend) => (
                 <div key={friend.userId} className='friend'>
                     <Link to={`/user/${friend.userId}`} className='user-avatar-name'>
-                        <img src={`http://10.14.5.10:3000/avatar/${friend.avatar}`} className='avatar' />
+                        <img src={`http://localhost:3000/avatar/${friend.avatar}`} className='avatar' />
                         <h4>{friend.name}</h4>
                     </Link>
                     {userId === authUser.userId &&

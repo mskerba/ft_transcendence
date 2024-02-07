@@ -32,7 +32,7 @@ const Member = (prop: any) => {
 
     <div className='member-in-group'>
       <div className='avatar-name-in-grou-inf'>
-        <img src={`http://10.14.5.10:3000/avatar/${Avatar}`} />
+        <img src={`http://localhost:3000/avatar/${Avatar}`} />
       </div>
       <div className='name-of-member-in-group'>
         <h3>{Name}</h3>
@@ -429,7 +429,7 @@ const PopupGroupInf = (prop: any) => {
 
 
           {convInf.Avatar && <div className='group-avatar-inf'>
-            <img src={`http://10.14.5.10:3000/avatar/${convInf.Avatar}`} />
+            <img src={`http://localhost:3000/avatar/${convInf.Avatar}`} />
           </div>
           }
 

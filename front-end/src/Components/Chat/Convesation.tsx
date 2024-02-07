@@ -111,7 +111,7 @@ const Conversation = (prop:any) => {
       <div className='convesation-container' onClick={handleClick}style={{
       backgroundColor: (prop.selectedId == prop.convId) ? '#038C3E' : '',}}
 >
-      <img src={`http://10.14.5.10:3000/avatar/${prop.Avatar}`} className='conversation-avatar'/>
+      <img src={`http://localhost:3000/avatar/${prop.Avatar}`} className='conversation-avatar'/>
       <div className='convesation-info'>
         <div className='name-lastime'>
           <h5>{prop.Name}</h5>
