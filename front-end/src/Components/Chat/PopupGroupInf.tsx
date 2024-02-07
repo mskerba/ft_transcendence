@@ -180,7 +180,11 @@ const PopupGroupInf = (prop: any) => {
   async function handleRemoveGroupClick() {
     const res = await axiosPrivate.get(`/chat/remove/${convInf.convId}`);
 
-    prop.setRefresh(1);
+    if (res.data.success) {
+      allMember.forEach((element: any) => {
+        socketRef.current.emit('mute', { userId: element.Id, roomId: convInf.convId });
+      });
+    }
     handleCloseClick();
     setConvInf({
       Avatar: "",
@@ -193,7 +197,9 @@ const PopupGroupInf = (prop: any) => {
     setTimeout(() => prop.setShowDropdown(false), 3000);
     prop.setNotifAlert(() => { return ({ error: 'warning', msg: res.data.success }) })
     if (innerWidth <= 925)
-      prop.setShow(1);
+    prop.setShow(1);
+  
+  prop.setRefresh(1);
   }
 
   const closeMute = () => setMutePopUp(false)
