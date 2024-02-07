@@ -18,7 +18,6 @@ const Profile = () => {
     const navigate = useNavigate();
 
 
-    console.log("123123", userId);
     const handleStateChange = (option: number) => {
         setOption(option);
     };
