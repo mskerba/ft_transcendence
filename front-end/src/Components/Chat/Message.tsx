@@ -11,7 +11,7 @@ function Message(props:any) {
       <div className={user}>
         
         <a  href={`/user/${Id}`}>
-          {channel && Avatar !== undefined && user !== 'user' && <img src={`http://10.14.4.8:3000/avatar/${Avatar}`} alt='User avatar' />}
+          {channel && Avatar !== undefined && user !== 'user' && <img src={`http://localhost:3000/avatar/${Avatar}`} alt='User avatar' />}
         </a>
         <div className={`color-${user}`}>
           <a  href={`/user/${Id}`}>

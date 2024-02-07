@@ -1,7 +1,7 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// for local url = "postgresql://myuser:postgres@10.14.4.8:5432/mydb?schema=public"
+// for local url = "postgresql://myuser:postgres@localhost:5432/mydb?schema=public"
 generator client {
   provider = "prisma-client-js"
 }
