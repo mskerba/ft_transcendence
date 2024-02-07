@@ -48,11 +48,6 @@ const NavBar = () => {
         password: password,
       });
 
-
-
-
-
-
       if (res.data.success) {
         socketRef.current.emit('addToGroup', { name: authUser.name, roomId: group.RoomId });
         setConvInf({

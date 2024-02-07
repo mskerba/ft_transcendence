@@ -27,7 +27,13 @@ export class AvatarController {
     @Res() res
   ){
     const user: UserEntity = req.user;
-    res.sendFile(`/app/avatar/${userAvatar}`);
+    const filePath: string = `/app/avatar/${userAvatar}`;
+    
+    try {
+      await fs.access(filePath);
+      await fs.access(filePath, fs.constants.R_OK);
+      res.sendFile(filePath);
+    } catch (error) { }
   }
 
 }
