@@ -104,7 +104,7 @@ const PopupGroupInf = (prop: any) => {
     const generatedName = `${prefix}${timestamp}_${randomPart}`;
 
     setRandomKey(generatedName);
-    socketRef.current.emit("createPrivateGame", { userId: parseInt(memberSelected) , gameID: generatedName })
+    socketRef.current.emit("createPrivateGame", { userId: parseInt(memberSelected), gameID: generatedName })
     navigate('/game');
     handleMoreInfClick();
   }
@@ -178,7 +178,7 @@ const PopupGroupInf = (prop: any) => {
 
   async function handleRemoveGroupClick() {
     const res = await axiosPrivate.get(`/chat/remove/${convInf.convId}`);
-    
+
     prop.setRefresh(1);
     handleCloseClick();
     setConvInf({
@@ -270,18 +270,24 @@ const PopupGroupInf = (prop: any) => {
 
       const res = await axiosPrivate.post(`/chat/group/add`, post);
 
-      if (res.data.success) {
-        socketRef.current.emit("addToGroup",  { name: addUsernameGroup, roomId: convInf.convId });
-      }
-      
       prop.setShowDropdown(true);
       setTimeout(() => prop.setShowDropdown(false), 3000);
-      prop.setNotifAlert(() => { return ({ error: 'success', msg: res.data.success }) })
+      if (res.data.success) {
+        socketRef.current.emit("addToGroup", { name: addUsernameGroup, roomId: convInf.convId });
+        
+        prop.setNotifAlert(() => { return ({ error: 'success', msg: "added successfully" }) })
+      } else {
+        prop.setNotifAlert(() => { return ({ error: 'error', msg: res.data.error }) })
+      }
+
+
+      console.log(res.data);
+
     }
     catch {
       prop.setShowDropdown(true);
       setTimeout(() => prop.setShowDropdown(false), 3000);
-      // prop.setNotifAlert(()=>{return ({error:'error',msg:error.response.data.message[0]})})
+      prop.setNotifAlert(() => { return ({ error: 'error', msg: error.response.data.message[0] }) })
     }
     setAddUsernameGroup('');
     prop.setRefresh(1);

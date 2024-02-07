@@ -543,7 +543,7 @@ export class ChatService {
                 }
             });
             await this.achievementService.create(userId.userId, 'United Front 🌐', 'Join a group and become part of a collective force, collaborating with fellow gamers to achieve shared victories.');
-            return { "success": true, status: HttpStatus.OK };
+            return { "success": 'added successfully', status: HttpStatus.OK };
         } catch (error) {
             return {
                 "error": "Error: Incorrect data type. Please provide the correct type of data",
