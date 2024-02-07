@@ -118,7 +118,7 @@ const UserProfileButtons = ({ user }: any) => {
                             Name: user.name,
                             convId : res?.data?.conversationId,
                             group: "",
-                            Id: String(user.userId),
+                            Id: user.userId,
                             status: user.status,
                         });
                         navigate('/chat');

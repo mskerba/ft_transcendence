@@ -57,7 +57,7 @@ const App = () => {
 
   useEffect(() => {
     if (socketRef.current === null && auth == 2) {
-      socketRef.current = io('http://localhost:3000', {
+      socketRef.current = io('http://10.14.5.10:3000', {
         query: { userId: authUser.userId },
         transports: ["websocket"],
         withCredentials: true,

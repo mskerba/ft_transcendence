@@ -24,12 +24,12 @@ const Game = ({userId}: any) => {
                 <div className='game' key={game.gameId}>
                     <div className='game-palyers'>
                         <Link to={`/user/${game.winnerId}`} className='player custom-link' >
-                            <img className='palyer-avatar' src={`http://localhost:3000/avatar/${game.winner.avatar}`} />
+                            <img className='palyer-avatar' src={`http://10.14.5.10:3000/avatar/${game.winner.avatar}`} />
                             <p className='player-name'>{game.winner.name}</p>
                             <p>{ game.winnerScore }</p>
                         </Link>
                         <Link to={`/user/${game.loserId}`} className='player custom-link'>
-                        <img className='palyer-avatar' src={`http://localhost:3000/avatar/${game.loser.avatar}`} />
+                        <img className='palyer-avatar' src={`http://10.14.5.10:3000/avatar/${game.loser.avatar}`} />
                             <p className='player-name'>{ game.loser.name }</p>
                             <p>{ game.loserScore }</p>
                         </Link>

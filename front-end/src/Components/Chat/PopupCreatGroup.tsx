@@ -64,6 +64,7 @@ const PopupCreatGroup = (prop:any) => {
     prop.setPopupParent((prev:any)=> {
       return ({...prev,display:'none'})
     });
+    prop.setRoomID('');
     setChannelType('public');
     setChannelPassword('');
     setNameOfGroup('');

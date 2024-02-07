@@ -44,7 +44,7 @@ const UserMaking = () => {
         <div className='user-image'>
           <img
           className="user-making-game"
-          src={`http://localhost:3000/avatar/${authUser.avatar}`}
+          src={`http://10.14.5.10:3000/avatar/${authUser.avatar}`}
           />
         </div>
       );

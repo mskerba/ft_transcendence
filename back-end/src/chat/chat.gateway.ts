@@ -173,8 +173,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
         const user = await this.chatService.findUserBySockid(client.id);
 
-        const notMuted = await this.chatService.checkIsMuted(data.group, user.userId);
-        if (notMuted.error) return;
 
         client.join(data.group);
     }
@@ -194,10 +192,10 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
             if (!user) return;
 
+            client.to(user.sockId).emit('refresh', { convId: data.roomId});
             const _client = this.server.sockets.sockets.get(user.sockId);
             if (_client) {
                 _client.leave(data.roomId);
-                client.to(user.sockId).emit('refresh', { convId: data.roomId});
             }
         } catch (err) { }
     }

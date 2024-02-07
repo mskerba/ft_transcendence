@@ -59,7 +59,7 @@ const Chat = () => {
 
       socketRef.current.on('FrontDirectMessage', (data: any) => {
         setRefresh(2);
-        if (authUser.blockList.indexOf(data?.Id) === -1 && selectedConvRef.current.convId == data.convId) {
+        if (authUser.blockList.indexOf(parseInt(data?.Id)) === -1 && selectedConvRef.current.convId == data.convId) {
           setNewMessage({
             Name: data.name,
             Message: data.Message,
@@ -86,13 +86,12 @@ const Chat = () => {
           });
         }
         
-        setRefresh(2);
+        setRefresh(1);
       });
 
       socketRef.current.on('status', (data: any) => {
-        setRefresh(2);
         setUsersStatus(usersStatus.set(data.userId, data.status))
-        setUsersStatus(usersStatus.set(4, data.status))
+        setRefresh(2);
         console.log("status change", data, data.userId, data.status, "***", usersStatus)
       })
 

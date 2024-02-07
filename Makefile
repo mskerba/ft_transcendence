@@ -4,8 +4,7 @@ up:
 	docker compose up --build
 
 down:
-	docker compose down
-	docker volume rm ft_transcendence_pgdata_vol
+	docker compose down -v
 
 clean:
 	docker compose down --volumes --rmi all

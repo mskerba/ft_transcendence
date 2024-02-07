@@ -6,6 +6,7 @@ import Modal from 'react-modal';
 import './chat.css';
 import { useAuth } from '../../context/AuthContext';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Member = (prop: any) => {
   const { Id, Role, Name, Avatar } = prop;
@@ -31,7 +32,7 @@ const Member = (prop: any) => {
 
     <div className='member-in-group'>
       <div className='avatar-name-in-grou-inf'>
-        <img src={`http://localhost:3000/avatar/${Avatar}`} />
+        <img src={`http://10.14.5.10:3000/avatar/${Avatar}`} />
       </div>
       <div className='name-of-member-in-group'>
         <h3>{Name}</h3>
@@ -259,7 +260,11 @@ const PopupGroupInf = (prop: any) => {
   }
 
   async function sendUpdateGroup() {
+    if (addUsernameGroup == ''){
 
+      toast.warn("must not be empty")
+      return ;
+    }
     closeupdate();
     let post = {
       roomId: convInf.convId,
@@ -424,7 +429,7 @@ const PopupGroupInf = (prop: any) => {
 
 
           {convInf.Avatar && <div className='group-avatar-inf'>
-            <img src={`http://localhost:3000/avatar/${convInf.Avatar}`} />
+            <img src={`http://10.14.5.10:3000/avatar/${convInf.Avatar}`} />
           </div>
           }
 

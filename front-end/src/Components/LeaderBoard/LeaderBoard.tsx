@@ -46,7 +46,7 @@ const LeaderBoard = () => {
                     >
                         <p className='leaderboard-rank'>{_index + 1}</p>
                         <div className='leaderboard-username-avatar'>
-                            <img className='leaderboard-avatar' src={`http://localhost:3000/avatar/${user.avatar}`} />
+                            <img className='leaderboard-avatar' src={`http://10.14.5.10:3000/avatar/${user.avatar}`} />
                             <p className='leaderboard-username'>{user.name}</p>
                         </div>
                         <p className='leaderboard-level'>{user.level.toFixed(2)}</p>
@@ -56,7 +56,7 @@ const LeaderBoard = () => {
             <div className='leaderboard-userinfo'>
                 {sortedUsers.length > 0 &&
                     <>
-                        <img className='leaderboard-userinfo-avatar' src={`http://localhost:3000/avatar/${sortedUsers[index].avatar}`} />
+                        <img className='leaderboard-userinfo-avatar' src={`http://10.14.5.10:3000/avatar/${sortedUsers[index].avatar}`} />
                         <h2>{sortedUsers[index].name}</h2>
 
 

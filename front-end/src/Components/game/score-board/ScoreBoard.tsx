@@ -73,9 +73,9 @@ function ScoreBoard(prop:any) {
   return (
     <div className='score--board' style={SBstyle}>
         {/* <Setting /> */}
-        <UserData className='player1 players' image={`http://localhost:3000/avatar/${player1.avatar}`} userName={player1.name}/>
+        <UserData className='player1 players' image={`http://10.14.5.10:3000/avatar/${player1.avatar}`} userName={player1.name}/>
         <Timer  scoreInGame={scoreInGame}  time={prop.time} setTime={prop.setTime}/>
-        <UserData  className='player2 players' image={`http://localhost:3000/avatar/${player2.avatar}`} userName={player2.name}/>
+        <UserData  className='player2 players' image={`http://10.14.5.10:3000/avatar/${player2.avatar}`} userName={player2.name}/>
         {/* <Emoji /> */}
     </div>
   )
