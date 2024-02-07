@@ -140,35 +140,46 @@ const P5Component = (props: any) => {
 
     function powerUpDrawe() {
       p.rectMode(p.CENTER);
-      p.fill('blue');
-    
-      const circleX = showPowerUp.x * canva.x / 1080;
-      const circleY = showPowerUp.y * canva.y / 600;
-      const circleSize = 60 * canva.y / 600;
-    
+      
+      const circleX = showPowerUp.x * canva?.x / 1080;
+      const circleY = showPowerUp.y * canva?.y / 600;
+      const circleSize = 60 * canva?.y / 600;
+      
       // Draw the circle
-      p.circle(circleX, circleY, circleSize);
-    
+      
       // Load your icon image
-      const iconSize = 40 * canva.y / 600; // Adjust the size of the icon
+      const iconSize = 40 * canva?.y / 600; // Adjust the size of the icon
       const iconX = circleX - iconSize / 2;
       const iconY = circleY - iconSize / 2;
-      if (showPowerUp.type === "minimizePaddle")
-        p.image(minimizeImg, iconX, iconY, iconSize, iconSize);
-      else if (showPowerUp.type === "freezOpp")
-        p.image(freezOppImg, iconX, iconY, iconSize, iconSize);
-      else if (showPowerUp.type === "augmentPaddle")
-        p.image(augmentImg, iconX, iconY, iconSize, iconSize);
+      try {
+        
+        if (showPowerUp.type === "minimizePaddle") {
+          p.image(minimizeImg, iconX, iconY, iconSize, iconSize);
+          p.fill('aqua');
+        }
+        else if (showPowerUp.type === "freezOpp"){
+          p.image(freezOppImg, iconX, iconY, iconSize, iconSize);
+          p.fill('turquoise');
+        }
+        else if (showPowerUp.type === "augmentPaddle"){
+          p.image(augmentImg, iconX, iconY, iconSize, iconSize);
+          p.fill('blue');
+        }
+      } catch(error)
+      {
+        // console.log("!Error", error)
+      }
+      p.circle(circleX, circleY, circleSize);
     }
     
     
   };
   
   function handleWindowMouseMove(event:any) {
-    if (PowerUpApp.show == true && PowerUpApp.playerId != authUser.userId && PowerUpApp.type == 'freezOpp')
+    if (PowerUpApp?.show == true && PowerUpApp?.playerId != authUser?.userId && PowerUpApp?.type == 'freezOpp')
       return ;
 
-    props.socket.current.emit('gamepaddle', {'y': y * 600 / canva.y});
+    props?.socket?.current?.emit('gamepaddle', {'y': y * 600 / canva?.y});
   }  
 
   
@@ -186,8 +197,8 @@ const P5Component = (props: any) => {
   }
   
   const paddlesPositionListener = (data:any) => {
-    player1 = data.player1 * canva.y / 600;
-    player2 = data.player2 * canva.y / 600;
+    player1 = data.player1 * canva?.y / 600;
+    player2 = data.player2 * canva?.y / 600;
   }
 
   setTimeout(()=>{
