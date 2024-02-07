@@ -185,10 +185,16 @@ export class ChatService {
         }
     }
 
-    async lastMessageGroup(groupId: string) {
+    async lastMessageGroup(groupId: string, userId: number) {
+        const userIdsToExclude = await this.blockService.blockList(userId);
         const data = await this.prismaService.roomMessage.findFirst({
             where: {
                 RoomId: groupId,
+                UserId: {
+                    not: {
+                        in: userIdsToExclude,
+                    },
+                },
             },
             orderBy: [{ dateSent: "desc" },],
             distinct: ['RoomId'],
@@ -212,7 +218,7 @@ export class ChatService {
                 console.log("55555555555555 | ", room[item].RoomId, notMuted);
                 if (notMuted.error) continue;
                 
-                let data = (await this.lastMessageGroup(room[item].RoomId));
+                let data = await this.lastMessageGroup(room[item].RoomId, user1);
                 let lastMsg: string = "welcome to " + room[item].roomId.title;
                 let date = room[item].roomId.createdAt;
                 if (data) {
