@@ -108,7 +108,7 @@ const App = () => {
       {auth != 1 &&
         <Routes>
           <Route element={<RequireAuth />}>
-            <Route path="user/:userId" element={<><NavBar /><Profile /></>} key="user-profile"/>
+            <Route path="user/:userId" element={<><NavBar /><Profile /></>}/>
             <Route path="/leaderboard" element={<> <NavBar /> <LeaderBoard /> </>} />
             <Route path="/game" element={<Game />} />
             <Route path="/" element={<> <NavBar /> <Home /></>} />
