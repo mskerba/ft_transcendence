@@ -423,9 +423,10 @@ const PopupGroupInf = (prop: any) => {
           <div className="close-goup-inf" onClick={handleCloseClick}>&#10799;</div>
 
 
-          <div className='group-avatar-inf'>
+          {convInf.Avatar && <div className='group-avatar-inf'>
             <img src={`http://localhost:3000/avatar/${convInf.Avatar}`} />
           </div>
+          }
 
           <div className="group-remove-add"  >
             {(Role !== 'member') &&

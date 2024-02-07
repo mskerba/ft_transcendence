@@ -28,6 +28,10 @@ export class AvatarController {
   ){
     const user: UserEntity = req.user;
     const filePath: string = `/app/avatar/${userAvatar}`;
+
+    console.log('AVATAR1');
+    console.log(filePath);
+    console.log('AVATAR2');
     
     try {
       // await fs.access(filePath);
