@@ -17,13 +17,14 @@ const Profile = () => {
     const { authUser }: any = useAuth();
     const navigate = useNavigate();
 
+
+    console.log("123123", userId);
     const handleStateChange = (option: number) => {
         setOption(option);
     };
 
     useEffect(() => {
-        
-        const test = async () => {
+        const fetchUser = async () => {
             try {
                 const res = await axiosPrivate.get(`/user/${userId}`);
                 setOption(0);
@@ -32,12 +33,12 @@ const Profile = () => {
                 }
             }
             catch (err) {
-                toast.error('This content isn\'t available right now');
+                toast.error("This content isn\'t available right now");
                 navigate('/');
             }
         }
         if (authUser.blockList.includes(Number(userId)) === false) {
-            test();
+            fetchUser();
         } else {
             toast.error('you are not authorized to access this page');
             navigate('/');

@@ -18,16 +18,20 @@ const ChangeAvatar = ({ user, onStateChange }: any) => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
+    const fileType = file.type;
 
-    if (file) {
+    
+    if (file && fileType.startsWith('image/')) {
       const reader = new FileReader();
-
+      
       reader.onloadend = () => {
         setImagePreview(reader.result);
       };
-
+      
       reader.readAsDataURL(file);
       setSelectedImage(file); // Save the selected image for upload
+    } else {
+      toast.warn('images only!');
     }
   };
 
