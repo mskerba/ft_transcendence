@@ -58,7 +58,7 @@ const ChatHeader = (prop: any) => {
       <div className='right-part-header'>
         {!convInf.group && <Link to={`/user/${convInf.Id}`}>
           <div className='chat-info'>
-            <img src={`http://localhost:3000/avatar/${convInf.Avatar}`} className='conversation-avatar' />
+            <img src={`http://10.14.4.8:3000/avatar/${convInf.Avatar}`} className='conversation-avatar' />
             <div className='content'>
               <h5>{convInf.Name}</h5>
               {!group && <p>{status}</p>}
@@ -67,7 +67,7 @@ const ChatHeader = (prop: any) => {
         </Link>}
         {convInf.group &&
           <div className='chat-info'>
-            <img src={`http://localhost:3000/avatar/${convInf.Avatar}`} className='conversation-avatar' />
+            <img src={`http://10.14.4.8:3000/avatar/${convInf.Avatar}`} className='conversation-avatar' />
             <div className='content'>
               <h5>{convInf.Name}</h5>
               {!group && <p>{status}</p>}

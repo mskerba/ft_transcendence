@@ -10,7 +10,7 @@ const ImageOpponent = ({player2}:any) => {
         <div className='player2-image-end-game'>
         <img
         
-        src={`http://localhost:3000/avatar/${player2.avatar}`}
+        src={`http://10.14.4.8:3000/avatar/${player2.avatar}`}
         />
         <p>{player2.name}</p>
         </div>
@@ -22,7 +22,7 @@ const UserMaking = ({player1}:any) => {
         <div className='player1-image-end-game'>
             <img
             
-            src={`http://localhost:3000/avatar/${player1.avatar}`}
+            src={`http://10.14.4.8:3000/avatar/${player1.avatar}`}
             />
             <p>{player1.name}</p>
         </div>

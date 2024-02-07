@@ -46,7 +46,7 @@ function Game() {
       setIsInGame(true);
 
       setRootAppStyle(() => { return ({ gridTemplateRows: '1fr' }) })
-      socketRefGame.current = io('http://localhost:3000/game', {
+      socketRefGame.current = io('http://10.14.4.8:3000/game', {
         transports: ["websocket"],
         withCredentials: true,
         query: { key: randomKey , userId: authUser.userId },

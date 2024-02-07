@@ -57,7 +57,7 @@ const App = () => {
 
   useEffect(() => {
     if (socketRef.current === null && auth == 2) {
-      socketRef.current = io('http://localhost:3000', {
+      socketRef.current = io('http://10.14.4.8:3000', {
         query: { userId: authUser.userId },
         transports: ["websocket"],
         withCredentials: true,
@@ -108,7 +108,7 @@ const App = () => {
       {auth != 1 &&
         <Routes>
           <Route element={<RequireAuth />}>
-            <Route path="user/:userId" element={<><NavBar /><Profile /></>} />
+            <Route path="user/:userId" element={<><NavBar /><Profile /></>} key="user-profile"/>
             <Route path="/leaderboard" element={<> <NavBar /> <LeaderBoard /> </>} />
             <Route path="/game" element={<Game />} />
             <Route path="/" element={<> <NavBar /> <Home /></>} />
